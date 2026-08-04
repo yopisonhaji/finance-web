@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const isAuthPage = request.nextUrl.pathname === '/login';
+  const isRegisterPage = request.nextUrl.pathname === '/register';
   const isOnboarding = request.nextUrl.pathname === '/onboarding';
   const isPublicApi = request.nextUrl.pathname.startsWith('/api/');
 
@@ -11,8 +12,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Jika tidak ada token dan bukan halaman login/onboarding, redirect ke login
-  if (!token && !isAuthPage && !isOnboarding) {
+  // Jika tidak ada token dan bukan halaman login/register/onboarding, redirect ke login
+  if (!token && !isAuthPage && !isOnboarding && !isRegisterPage) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

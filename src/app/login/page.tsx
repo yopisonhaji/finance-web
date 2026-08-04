@@ -106,7 +106,7 @@ export default function LoginPage() {
             </div>
 
             <Button 
-              onClick={() => alert("INFORMASI SISTEM:\\n\\nSistem ini berbasis Cloud (Satu Database Terpusat). Karena aplikasi ini sudah diregistrasi oleh Pemilik Utama, maka perangkat baru TIDAK PERLU melakukan registrasi ulang.\\n\\nJika Anda adalah Pemilik/Admin, silakan langsung klik LOGIN DENGAN GOOGLE. Data Anda akan langsung tersinkronisasi otomatis!")}
+              onClick={() => router.push('/register')}
               type="button"
               variant="outline"
               className="w-full h-12 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold border-slate-300 dark:border-slate-700 transition-all rounded-xl"
