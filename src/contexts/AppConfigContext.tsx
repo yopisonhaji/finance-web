@@ -27,7 +27,7 @@ export function AppConfigProvider({
     setTipeBisnisState(type);
   };
 
-  const clientTerm = tipeBisnis === "PERUSAHAAN" ? "Pelanggan" : "Siswa";
+  const clientTerm = tipeBisnis === "PERUSAHAAN" ? "Klien" : "Siswa";
 
   return (
     <AppConfigContext.Provider value={{ tipeBisnis, clientTerm, setTipeBisnis }}>

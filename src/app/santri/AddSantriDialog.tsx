@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { addSantri } from "./actions"
+import { useAppConfig } from "@/contexts/AppConfigContext"
 
 const formSchema = z.object({
   nis: z.string().min(1, "NIS wajib diisi"),
@@ -38,6 +39,13 @@ const formSchema = z.object({
 export function AddSantriDialog() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { tipeBisnis } = useAppConfig()
+
+  const isBisnis = tipeBisnis === "PERUSAHAAN"
+  const termStudent = isBisnis ? "Klien" : "Siswa"
+  const termWali = isBisnis ? "Penanggung Jawab" : "Wali Siswa"
+  const termKelas = isBisnis ? "Layanan" : "Kelas"
+  const termNIS = isBisnis ? "ID Klien" : "NIS / ID Siswa"
 
   const form = useForm<any>({
     resolver: zodResolver(formSchema) as any,
@@ -69,14 +77,14 @@ export function AddSantriDialog() {
       {/* @ts-ignore */}
       <DialogTrigger asChild>
         <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
-          <Plus className="w-4 h-4 mr-2" /> Tambah Santri
+          <Plus className="w-4 h-4 mr-2" /> Tambah {termStudent}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Tambah Data Santri</DialogTitle>
+          <DialogTitle>Tambah Data {termStudent}</DialogTitle>
           <DialogDescription>
-            Masukkan biodata santri dan informasi kontak WhatsApp wali santri.
+            Masukkan biodata {termStudent.toLowerCase()} dan informasi kontak WhatsApp {termWali.toLowerCase()}.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +94,7 @@ export function AddSantriDialog() {
               name="nis"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>NIS / ID Santri</FormLabel>
+                  <FormLabel>{termNIS}</FormLabel>
                   <FormControl>
                     <Input placeholder="Contoh: 1001" {...field} />
                   </FormControl>
@@ -99,7 +107,7 @@ export function AddSantriDialog() {
               name="nama"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nama Lengkap Santri</FormLabel>
+                  <FormLabel>Nama Lengkap {termStudent}</FormLabel>
                   <FormControl>
                     <Input placeholder="Contoh: Ahmad Yasin" {...field} />
                   </FormControl>
@@ -112,7 +120,7 @@ export function AddSantriDialog() {
               name="kelas"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kelas / Asrama</FormLabel>
+                  <FormLabel>{termKelas}</FormLabel>
                   <FormControl>
                     <Input placeholder="Contoh: 10 A" {...field} />
                   </FormControl>
@@ -125,7 +133,7 @@ export function AddSantriDialog() {
               name="nama_wali"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nama Wali</FormLabel>
+                  <FormLabel>Nama {termWali}</FormLabel>
                   <FormControl>
                     <Input placeholder="Contoh: Bpk. Supardi" {...field} />
                   </FormControl>
@@ -138,7 +146,7 @@ export function AddSantriDialog() {
               name="no_wa"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nomor WA Wali (Awali dengan 62)</FormLabel>
+                  <FormLabel>Nomor WA {termWali} (Awali dengan 62)</FormLabel>
                   <FormControl>
                     <Input placeholder="Contoh: 62812345678" {...field} />
                   </FormControl>
@@ -151,7 +159,7 @@ export function AddSantriDialog() {
               name="nominal_spp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nominal Tagihan SPP Bulanan (Rp)</FormLabel>
+                  <FormLabel>Nominal Tagihan Bulanan (Rp)</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="Contoh: 500000" {...field} />
                   </FormControl>
@@ -161,7 +169,7 @@ export function AddSantriDialog() {
             />
             <div className="pt-4 flex justify-end">
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? "Menyimpan..." : "Simpan Data Santri"}
+                {loading ? "Menyimpan..." : `Simpan Data ${termStudent}`}
               </Button>
             </div>
           </form>

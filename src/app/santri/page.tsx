@@ -10,7 +10,7 @@ export default async function SantriPage() {
   const data = await getSantri()
   const settingsData = await db.select().from(pengaturan).where(eq(pengaturan.kunci, "TIPE_BISNIS"))
   const tipeBisnis = settingsData.length > 0 ? settingsData[0].nilai : ""
-  const clientTerm = tipeBisnis === "PERUSAHAAN" ? "Pelanggan" : "Siswa"
+  const clientTerm = tipeBisnis === "PERUSAHAAN" ? "Klien" : "Siswa"
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto h-full flex flex-col">
