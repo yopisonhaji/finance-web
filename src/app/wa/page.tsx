@@ -125,7 +125,8 @@ export default function StatusWAPage() {
                     placeholder="Contoh: 628123456789 (Gunakan 62)" 
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
-                    className="h-12 text-lg font-medium bg-slate-900 border-slate-700 text-white placeholder:text-slate-500"
+                    className="h-12 text-lg font-medium bg-[#0f172a] text-white border-slate-700 placeholder:text-slate-500 focus:bg-[#0f172a] focus-visible:ring-blue-500"
+                    style={{ backgroundColor: "#0f172a", color: "white" }}
                   />
                 </div>
                 <Button 
