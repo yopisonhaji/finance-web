@@ -8,8 +8,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #0b172a;
+  --foreground: #f8fafc;
 }
 
 @theme inline {
@@ -32,12 +32,7 @@
   --animate-status-pulse: statusPulse 2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b172a;
-    --foreground: #f8fafc;
-  }
-}
+
 
 body {
   background: var(--background);
