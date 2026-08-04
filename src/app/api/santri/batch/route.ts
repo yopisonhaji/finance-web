@@ -30,6 +30,7 @@ export async function POST(req: Request) {
         }
 
         await db.insert(santri).values({
+          tenantId: 'default',
           nis: String(item.nis),
           nama: String(item.nama),
           kelas: item.kelas ? String(item.kelas) : null,

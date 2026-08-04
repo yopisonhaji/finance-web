@@ -25,7 +25,7 @@ export async function addSantri(input: {
   saldo: number;
 }) {
   try {
-    await db.insert(santri).values(input);
+    await db.insert(santri).values({ ...input, tenantId: 'default' });
     
     
     return { success: true };

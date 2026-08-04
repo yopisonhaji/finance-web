@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Wallet, ArrowRight } from "lucide-react";
+import { Wallet, ArrowRight, ShieldCheck } from "lucide-react";
 import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 

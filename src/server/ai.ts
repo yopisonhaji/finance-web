@@ -179,7 +179,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     if (existing.length > 0) {
       await db.update(pengaturan).set({ nilai: String(tokenUsage) }).where(eq(pengaturan.kunci, 'token_usage'));
     } else {
-      await db.insert(pengaturan).values({ kunci: 'token_usage', nilai: String(tokenUsage) });
+      await db.insert(pengaturan).values({ tenantId: 'default', kunci: 'token_usage', nilai: String(tokenUsage) });
     }
   }
 
@@ -248,6 +248,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           const { nama, nis, kelas, nama_wali, no_wa, nominal_spp } = args as any;
           try {
             await db.insert(santri).values({
+              tenantId: 'default',
               nama: nama,
               nis: nis,
               kelas: kelas || "",
