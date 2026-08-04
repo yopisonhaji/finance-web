@@ -52,6 +52,7 @@ export default async function RootLayout({
   let alamatLembaga = "";
   let hasAiKey = false;
   let isOwnerSet = false;
+  let isWaSet = false;
   let ownerName = "Admin";
   let tipeBisnis = "";
   
@@ -66,10 +67,13 @@ export default async function RootLayout({
       isOwnerSet = true;
       ownerName = s.nilai;
     }
+    if (s.kunci === "OWNER_WA" && s.nilai) {
+      isWaSet = true;
+    }
     if (s.kunci === "TIPE_BISNIS") tipeBisnis = s.nilai;
   });
 
-  const isActivated = isOwnerSet && hasUsers;
+  const isActivated = isOwnerSet && isWaSet && hasUsers;
 
   if (!isActivated) {
     return (
