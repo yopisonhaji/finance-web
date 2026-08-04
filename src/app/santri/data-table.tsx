@@ -147,7 +147,7 @@ export function DataTable<TData, TValue>({
             placeholder={t("students.search_placeholder")}
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(String(event.target.value))}
-            className="w-full bg-[#0b172a] border-slate-700 focus-visible:ring-blue-500 h-12 rounded-xl text-base"
+            className="w-full bg-[#0b172a] border-slate-700 text-white focus-visible:ring-blue-500 h-12 rounded-xl text-base"
           />
         </div>
         <div className="grid grid-cols-2 gap-3 w-full sm:flex sm:flex-row sm:w-auto">
