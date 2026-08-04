@@ -20,17 +20,12 @@ export default function LoginPage() {
       const email = result.user.email;
       const firebaseUid = result.user.uid;
 
-      const res = await fetch("/api/login/firebase", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firebaseUid }),
-      });
+      const { verifyLogin } = await import("@/app/actions/auth");
+      const data = await verifyLogin(email || "", firebaseUid);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
+      if (data.success) {
+        localStorage.setItem("token", data.token!);
+        document.cookie = `token=${data.token}; path=/; max-age=864000`;
         router.push("/");
       } else {
         setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");

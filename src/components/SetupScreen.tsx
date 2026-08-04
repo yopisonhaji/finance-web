@@ -31,6 +31,10 @@ export function SetupScreen() {
     const res = await saveSetupData(nama, noWa, email, firebaseUid, tipeBisnis);
     if (res.success) {
       setSuccess(true);
+      if (firebaseUid) {
+        localStorage.setItem("token", firebaseUid);
+        document.cookie = `token=${firebaseUid}; path=/; max-age=864000`;
+      }
       setTimeout(() => {
         window.location.href = "/";
       }, 2000);
