@@ -13,8 +13,15 @@ const globalForDb = globalThis as unknown as {
   libsqlClient: ReturnType<typeof createClient> | undefined;
 };
 
+const url = process.env.TURSO_DATABASE_URL;
+const isVercel = process.env.VERCEL === '1';
+
+if (!url && isVercel) {
+  throw new Error("CRITICAL: TURSO_DATABASE_URL is not set in Vercel Environment Variables. Please check Vercel settings.");
+}
+
 const client = globalForDb.libsqlClient ?? createClient({ 
-  url: process.env.TURSO_DATABASE_URL || 'file:./finance.db',
+  url: url || 'file:./finance.db',
   authToken: process.env.TURSO_AUTH_TOKEN
 });
 
