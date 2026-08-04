@@ -46,9 +46,12 @@ export function SetupScreen() {
 
   const handleGoogleSignIn = async () => {
     try {
+      const popupPromise = signInWithPopup(auth!, googleProvider);
+      
       setLoading(true);
       setError("");
-      const result = await signInWithPopup(auth!, googleProvider);
+      
+      const result = await popupPromise;
       setEmail(result.user.email || "");
       setNama(result.user.displayName || "");
       setFirebaseUid(result.user.uid);

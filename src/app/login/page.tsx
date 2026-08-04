@@ -13,10 +13,13 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     try {
+      // Panggil popup TERLEBIH DAHULU agar browser tidak menganggapnya bot/script (menghindari popup-blocked)
+      const popupPromise = signInWithPopup(auth!, googleProvider);
+      
       setLoading(true);
       setError("");
       
-      const result = await signInWithPopup(auth!, googleProvider);
+      const result = await popupPromise;
       const email = result.user.email;
       const firebaseUid = result.user.uid;
 
