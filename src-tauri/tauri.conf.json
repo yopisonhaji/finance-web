@@ -1,0 +1,43 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "SJ AI",
+  "version": "0.1.2",
+  "identifier": "id.pesantren.finance",
+  "build": {
+    "frontendDist": "../dist-client/public",
+    "devUrl": "http://localhost:3000",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "node build-exe.js"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Admin Dashboard",
+        "url": "http://localhost:3000",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "externalBin": ["binaries/node"],
+    "resources": ["dist-client/**/*"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  }
+}

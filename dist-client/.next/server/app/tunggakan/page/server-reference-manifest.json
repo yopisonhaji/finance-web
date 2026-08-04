@@ -1,0 +1,53 @@
+{
+  "node": {
+    "605eb005c70124a064868834a1827350f758c37f82": {
+      "workers": {
+        "app/tunggakan/page": {
+          "moduleId": 54848,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "src/app/actions/setup.ts"
+        }
+      },
+      "exportedName": "saveSetupData",
+      "filename": "src/app/actions/setup.ts"
+    },
+    "001f97bfb4237a6ed852e5cb48d4fb405e760b1a08": {
+      "workers": {
+        "app/tunggakan/page": {
+          "moduleId": 54848,
+          "async": true,
+          "exportedName": "getTunggakan",
+          "filename": "src/app/tunggakan/actions.ts"
+        }
+      },
+      "exportedName": "getTunggakan",
+      "filename": "src/app/tunggakan/actions.ts"
+    },
+    "40ad233959dd2988a359342dcff5e77c44bdf96fae": {
+      "workers": {
+        "app/tunggakan/page": {
+          "moduleId": 54848,
+          "async": true,
+          "exportedName": "tandaiLunas",
+          "filename": "src/app/tunggakan/actions.ts"
+        }
+      },
+      "exportedName": "tandaiLunas",
+      "filename": "src/app/tunggakan/actions.ts"
+    },
+    "40c46fe03bc1f1e54b479207952ee57f99be58978a": {
+      "workers": {
+        "app/tunggakan/page": {
+          "moduleId": 54848,
+          "async": true,
+          "exportedName": "addSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "addSantri",
+      "filename": "src/app/santri/actions.ts"
+    }
+  },
+  "edge": {}
+}

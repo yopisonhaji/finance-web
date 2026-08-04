@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -10,12 +17,25 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  --color-dash-bg: #0b172a;
+  --color-dash-panel: rgba(18, 35, 58, 0.78);
+  --color-dash-panel-hover: rgba(22, 42, 70, 0.9);
+  
+  --color-accent-blue: #5396ff;
+  --color-accent-green: #10b981;
+  --color-accent-pink: #f43f5e;
+  --color-accent-orange: #f97316;
+  --color-accent-purple: #8b5cf6;
+  
+  --animate-page-enter: pageEnter 260ms ease-out;
+  --animate-status-pulse: statusPulse 2s ease-in-out infinite;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b172a;
+    --foreground: #f8fafc;
   }
 }
 
@@ -23,4 +43,55 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(24, 45, 74, 0.88), rgba(12, 27, 48, 0.82));
+  border: 1px solid rgba(148, 190, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glow-blue { box-shadow: 0 0 10px rgba(83, 150, 255, 0.2); }
+.glow-green { box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+.glow-pink { box-shadow: 0 0 10px rgba(244, 63, 94, 0.2); }
+.glow-orange { box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
+.glow-purple { box-shadow: 0 0 10px rgba(139, 92, 246, 0.2); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }

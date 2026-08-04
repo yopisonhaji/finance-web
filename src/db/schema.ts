@@ -1,0 +1,45 @@
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+
+export const santri = sqliteTable('santri', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  nis: text('nis').notNull(), // Remove unique globally, should be unique per tenant (handled via code/composite index)
+  nama: text('nama').notNull(),
+  kelas: text('kelas'),
+  nama_wali: text('nama_wali'),
+  no_wa: text('no_wa'),
+  saldo: integer('saldo').default(0),
+  nominal_spp: integer('nominal_spp').default(0),
+  status_bulan_ini: text('status_bulan_ini').default('BELUM_BAYAR'),
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const transaksi = sqliteTable('transaksi', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  santriId: integer('santri_id').references(() => santri.id),
+  tipe: text('tipe').notNull(), // 'SPP', 'UANG_SAKU', dll
+  jumlah: integer('jumlah').notNull(),
+  status: text('status').default('PENDING'), // 'PENDING', 'LUNAS'
+  metode: text('metode'), // 'TUNAI', 'IPAYMU'
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const pengaturan = sqliteTable('pengaturan', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  kunci: text('kunci').notNull(), // 'DEEPSEEK_API', 'IPAYMU_API'
+  nilai: text('nilai').notNull(),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  tenantId: text("tenant_id").notNull(), // Menyimpan "tenant-1" dll
+  email: text("email").notNull().unique(), // Digunakan untuk login Google
+  firebaseUid: text("firebase_uid").unique(), // Firebase UID
+  namaSekolah: text("nama_sekolah"), // Bisa diisi nama owner/lembaga
+  role: text("role").notNull().default("ADMIN"), // "SUPER_ADMIN" atau "ADMIN"
+  createdAt: text("created_at").default("CURRENT_TIMESTAMP")
+});

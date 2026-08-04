@@ -1,0 +1,17 @@
+{
+  "node": {
+    "605eb005c70124a064868834a1827350f758c37f82": {
+      "workers": {
+        "app/update/page": {
+          "moduleId": 35499,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "src/app/actions/setup.ts"
+        }
+      },
+      "exportedName": "saveSetupData",
+      "filename": "src/app/actions/setup.ts"
+    }
+  },
+  "edge": {}
+}

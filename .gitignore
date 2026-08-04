@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local data
+*.db
+*.db-shm
+*.db-wal
+wa-state.json
+debug-*.txt
+*.zip

@@ -1,0 +1,65 @@
+{
+  "node": {
+    "605eb005c70124a064868834a1827350f758c37f82": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 91076,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "src/app/actions/setup.ts"
+        }
+      },
+      "exportedName": "saveSetupData",
+      "filename": "src/app/actions/setup.ts"
+    },
+    "0083edf1761d14326b289626eb0ca985c7334b8d37": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 91076,
+          "async": true,
+          "exportedName": "getSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "getSantri",
+      "filename": "src/app/santri/actions.ts"
+    },
+    "4057bdd719a4e621c41290e1bd11cc26777eb0494b": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 91076,
+          "async": true,
+          "exportedName": "deleteSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "deleteSantri",
+      "filename": "src/app/santri/actions.ts"
+    },
+    "40c46fe03bc1f1e54b479207952ee57f99be58978a": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 91076,
+          "async": true,
+          "exportedName": "addSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "addSantri",
+      "filename": "src/app/santri/actions.ts"
+    },
+    "60805a18d056bd0a9d664b19be350a4e6450076e86": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 91076,
+          "async": true,
+          "exportedName": "updateSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "updateSantri",
+      "filename": "src/app/santri/actions.ts"
+    }
+  },
+  "edge": {}
+}

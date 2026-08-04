@@ -1,0 +1,172 @@
+"use client"
+
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Plus } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { addSantri } from "./actions"
+
+const formSchema = z.object({
+  nis: z.string().min(1, "NIS wajib diisi"),
+  nama: z.string().min(1, "Nama wajib diisi"),
+  kelas: z.string().min(1, "Kelas wajib diisi"),
+  nama_wali: z.string().min(1, "Nama wali wajib diisi"),
+  no_wa: z.string().min(10, "Nomor WA tidak valid"),
+  nominal_spp: z.coerce.number().min(0, "Nominal tidak boleh negatif"),
+})
+
+export function AddSantriDialog() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const form = useForm<any>({
+    resolver: zodResolver(formSchema) as any,
+    defaultValues: {
+      nis: "",
+      nama: "",
+      kelas: "",
+      nama_wali: "",
+      no_wa: "",
+      nominal_spp: 0,
+    },
+  })
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    const res = await addSantri(values)
+    setLoading(false)
+    
+    if (res.success) {
+      setOpen(false)
+      form.reset()
+    } else {
+      alert("Gagal menambahkan santri: " + res.message)
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {/* @ts-ignore */}
+      <DialogTrigger asChild>
+        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Plus className="w-4 h-4 mr-2" /> Tambah Santri
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Tambah Data Santri</DialogTitle>
+          <DialogDescription>
+            Masukkan biodata santri dan informasi kontak WhatsApp wali santri.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="nis"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>NIS / ID Santri</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh: 1001" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nama"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nama Lengkap Santri</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh: Ahmad Yasin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="kelas"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kelas / Asrama</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh: 10 A" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nama_wali"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nama Wali</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh: Bpk. Supardi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="no_wa"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nomor WA Wali (Awali dengan 62)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh: 62812345678" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nominal_spp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nominal Tagihan SPP Bulanan (Rp)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Contoh: 500000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="pt-4 flex justify-end">
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? "Menyimpan..." : "Simpan Data Santri"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
