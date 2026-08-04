@@ -29,7 +29,7 @@ async function migrate() {
       if (existing.length > 0) {
         await db.update(pengaturan).set({ nilai: String(data[oldKey]) }).where(eq(pengaturan.kunci, newKey));
       } else {
-        await db.insert(pengaturan).values({ kunci: newKey, nilai: String(data[oldKey]) });
+        await db.insert(pengaturan).values({ tenantId: 'default', kunci: newKey, nilai: String(data[oldKey]) });
       }
       console.log(`Migrated ${oldKey} to ${newKey}`);
     }
@@ -41,7 +41,7 @@ async function migrate() {
     if (existing.length > 0) {
       await db.update(pengaturan).set({ nilai: String(data['telegram_bot_token']) }).where(eq(pengaturan.kunci, 'telegram_bot_token'));
     } else {
-      await db.insert(pengaturan).values({ kunci: 'telegram_bot_token', nilai: String(data['telegram_bot_token']) });
+      await db.insert(pengaturan).values({ tenantId: 'default', kunci: 'telegram_bot_token', nilai: String(data['telegram_bot_token']) });
     }
   }
   
