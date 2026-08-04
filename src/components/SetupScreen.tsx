@@ -38,6 +38,8 @@ export function SetupScreen() {
       setError("Gagal menyimpan data: " + res.error);
       setLoading(false);
     }
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
