@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Fingerprint, User, Phone, Sparkles, Building2, GraduationCap, Mail } from "lucide-react";
 import { saveSetupData } from "@/app/actions/setup";
 import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
+import { signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { useEffect } from "react";
 
 export function SetupScreen() {
   const [nama, setNama] = useState("");
@@ -15,9 +17,30 @@ export function SetupScreen() {
   const [firebaseUid, setFirebaseUid] = useState("");
   const [isGoogleSignedIn, setIsGoogleSignedIn] = useState(false);
   const [tipeBisnis, setTipeBisnis] = useState("PENDIDIKAN");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth!);
+        if (result && result.user) {
+          setEmail(result.user.email || "");
+          setNama(result.user.displayName || "");
+          setFirebaseUid(result.user.uid);
+          setIsGoogleSignedIn(true);
+        }
+      } catch (err: any) {
+        if (err.code !== 'auth/redirect-cancelled-by-user') {
+          setError("Gagal login dengan Google: " + err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkRedirectResult();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,14 +67,9 @@ export function SetupScreen() {
     try {
       setLoading(true);
       setError("");
-      const result = await signInWithPopup(auth!, googleProvider);
-      setEmail(result.user.email || "");
-      setNama(result.user.displayName || "");
-      setFirebaseUid(result.user.uid);
-      setIsGoogleSignedIn(true);
+      await signInWithRedirect(auth!, googleProvider);
     } catch (err: any) {
-      setError("Gagal login dengan Google: " + err.message);
-    } finally {
+      setError("Gagal memulai login Google: " + err.message);
       setLoading(false);
     }
   };

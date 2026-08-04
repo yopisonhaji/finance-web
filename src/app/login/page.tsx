@@ -4,40 +4,57 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Wallet, ArrowRight, ShieldCheck } from "lucide-react";
 import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
+import { signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth!);
+        if (result && result.user) {
+          const email = result.user.email;
+          const firebaseUid = result.user.uid;
+
+          const res = await fetch("/api/login/firebase", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, firebaseUid }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            localStorage.setItem("token", data.token);
+            document.cookie = `token=${data.token}; path=/; max-age=86400`;
+            router.push("/");
+          } else {
+            setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
+          }
+        }
+      } catch (err: any) {
+        if (err.code !== 'auth/redirect-cancelled-by-user') {
+          setError("Gagal login dengan Google: " + err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkRedirectResult();
+  }, [router]);
 
   const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
       setError("");
-      
-      const result = await signInWithPopup(auth!, googleProvider);
-      const email = result.user.email;
-      const firebaseUid = result.user.uid;
-
-      const res = await fetch("http://127.0.0.1:8080/api/login/firebase", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firebaseUid }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
-        router.push("/");
-      } else {
-        setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
-      }
+      await signInWithRedirect(auth!, googleProvider);
     } catch (err: any) {
       setError("Terjadi kesalahan saat menghubungi server: " + err.message);
-    } finally {
       setLoading(false);
     }
   };
