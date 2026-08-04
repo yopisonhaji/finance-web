@@ -255,10 +255,10 @@ export function SetupScreen() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => window.open("https://wa.me/6282138004443?text=Halo%20Admin,%20saya%20ingin%20registrasi%20Aplikasi%20Finance%20AI.", "_blank")}
-                  className="w-full h-11 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 font-semibold border-2"
+                  onClick={() => window.location.href = '/login'}
+                  className="w-full h-11 border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-800 font-semibold border-2 rounded-xl transition-all"
                 >
-                  Ingin Registrasi (Hubungi WA)
+                  Sudah punya akun? Login Disini
                 </Button>
               </div>
             </>
