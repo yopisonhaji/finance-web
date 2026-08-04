@@ -88,7 +88,7 @@ export function AddSantriDialog() {
                 <FormItem>
                   <FormLabel>NIS</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: 1001" {...field} />
+                    <Input placeholder="Contoh: 1001" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,7 +101,7 @@ export function AddSantriDialog() {
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: Ahmad Yasin" {...field} />
+                    <Input placeholder="Contoh: Ahmad Yasin" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,7 +115,7 @@ export function AddSantriDialog() {
                   <FormItem>
                     <FormLabel>Kelas</FormLabel>
                     <FormControl>
-                      <Input placeholder="Contoh: 10 A" {...field} />
+                      <Input placeholder="Contoh: 10 A" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,7 +128,7 @@ export function AddSantriDialog() {
                   <FormItem>
                     <FormLabel>Nomor WA</FormLabel>
                     <FormControl>
-                      <Input placeholder="08123456789" {...field} />
+                      <Input placeholder="08123456789" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

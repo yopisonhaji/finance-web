@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { requestWaPairing } from "@/server/wa"
 
 export default function StatusWAPage() {
   const [status, setStatus] = useState<string>("disconnected")
@@ -15,7 +16,7 @@ export default function StatusWAPage() {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8080/api/wa/status")
+      const res = await fetch("http://localhost:8080/api/wa/status")
       const data = await res.json()
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
@@ -31,27 +32,46 @@ export default function StatusWAPage() {
     setLoading(true);
     setPairingCode("");
     try {
-      const res = await fetch("http://127.0.0.1:8080/api/wa/pairing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: inputPhone })
-      });
-      const data = await res.json();
-      if (data.code) {
-        setPairingCode(data.code);
+      const res = await requestWaPairing(inputPhone);
+      if (res.success && res.code) {
+        setPairingCode(res.code);
       } else {
-        alert(data.error || "Gagal meminta kode");
+        alert(res.message || "Gagal meminta kode");
       }
     } catch (e) {
-      alert("Gagal terhubung ke backend Golang");
+      alert("Gagal memanggil server action");
     }
     setLoading(false);
   }
 
   useEffect(() => {
+    // Initial fetch
     fetchStatus()
-    const interval = setInterval(fetchStatus, 3000)
-    return () => clearInterval(interval)
+
+    // Connect to SSE for real-time updates
+    const eventSource = new EventSource("http://localhost:8080/api/events")
+    
+    eventSource.onmessage = (event) => {
+      try {
+        const parsed = JSON.parse(event.data)
+        if (parsed.type === 'connected') {
+          fetchStatus() // refresh status
+        } else if (parsed.type === 'disconnected') {
+          setStatus('disconnected')
+          setPhone('')
+        } else if (parsed.type === 'message_sent') {
+          console.log("Pesan berhasil terkirim via queue:", parsed.data)
+        }
+      } catch(e) {}
+    }
+
+    eventSource.onerror = () => {
+      console.log("SSE Connection lost. Retrying...")
+    }
+
+    return () => {
+      eventSource.close()
+    }
   }, [])
 
   return (

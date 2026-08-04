@@ -95,6 +95,24 @@ export default function LoginPage() {
                 </>
               )}
             </Button>
+
+            <div className="relative mt-6 mb-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white/80 dark:bg-slate-900 text-slate-500">Atau</span>
+              </div>
+            </div>
+
+            <Button 
+              onClick={() => alert("INFORMASI SISTEM:\\n\\nSistem ini berbasis Cloud (Satu Database Terpusat). Karena aplikasi ini sudah diregistrasi oleh Pemilik Utama, maka perangkat baru TIDAK PERLU melakukan registrasi ulang.\\n\\nJika Anda adalah Pemilik/Admin, silakan langsung klik LOGIN DENGAN GOOGLE. Data Anda akan langsung tersinkronisasi otomatis!")}
+              type="button"
+              variant="outline"
+              className="w-full h-12 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold border-slate-300 dark:border-slate-700 transition-all rounded-xl"
+            >
+              Belum Registrasi? Klik Disini
+            </Button>
           </div>
 
           <div className="mt-8 text-center">

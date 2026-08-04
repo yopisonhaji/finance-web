@@ -55,6 +55,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
          text = text.replace(/Wali/g, 'P.Jawab').replace(/wali/g, 'p.jawab');
          text = text.replace(/NIS/g, 'ID Klien');
          text = text.replace(/Kelas/g, 'Layanan');
+         text = text.replace(/SPP/g, 'Layanan/Tagihan').replace(/spp/g, 'layanan/tagihan');
+         text = text.replace(/Tagihan Layanan\/Tagihan/g, 'Tagihan Klien');
+         text = text.replace(/Status Layanan\/Tagihan/g, 'Status Pembayaran');
+         text = text.replace(/Tunggakan Layanan\/Tagihan/g, 'Tunggakan');
       } else if (tipeBisnis === 'PENDIDIKAN') {
          text = text.replace(/Santri/g, 'Siswa').replace(/santri/g, 'siswa');
       }

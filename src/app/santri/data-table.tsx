@@ -141,28 +141,34 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-end py-4">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleExport} disabled={isExporting}>
-            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+      <div className="flex flex-col gap-4 py-4">
+        <div className="w-full">
+          <Input
+            placeholder={t("students.search_placeholder")}
+            value={globalFilter ?? ""}
+            onChange={(event) => setGlobalFilter(String(event.target.value))}
+            className="w-full bg-[#0b172a] border-slate-700 focus-visible:ring-blue-500 h-12 rounded-xl text-base"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3 w-full sm:flex sm:flex-row sm:w-auto">
+          <Button variant="outline" onClick={handleExport} disabled={isExporting} className="w-full border-slate-700 bg-slate-800/50 hover:bg-slate-800 h-11 rounded-lg">
+            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4 text-blue-400" />}
             {t("students.export")}
           </Button>
           
-          <div className="relative">
+          <div className="relative w-full">
             <input 
               type="file" 
               accept=".xlsx, .xls" 
               onChange={handleImport}
               disabled={isImporting}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed" 
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10" 
             />
-            <Button variant="outline" disabled={isImporting}>
-              {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+            <Button variant="outline" disabled={isImporting} className="w-full border-slate-700 bg-slate-800/50 hover:bg-slate-800 h-11 rounded-lg">
+              {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4 text-green-400" />}
               {t("students.import")}
             </Button>
           </div>
-
-          <AddSantriDialog />
         </div>
       </div>
       <div className="rounded-md border">

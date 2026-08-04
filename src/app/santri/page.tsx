@@ -14,17 +14,19 @@ export default async function SantriPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto h-full flex flex-col">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Manajemen {clientTerm}</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Manajemen {clientTerm}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
             Kelola data dan tagihan {clientTerm.toLowerCase()} Anda
           </p>
         </div>
-        <AddSantriDialog />
+        <div className="w-full sm:w-auto">
+          <AddSantriDialog />
+        </div>
       </div>
       
-      <div className="flex-1 bg-[#0f172a] text-white rounded-xl border border-slate-700 shadow-2xl p-6 overflow-hidden">
+      <div className="flex-1 bg-[#0f172a] text-white rounded-xl border border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
         <DataTable columns={columns} data={data} />
       </div>
     </div>

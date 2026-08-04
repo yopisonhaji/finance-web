@@ -5,28 +5,28 @@
 import { db } from "@/db";
 import { pengaturan } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 
 export async function sendWaMessage(noWa: string, messageText: string) {
   try {
     const urlConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_url'));
     const tokenConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_token'));
     
-    const url = urlConfig[0]?.nilai;
-    const token = tokenConfig[0]?.nilai;
+    const url = urlConfig[0]?.nilai || "http://localhost:8080/send";
+    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
     
-    if (!url || !token) {
-      return { success: false, message: "Konfigurasi WA Bot (URL & Token) belum diatur di menu Pengaturan." };
-    }
+    // Generate JWT token
+    const jwtToken = jwt.sign({ sender: "nextjs-client" }, token, { expiresIn: '1h' });
     
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${jwtToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        phone: noWa,
-        message: messageText
+        no_wa: noWa, // Go Backend expects no_wa
+        pesan: messageText // Go Backend expects pesan
       })
     });
     
@@ -35,6 +35,38 @@ export async function sendWaMessage(noWa: string, messageText: string) {
     } else {
       const err = await response.text();
       return { success: false, message: `Gagal mengirim pesan: ${err}` };
+    }
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function requestWaPairing(phone: string) {
+  try {
+    const urlConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_url'));
+    const tokenConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_token'));
+    
+    // Asumsi URL pairing adalah base_url diganti /send jadi /api/wa/pairing
+    const rawUrl = urlConfig[0]?.nilai || "http://localhost:8080/send";
+    const pairingUrl = rawUrl.replace("/send", "/api/wa/pairing");
+    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
+    
+    const jwtToken = jwt.sign({ sender: "nextjs-client" }, token, { expiresIn: '1h' });
+
+    const response = await fetch(pairingUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ phone })
+    });
+
+    const data = await response.json();
+    if (response.ok && data.code) {
+      return { success: true, code: data.code };
+    } else {
+      return { success: false, message: data.error || "Gagal meminta kode pairing dari bot" };
     }
   } catch (error: any) {
     return { success: false, message: error.message };

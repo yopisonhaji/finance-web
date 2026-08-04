@@ -184,12 +184,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               </h3>
             </div>
             <CardContent className="p-5 flex flex-col items-center justify-center h-full text-sm text-slate-500 relative overflow-hidden">
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 opacity-20 bg-gradient-to-t from-blue-500/10 to-transparent"></div>
-              {/* Dummy Line Chart line for visual */}
-              <div className="absolute inset-x-0 bottom-4 h-16 flex items-end justify-between px-4 opacity-30">
-                <div className="w-full h-full border-b-2 border-blue-400 rounded-[100%]"></div>
-              </div>
-              <span className="relative z-10">{t("reports.no_tx_data")}</span>
+              <span className="relative z-10">{t("reports.no_tx_data") || "Belum ada riwayat transaksi bulan ini."}</span>
             </CardContent>
           </Card>
 

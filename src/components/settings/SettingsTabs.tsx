@@ -94,6 +94,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
     const res = await saveSettings(values)
     if (res.success) {
       alert(t('settings.save_success') || "Pengaturan berhasil disimpan!")
+      window.location.reload()
     } else {
       alert((t('settings.save_error') || "Gagal menyimpan: ") + res.message)
     }
@@ -104,11 +105,11 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs defaultValue="umum" className="w-full flex-col">
-          <TabsList className="flex flex-col h-auto w-full md:grid md:grid-cols-4 mb-6 bg-[#0f172a] gap-2 p-2 rounded-xl border border-slate-800">
-            <TabsTrigger value="umum" className="w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all">{t("settings.tab_general")}</TabsTrigger>
-            <TabsTrigger value="keuangan" className="w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all">{t("settings.tab_payment")}</TabsTrigger>
-            <TabsTrigger value="ai" className="w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all">{t("settings.tab_ai")}</TabsTrigger>
-            <TabsTrigger value="penagihan" className="w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all">{t("settings.tab_billing")}</TabsTrigger>
+          <TabsList className="flex md:grid md:grid-cols-4 h-auto w-full mb-6 bg-[#0f172a] gap-2 p-2 rounded-xl border border-slate-800 overflow-x-auto overflow-y-hidden snap-x scrollbar-hide">
+            <TabsTrigger value="umum" className="min-w-[140px] md:w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_general")}</TabsTrigger>
+            <TabsTrigger value="keuangan" className="min-w-[140px] md:w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_payment")}</TabsTrigger>
+            <TabsTrigger value="ai" className="min-w-[140px] md:w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_ai")}</TabsTrigger>
+            <TabsTrigger value="penagihan" className="min-w-[140px] md:w-full py-2.5 rounded-lg data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_billing")}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="umum">
@@ -120,7 +121,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="OWNER_NAMA"
@@ -168,7 +169,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     </FormItem>
                   )}
                 />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="KEPSEK_WA"
@@ -176,7 +177,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.principal_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} />
+                          <Input placeholder="628xxx" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.principal_desc')}</FormDescription>
                         <FormMessage />
@@ -190,7 +191,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.admin_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} />
+                          <Input placeholder="628xxx" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.admin_desc')}</FormDescription>
                         <FormMessage />
@@ -205,7 +206,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     <FormItem>
                       <FormLabel>{t('settings.school_name')}</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className="bg-slate-900 border-slate-700 text-white h-11" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -218,7 +219,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     <FormItem>
                       <FormLabel>{t('settings.school_address')}</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} className="bg-slate-900 border-slate-700 text-white min-h-[100px]" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -251,7 +252,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                             placeholder="0000000000000000" 
                             {...field} 
                             readOnly={lockIpaymuVa}
-                            className={`pr-20 ${lockIpaymuVa ? 'opacity-70 bg-slate-800' : ''}`} 
+                            className={`h-11 pr-20 text-white border-slate-700 ${lockIpaymuVa ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
                           />
                           <div className="absolute right-2 flex items-center space-x-1">
                             <button
@@ -288,7 +289,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                             type={showIpaymuKey ? "text" : "password"} 
                             {...field} 
                             readOnly={lockIpaymu}
-                            className={`pr-20 ${lockIpaymu ? 'opacity-70 bg-slate-800' : ''}`} 
+                            className={`h-11 pr-20 text-white border-slate-700 ${lockIpaymu ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
                           />
                           <div className="absolute right-2 flex items-center space-x-1">
                             <button
@@ -456,7 +457,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.wa_url')}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} />
+                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.wa_url_desc')}</FormDescription>
                         <FormMessage />
@@ -476,7 +477,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                               placeholder={t('settings.token_placeholder') || "Token keamanan (opsional)"} 
                               {...field} 
                               readOnly={lockWa}
-                              className={`pr-20 ${lockWa ? 'opacity-70 bg-slate-800' : ''}`} 
+                              className={`h-11 pr-20 text-white border-slate-700 ${lockWa ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
                             />
                             <div className="absolute right-2 flex items-center space-x-1">
                               <button
@@ -516,7 +517,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                   <CardDescription>{t('settings.early_reminder_desc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-6">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="spp_early_reminder_day"
@@ -526,7 +527,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                           <FormControl>
                             <select 
                               {...field}
-                              className="flex h-10 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="flex h-11 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-white"
                             >
                               {[...Array(31)].map((_, i) => (
                                 <option key={i+1} value={(i+1).toString()}>{t('settings.date')} {i+1}</option>
@@ -545,7 +546,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormItem>
                           <FormLabel>{t('settings.send_time')}</FormLabel>
                           <FormControl>
-                            <Input type="time" className="bg-slate-900 border-slate-700" {...field} />
+                            <Input type="time" className="bg-slate-900 border-slate-700 text-white h-11 block w-full" {...field} />
                           </FormControl>
                           <FormDescription>{t('settings.time_desc')}</FormDescription>
                           <FormMessage />
@@ -562,7 +563,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormLabel>{t('settings.early_template')}</FormLabel>
                         <FormControl>
                           <Textarea 
-                            className="min-h-[120px] bg-slate-900 border-slate-700" 
+                            className="min-h-[120px] bg-slate-900 border-slate-700 text-white" 
                             {...field} 
                           />
                         </FormControl>
@@ -583,7 +584,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                   <CardDescription>{t('settings.arrears_desc')}</CardDescription>
                 </CardHeader>
               <CardContent className="space-y-4 pt-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="spp_reminder_day"
@@ -593,7 +594,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormControl>
                           <select 
                             {...field}
-                            className="flex h-10 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-11 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50 text-white"
                           >
                             <option value="Setiap Hari">{t('settings.every_day')}</option>
                             {[...Array(31)].map((_, i) => (
@@ -613,7 +614,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.arrears_time')}</FormLabel>
                         <FormControl>
-                          <Input type="time" className="bg-slate-900 border-slate-700" {...field} />
+                          <Input type="time" className="bg-slate-900 border-slate-700 text-white h-11 block w-full" {...field} />
                         </FormControl>
                         <FormDescription>{t('settings.time_desc')}</FormDescription>
                         <FormMessage />
@@ -630,7 +631,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormLabel>{t('settings.wa_template')}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          className="min-h-[150px] bg-slate-900 border-slate-700" 
+                          className="min-h-[150px] bg-slate-900 border-slate-700 text-white" 
                           {...field} 
                         />
                       </FormControl>

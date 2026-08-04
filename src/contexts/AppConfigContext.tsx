@@ -23,6 +23,10 @@ export function AppConfigProvider({
     (initialTipeBisnis as BusinessType) || ""
   );
 
+  React.useEffect(() => {
+    setTipeBisnisState((initialTipeBisnis as BusinessType) || "");
+  }, [initialTipeBisnis]);
+
   const setTipeBisnis = (type: BusinessType) => {
     setTipeBisnisState(type);
   };
