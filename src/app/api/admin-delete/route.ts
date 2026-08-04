@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { pengaturan, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export async function GET(req: Request) {
   try {
@@ -12,19 +12,18 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: false, error: "Nomor WA tidak diberikan" }, { status: 400 });
     }
 
-    // Ambil nomor WA Owner dari database
-    const ownerWaData = await db.select().from(pengaturan).where(eq(pengaturan.kunci, "OWNER_WA"));
-    const ownerWa = ownerWaData.length > 0 ? ownerWaData[0].nilai : "";
-
-    // Pastikan nomor yang mau dihapus cocok dengan nomor owner, 
-    // jika iya, maka kita hapus seluruh datanya untuk memaksa sistem kembali ke layar pendaftaran putih.
-    if (ownerWa && ownerWa === noWa) {
-       await db.delete(users);
-       await db.delete(pengaturan).where(eq(pengaturan.kunci, "OWNER_WA"));
-       await db.delete(pengaturan).where(eq(pengaturan.kunci, "OWNER_NAMA"));
-       return NextResponse.json({ success: true, message: "Klien berhasil didepak dari Vercel/Turso. Sistem akan kembali ke layar Setup putih." });
+    // Ambil nomor WA Owner dari database untuk mencari tenantId
+    const ownerWaData = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, noWa)));
+    
+    if (ownerWaData.length > 0) {
+       const tenantId = ownerWaData[0].tenantId;
+       // Hapus seluruh data users dan pengaturan HANYA untuk tenant tersebut
+       await db.delete(users).where(eq(users.tenantId, tenantId));
+       await db.delete(pengaturan).where(eq(pengaturan.tenantId, tenantId));
+       
+       return NextResponse.json({ success: true, message: `Klien dengan nomor ${noWa} berhasil dihapus konfigurasinya dari sistem. Data santri tetap aman.` });
     } else {
-       return NextResponse.json({ success: false, message: "Nomor WA tidak cocok dengan Owner, tidak ada yang dihapus." });
+       return NextResponse.json({ success: false, message: "Nomor WA tidak cocok dengan Owner manapun, tidak ada yang dihapus." });
     }
 
   } catch (error: any) {

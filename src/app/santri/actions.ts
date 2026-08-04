@@ -2,8 +2,9 @@
 
 import { db } from "@/db";
 import { santri, transaksi } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getServerTenantId } from "@/server/auth";
 
 export type Santri = {
   id: number;
@@ -19,7 +20,10 @@ export type Santri = {
 
 export async function getSantri() {
   try {
-    const data = await db.select().from(santri).orderBy(desc(santri.createdAt));
+    const tenantId = await getServerTenantId();
+    if (!tenantId) return [];
+
+    const data = await db.select().from(santri).where(eq(santri.tenantId, tenantId)).orderBy(desc(santri.createdAt));
     return data;
   } catch (error) {
     console.error("Gagal mengambil data santri dari DB:", error);
@@ -36,8 +40,11 @@ export async function addSantri(data: {
   nominal_spp?: number;
 }) {
   try {
+    const tenantId = await getServerTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
     await db.insert(santri).values({
-      tenantId: "tenant-1",
+      tenantId: tenantId,
       nis: data.nis,
       nama: data.nama,
       kelas: data.kelas,
@@ -63,7 +70,10 @@ export async function updateSantri(id: number, data: {
   nominal_spp?: number;
 }) {
   try {
-    const existing = await db.select().from(santri).where(eq(santri.id, id));
+    const tenantId = await getServerTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
+    const existing = await db.select().from(santri).where(and(eq(santri.id, id), eq(santri.tenantId, tenantId)));
     if (existing.length === 0) {
       return { success: false, message: "Santri tidak ditemukan" };
     }
@@ -82,7 +92,7 @@ export async function updateSantri(id: number, data: {
       no_wa: data.no_wa,
       nominal_spp: newSpp,
       saldo: newSaldo,
-    }).where(eq(santri.id, id));
+    }).where(and(eq(santri.id, id), eq(santri.tenantId, tenantId)));
     revalidatePath("/santri");
     return { success: true };
   } catch (error: any) {
@@ -92,7 +102,10 @@ export async function updateSantri(id: number, data: {
 
 export async function deleteSantri(id: number) {
   try {
-    await db.delete(santri).where(eq(santri.id, id));
+    const tenantId = await getServerTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
+    await db.delete(santri).where(and(eq(santri.id, id), eq(santri.tenantId, tenantId)));
     revalidatePath("/santri");
     return { success: true };
   } catch (error: any) {

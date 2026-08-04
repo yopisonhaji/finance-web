@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { santri } from "@/db/schema"
+import { getServerTenantId } from "@/server/auth"
 
 export async function POST(req: Request) {
   try {
+    const tenantId = await getServerTenantId();
+    if (!tenantId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const data = await req.json()
 
     if (!Array.isArray(data)) {
@@ -30,7 +36,7 @@ export async function POST(req: Request) {
         }
 
         await db.insert(santri).values({
-          tenantId: 'default',
+          tenantId: tenantId,
           nis: String(item.nis),
           nama: String(item.nama),
           kelas: item.kelas ? String(item.kelas) : null,

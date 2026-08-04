@@ -41,10 +41,13 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     }
 
     // 2. Jika aman (belum terdaftar) ATAU kita memaksa simpan ke lokal
+    // Buat Tenant ID unik untuk akun baru ini (Arsitektur Multi-Tenant)
+    const newTenantId = crypto.randomUUID();
+
     await db.insert(pengaturan).values([
-      { tenantId: "tenant-1", kunci: "OWNER_NAMA", nilai: nama },
-      { tenantId: "tenant-1", kunci: "OWNER_WA", nilai: noWa },
-      { tenantId: "tenant-1", kunci: "TIPE_BISNIS", nilai: tipeBisnis || "PENDIDIKAN" }
+      { tenantId: newTenantId, kunci: "OWNER_NAMA", nilai: nama },
+      { tenantId: newTenantId, kunci: "OWNER_WA", nilai: noWa },
+      { tenantId: newTenantId, kunci: "TIPE_BISNIS", nilai: tipeBisnis || "PENDIDIKAN" }
     ]);
 
     // 3. Simpan User untuk Login
@@ -53,14 +56,14 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
       
       try {
         await db.insert(users).values({
-          tenantId: "tenant-1",
+          tenantId: newTenantId,
           email: email, // email digunakan sebagai username
           firebaseUid: firebaseUid,
           namaSekolah: nama,
           role: "SUPER_ADMIN"
         });
-      } catch (e: any) {
-        console.error("Gagal insert user:", e);
+      } catch (err: any) {
+        // Abaikan error jika sudah ada di DB lokal
       }
 
       // 4. Kirim notifikasi ke Telegram (Opsional, asumsikan bot token disediakan lewat env)
@@ -87,9 +90,10 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     }
     
     // Clear cache agar layout di-render ulang
-    revalidatePath("/", "layout");
+    revalidatePath("/");
+    revalidatePath("/settings");
     
-    return { success: true };
+    return { success: true, tenantId: newTenantId };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

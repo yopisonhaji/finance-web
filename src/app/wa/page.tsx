@@ -77,17 +77,17 @@ export default function StatusWAPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Terminal WhatsApp</h1>
-        <p className="text-slate-500 mt-2">
+        <h1 className="text-3xl font-bold tracking-tight text-white">Terminal WhatsApp</h1>
+        <p className="text-slate-400 mt-2">
           Hubungkan sistem dengan WhatsApp menggunakan metode modern (Pairing Code).
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Panel Kiri: Form Pairing */}
-        <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-900">
-          <CardHeader className="bg-blue-50/50 dark:bg-blue-900/10 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <CardTitle className="flex items-center text-blue-700 dark:text-blue-400">
+        <Card className="border-slate-800 shadow-xl bg-[#0f172a]">
+          <CardHeader className="bg-blue-900/10 pb-4 border-b border-slate-800">
+            <CardTitle className="flex items-center text-blue-400">
               <Smartphone className="mr-2 h-5 w-5" />
               Tautkan Perangkat
             </CardTitle>
@@ -119,13 +119,13 @@ export default function StatusWAPage() {
             ) : (
               <form onSubmit={handlePairing} className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor WhatsApp Bot</label>
+                  <label className="text-sm font-semibold text-slate-300">Nomor WhatsApp Bot</label>
                   <Input 
                     type="text" 
                     placeholder="Contoh: 628123456789 (Gunakan 62)" 
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
-                    className="h-12 text-lg font-medium bg-slate-50 dark:bg-slate-900/50"
+                    className="h-12 text-lg font-medium bg-slate-900 border-slate-700 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <Button 
@@ -141,20 +141,20 @@ export default function StatusWAPage() {
         </Card>
 
         {/* Panel Kanan: Status Mesin */}
-        <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-900">
+        <Card className="border-slate-800 shadow-xl bg-[#0f172a]">
           <CardHeader>
-            <CardTitle>Status Mesin Golang</CardTitle>
-            <CardDescription>Sistem backend ringan & anti-blokir</CardDescription>
+            <CardTitle className="text-white">Status Mesin Golang</CardTitle>
+            <CardDescription className="text-slate-400">Sistem backend ringan & anti-blokir</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className={`p-4 rounded-xl border flex items-center justify-between ${status === 'connected' ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800' : 'bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800'}`}>
+            <div className={`p-4 rounded-xl border flex items-center justify-between ${status === 'connected' ? 'bg-emerald-900/20 border-emerald-800' : 'bg-rose-900/20 border-rose-800'}`}>
               <div className="flex items-center gap-3">
-                {status === "connected" ? <Wifi className="h-6 w-6 text-emerald-600" /> : <WifiOff className="h-6 w-6 text-rose-600" />}
+                {status === "connected" ? <Wifi className="h-6 w-6 text-emerald-500" /> : <WifiOff className="h-6 w-6 text-rose-500" />}
                 <div>
-                  <h4 className={`font-bold ${status === 'connected' ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
+                  <h4 className={`font-bold ${status === 'connected' ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {status === 'connected' ? 'Modul Terkoneksi' : 'Menunggu Sesi'}
                   </h4>
-                  <p className="text-sm text-slate-500 mt-0.5">Proxy IPRoyal Aktif</p>
+                  <p className="text-sm text-slate-400 mt-0.5">Proxy IPRoyal Aktif</p>
                 </div>
               </div>
             </div>

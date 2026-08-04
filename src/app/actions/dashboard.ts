@@ -3,11 +3,15 @@
 import { db } from "@/db";
 import { santri, transaksi } from "@/db/schema";
 import { eq, and, like } from "drizzle-orm";
+import { getServerTenantId } from "@/server/auth";
 
 export async function getDashboardStats() {
   try {
+    const tenantId = await getServerTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
     // 1. Total Santri
-    const santriData = await db.select().from(santri);
+    const santriData = await db.select().from(santri).where(eq(santri.tenantId, tenantId));
     const totalSantri = santriData.length;
 
     // 2. Total Kekurangan (Hanya dihitung dari santri yang BELUM_BAYAR / belum LUNAS)
@@ -29,6 +33,7 @@ export async function getDashboardStats() {
       .from(transaksi)
       .where(
         and(
+          eq(transaksi.tenantId, tenantId),
           eq(transaksi.status, 'LUNAS'),
           like(transaksi.createdAt, `${todayStr}%`)
         )

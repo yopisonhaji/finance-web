@@ -4,7 +4,7 @@
 
 import { db } from "@/db";
 import { pengaturan } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
 
 function getTimestamp() {
@@ -13,10 +13,12 @@ function getTimestamp() {
   return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 }
 
-export async function generatePaymentLink(orderId: string, amount: number, customer: { name: string, phone: string }, method?: string) {
+export async function generatePaymentLink(orderId: string, amount: number, customer: { name: string, phone: string }, method?: string, tenantId?: string) {
   try {
-    const vaConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'ipaymu_va'));
-    const apiKeyConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'ipaymu_key'));
+    if (!tenantId) return { success: false, message: "Error: Tenant ID is missing" };
+
+    const vaConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_va'), eq(pengaturan.tenantId, tenantId)));
+    const apiKeyConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_key'), eq(pengaturan.tenantId, tenantId)));
     
     const va = vaConfig[0]?.nilai;
     const apiKey = apiKeyConfig[0]?.nilai;

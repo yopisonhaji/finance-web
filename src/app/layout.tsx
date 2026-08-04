@@ -18,19 +18,25 @@ import { Input } from "@/components/ui/input";
 
 import { db } from "@/db";
 import { pengaturan, users } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, and } from "drizzle-orm";
+import { getServerTenantId } from "@/server/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settingsData = await db
-    .select()
-    .from(pengaturan)
-    .where(eq(pengaturan.kunci, "nama_pesantren"));
-    
-  const namaLembaga = settingsData.length > 0 ? settingsData[0].nilai : "Finance";
+  const tenantId = await getServerTenantId();
+  let namaLembaga = "Finance";
+
+  if (tenantId) {
+    const settingsData = await db
+      .select()
+      .from(pengaturan)
+      .where(and(eq(pengaturan.kunci, "nama_pesantren"), eq(pengaturan.tenantId, tenantId)));
+      
+    if (settingsData.length > 0) namaLembaga = settingsData[0].nilai;
+  }
 
   return {
     title: `${namaLembaga} AI`,
@@ -43,10 +49,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settingsData = await db
-    .select()
-    .from(pengaturan)
-    .where(inArray(pengaturan.kunci, ["nama_pesantren", "alamat", "deepseek_key", "OWNER_NAMA", "OWNER_WA", "TIPE_BISNIS"]));
+  const tenantId = await getServerTenantId();
+  
+  let settingsData: any[] = [];
+  if (tenantId) {
+    settingsData = await db
+      .select()
+      .from(pengaturan)
+      .where(and(inArray(pengaturan.kunci, ["nama_pesantren", "alamat", "deepseek_key", "OWNER_NAMA", "OWNER_WA", "TIPE_BISNIS"]), eq(pengaturan.tenantId, tenantId)));
+  }
     
   let namaLembaga = "Finance";
   let alamatLembaga = "";
@@ -57,25 +68,9 @@ export default async function RootLayout({
   let tipeBisnis = "";
   
   const usersData = await db.select().from(users);
-  const hasUsers = usersData.length > 0;
-  
-  settingsData.forEach((s) => {
-    if (s.kunci === "nama_pesantren") namaLembaga = s.nilai;
-    if (s.kunci === "alamat") alamatLembaga = s.nilai;
-    if (s.kunci === "deepseek_key" && s.nilai && s.nilai.length > 5) hasAiKey = true;
-    if (s.kunci === "OWNER_NAMA" && s.nilai) {
-      isOwnerSet = true;
-      ownerName = s.nilai;
-    }
-    if (s.kunci === "OWNER_WA" && s.nilai) {
-      isWaSet = true;
-    }
-    if (s.kunci === "TIPE_BISNIS") tipeBisnis = s.nilai;
-  });
+  const isFreshInstall = usersData.length === 0;
 
-  const isActivated = isOwnerSet && isWaSet && hasUsers;
-
-  if (!isActivated) {
+  if (isFreshInstall) {
     return (
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} min-h-screen bg-slate-50 antialiased`}>

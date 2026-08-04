@@ -4,11 +4,12 @@
 
 import { db } from "@/db";
 import { pengaturan, santri } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
-export async function processAIResponse(message: string, sender: string, santriData: any): Promise<{text: string, broadcasts?: any[]}> {
-  const settings = await db.select().from(pengaturan);
+export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string): Promise<{text: string, broadcasts?: any[]}> {
+  if (!tenantId) return { text: "Error: Tenant ID is missing" };
+  const settings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId));
   const getSetting = (key: string) => settings.find(s => s.kunci === key)?.nilai || "";
   
   const aiKey = getSetting("deepseek_key");
@@ -175,11 +176,11 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
 
   async function updateUsage(usedTokens: number) {
     tokenUsage += usedTokens;
-    const existing = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'token_usage'));
+    const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'token_usage'), eq(pengaturan.tenantId, tenantId)));
     if (existing.length > 0) {
-      await db.update(pengaturan).set({ nilai: String(tokenUsage) }).where(eq(pengaturan.kunci, 'token_usage'));
+      await db.update(pengaturan).set({ nilai: String(tokenUsage) }).where(and(eq(pengaturan.kunci, 'token_usage'), eq(pengaturan.tenantId, tenantId)));
     } else {
-      await db.insert(pengaturan).values({ tenantId: 'default', kunci: 'token_usage', nilai: String(tokenUsage) });
+      await db.insert(pengaturan).values({ tenantId: tenantId, kunci: 'token_usage', nilai: String(tokenUsage) });
     }
   }
 
@@ -228,7 +229,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         let toolResult = "";
         
         if (toolCall.function.name === "get_rekap_keuangan") {
-          const allSantri = await db.select().from(santri);
+          const allSantri = await db.select().from(santri).where(eq(santri.tenantId, tenantId));
           const totalSaldo = allSantri.reduce((acc, s) => acc + (s.saldo || 0), 0);
           const santriNunggak = allSantri.filter(s => s.status_bulan_ini === 'BELUM_BAYAR');
           const nunggakCount = santriNunggak.length;
@@ -248,7 +249,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           const { nama, nis, kelas, nama_wali, no_wa, nominal_spp } = args as any;
           try {
             await db.insert(santri).values({
-              tenantId: 'default',
+              tenantId: tenantId,
               nama: nama,
               nis: nis,
               kelas: kelas || "",
@@ -266,7 +267,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         else if (toolCall.function.name === "cari_data_santri") {
           const { keyword } = args as any;
           try {
-            const allSantri = await db.select().from(santri);
+            const allSantri = await db.select().from(santri).where(eq(santri.tenantId, tenantId));
             const found = allSantri.filter(s => 
               s.nama.toLowerCase().includes((keyword || "").toLowerCase()) || 
               s.nis === keyword
@@ -285,14 +286,14 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
             toolResult = JSON.stringify({ success: false, error: err.message });
           }
         }
-        else if (toolCall.function.name === "kirim_pengingat_tagihan") {
+        else if (toolCall.function.name === "kirim_broadcast_tagihan") {
           const { target, pesan_tambahan } = args as any;
           try {
             let targetSantri = [];
             if (target.toLowerCase() === "semua") {
-              targetSantri = await db.select().from(santri).where(eq(santri.status_bulan_ini, "BELUM_BAYAR"));
+              targetSantri = await db.select().from(santri).where(and(eq(santri.status_bulan_ini, "BELUM_BAYAR"), eq(santri.tenantId, tenantId)));
             } else {
-              targetSantri = await db.select().from(santri).where(eq(santri.status_bulan_ini, "BELUM_BAYAR"));
+              targetSantri = await db.select().from(santri).where(and(eq(santri.status_bulan_ini, "BELUM_BAYAR"), eq(santri.tenantId, tenantId)));
               targetSantri = targetSantri.filter(s => s.nama.toLowerCase().includes(target.toLowerCase()) || s.nis === target);
             }
             
@@ -341,7 +342,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
               else if (m === '3' || m === 'cstore' || m.includes('indo')) paymentMethod = 'cstore';
             }
 
-            const linkRes = await generatePaymentLink(orderId, amount, customer, paymentMethod);
+            const linkRes = await generatePaymentLink(orderId, amount, customer, paymentMethod, tenantId);
             if (linkRes.success) {
               if (linkRes.directData) {
                  const d = linkRes.directData;

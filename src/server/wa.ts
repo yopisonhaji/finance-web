@@ -3,14 +3,17 @@
 
 
 import { db } from "@/db";
-import { pengaturan } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import jwt from "jsonwebtoken";
+import { getServerTenantId } from "./auth";
 
 export async function sendWaMessage(noWa: string, messageText: string) {
   try {
-    const urlConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_url'));
-    const tokenConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_token'));
+    const tenantId = await getServerTenantId();
+    if (!tenantId) return { success: false, message: "Unauthorized" };
+
+    const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
+    const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
     
     const url = urlConfig[0]?.nilai || "http://localhost:8080/send";
     const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
@@ -43,8 +46,11 @@ export async function sendWaMessage(noWa: string, messageText: string) {
 
 export async function requestWaPairing(phone: string) {
   try {
-    const urlConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_url'));
-    const tokenConfig = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'wa_bot_token'));
+    const tenantId = await getServerTenantId();
+    if (!tenantId) return { success: false, message: "Unauthorized" };
+
+    const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
+    const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
     
     // Asumsi URL pairing adalah base_url diganti /send jadi /api/wa/pairing
     const rawUrl = urlConfig[0]?.nilai || "http://localhost:8080/send";

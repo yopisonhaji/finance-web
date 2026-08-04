@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { pengaturan, santri } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or, and } from "drizzle-orm";
 import { processAIResponse } from "@/server/ai";
 
 export async function POST(req: Request) {
@@ -23,11 +23,38 @@ export async function POST(req: Request) {
 
     console.log(`[Webhook WA] Pesan masuk dari ${sender}: ${message}`);
 
-    // Cek apakah pengirim adalah wali santri
-    const santriData = await db.select().from(santri).where(eq(santri.no_wa, sender));
-    
-    // Dapatkan API Key dan pengaturan
-    const settings = await db.select().from(pengaturan);
+    // Coba cari tenantId berdasarkan pengirim
+    let tenantId = null;
+
+    // 1. Coba cari di pengaturan (Apakah ini Owner/Kepsek/Admin?)
+    const adminData = await db.select().from(pengaturan).where(
+      and(
+        or(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.kunci, "ADMIN_WA"), eq(pengaturan.kunci, "KEPSEK_WA")),
+        eq(pengaturan.nilai, sender)
+      )
+    );
+    if (adminData.length > 0) {
+      tenantId = adminData[0].tenantId;
+    }
+
+    // 2. Coba cari di tabel santri (Apakah ini Wali Santri?)
+    let santriData: any[] = [];
+    if (!tenantId) {
+      santriData = await db.select().from(santri).where(eq(santri.no_wa, sender));
+      if (santriData.length > 0) {
+        tenantId = santriData[0].tenantId;
+      }
+    } else {
+      santriData = await db.select().from(santri).where(and(eq(santri.no_wa, sender), eq(santri.tenantId, tenantId)));
+    }
+
+    if (!tenantId) {
+       console.log(`[Webhook WA] Mengabaikan pesan dari ${sender} karena tidak ditemukan di tenant manapun.`);
+       return NextResponse.json({ success: true, reply: null, reason: "Nomor tidak terdaftar di sistem." });
+    }
+
+    // Dapatkan API Key dan pengaturan khusus untuk tenant ini
+    const settings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId));
     const getSetting = (key: string) => settings.find(s => s.kunci === key)?.nilai || "";
     
     const waUrl = getSetting("wa_bot_url");
@@ -35,7 +62,7 @@ export async function POST(req: Request) {
     const aiTargetReply = getSetting("ai_target_reply") || "all";
     
     // Cek privilege (Admin/Owner)
-    const kepsekWa = normalizeWA(getSetting("KEPSEK_WA"));
+    const kepsekWa = normalizeWA(getSetting("KEPSEK_WA") || getSetting("OWNER_WA"));
     const adminWa = normalizeWA(getSetting("ADMIN_WA"));
     const isPrivileged = (kepsekWa && sender === kepsekWa) || 
                          (adminWa && sender === adminWa);
@@ -46,7 +73,7 @@ export async function POST(req: Request) {
     }
     
     // Panggil AI
-    const aiResult = await processAIResponse(message, sender, santriData.length > 0 ? santriData[0] : null);
+    const aiResult = await processAIResponse(message, sender, santriData.length > 0 ? santriData[0] : null, tenantId);
     const replyText = aiResult.text;
     const broadcasts = aiResult.broadcasts;
     

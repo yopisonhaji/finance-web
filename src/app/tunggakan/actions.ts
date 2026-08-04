@@ -4,20 +4,27 @@
 
 import { db } from "@/db"
 import { santri } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, and } from "drizzle-orm"
+import { getServerTenantId } from "@/server/auth"
 
 
 export type SantriTunggakan = typeof santri.$inferSelect
 
 export async function getTunggakan() {
-  return await db.select().from(santri).where(eq(santri.status_bulan_ini, 'BELUM_BAYAR')).orderBy(santri.nama)
+  const tenantId = await getServerTenantId();
+  if (!tenantId) return [];
+
+  return await db.select().from(santri).where(and(eq(santri.status_bulan_ini, 'BELUM_BAYAR'), eq(santri.tenantId, tenantId))).orderBy(santri.nama)
 }
 
 export async function tandaiLunas(santriId: number) {
   try {
+    const tenantId = await getServerTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
     await db.update(santri)
       .set({ status_bulan_ini: 'LUNAS', updatedAt: new Date().toISOString() })
-      .where(eq(santri.id, santriId))
+      .where(and(eq(santri.id, santriId), eq(santri.tenantId, tenantId)))
     
     
     

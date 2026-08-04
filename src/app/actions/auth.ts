@@ -9,7 +9,7 @@ export async function verifyLogin(email: string, firebaseUid: string) {
     const userList = await db.select().from(users).where(eq(users.email, email));
     
     if (userList.length > 0) {
-      return { success: true, token: firebaseUid };
+      return { success: true, token: userList[0].tenantId };
     }
     
     return { success: false, error: "Akun Google ini tidak terdaftar di sistem. Gunakan akun yang sama dengan saat pendaftaran." };
