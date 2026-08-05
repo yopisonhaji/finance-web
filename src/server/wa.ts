@@ -3,6 +3,7 @@
 
 
 import { db } from "@/db";
+import { pengaturan } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import { getServerTenantId } from "./auth";
