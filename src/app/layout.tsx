@@ -67,6 +67,17 @@ export default async function RootLayout({
   let ownerName = "Admin";
   let tipeBisnis = "";
   
+  if (settingsData && settingsData.length > 0) {
+    settingsData.forEach(setting => {
+      if (setting.kunci === "nama_pesantren") namaLembaga = setting.nilai;
+      if (setting.kunci === "alamat") alamatLembaga = setting.nilai;
+      if (setting.kunci === "deepseek_key") hasAiKey = !!setting.nilai;
+      if (setting.kunci === "OWNER_NAMA") ownerName = setting.nilai;
+      if (setting.kunci === "OWNER_WA") isWaSet = !!setting.nilai;
+      if (setting.kunci === "TIPE_BISNIS") tipeBisnis = setting.nilai;
+    });
+  }
+  
   const usersData = await db.select().from(users);
   const isFreshInstall = usersData.length === 0;
 

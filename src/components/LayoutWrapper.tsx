@@ -104,7 +104,7 @@ export function LayoutWrapper({
             <div className="hidden sm:block">
               <UpdateButton />
             </div>
-            <div className="hidden lg:block">
+            <div className="block">
               <CurrentDate />
             </div>
             <LanguageSwitcher />

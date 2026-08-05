@@ -46,6 +46,7 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
 
     await db.insert(pengaturan).values([
       { tenantId: newTenantId, kunci: "OWNER_NAMA", nilai: nama },
+      { tenantId: newTenantId, kunci: "nama_pesantren", nilai: nama },
       { tenantId: newTenantId, kunci: "OWNER_WA", nilai: noWa },
       { tenantId: newTenantId, kunci: "TIPE_BISNIS", nilai: tipeBisnis || "PENDIDIKAN" }
     ]);
