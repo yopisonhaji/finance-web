@@ -54,17 +54,14 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     if (email && firebaseUid) {
       const { users } = await import("@/db/schema");
       
-      try {
-        await db.insert(users).values({
-          tenantId: newTenantId,
-          email: email, // email digunakan sebagai username
-          firebaseUid: firebaseUid,
-          namaSekolah: nama,
-          role: "SUPER_ADMIN"
-        });
-      } catch (err: any) {
-        // Abaikan error jika sudah ada di DB lokal
-      }
+      // Hapus try-catch agar jika error, fungsi me-return error yang sesungguhnya!
+      await db.insert(users).values({
+        tenantId: newTenantId,
+        email: email, // email digunakan sebagai username
+        firebaseUid: firebaseUid,
+        namaSekolah: nama,
+        role: "SUPER_ADMIN"
+      });
 
       // 4. Kirim notifikasi ke Telegram (Opsional, asumsikan bot token disediakan lewat env)
       const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
