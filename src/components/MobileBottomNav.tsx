@@ -37,11 +37,11 @@ export function MobileBottomNav() {
           {/* Nav Items Left */}
           <div className="flex w-2/5 justify-around">
             <Link href={navItems[0].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <navItems[0].icon className={`w-6 h-6 ${pathname === navItems[0].url ? 'text-blue-500' : 'text-slate-400'}`} />
+              <LayoutDashboard className={`w-6 h-6 ${pathname === navItems[0].url ? 'text-blue-500' : 'text-slate-400'}`} />
               <span className={`text-[10px] font-medium ${pathname === navItems[0].url ? 'text-blue-500' : 'text-slate-400'}`}>Beranda</span>
             </Link>
             <Link href={navItems[1].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <navItems[1].icon className={`w-6 h-6 ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-blue-500' : 'text-slate-400'}`} />
+              <Users className={`w-6 h-6 ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-blue-500' : 'text-slate-400'}`} />
               <span className={`text-[10px] font-medium ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-blue-500' : 'text-slate-400'}`}>Siswa</span>
             </Link>
           </div>
@@ -57,7 +57,7 @@ export function MobileBottomNav() {
           {/* Nav Items Right */}
           <div className="flex w-2/5 justify-around">
             <Link href={navItems[2].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <navItems[2].icon className={`w-6 h-6 ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-blue-500' : 'text-slate-400'}`} />
+              <FileText className={`w-6 h-6 ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-blue-500' : 'text-slate-400'}`} />
               <span className={`text-[10px] font-medium ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-blue-500' : 'text-slate-400'}`}>Tagihan</span>
             </Link>
             <button onClick={() => setIsDrawerOpen(true)} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1 bg-transparent border-none">
