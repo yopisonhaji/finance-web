@@ -126,13 +126,13 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
       <SidebarHeader className="p-4 bg-[var(--color-dash-bg)] border-b border-slate-800/60">
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-500/50 shadow-sm flex items-center justify-center bg-white flex-shrink-0">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src="/logo-finance.png" alt="Logo" className="w-full h-full object-contain p-1" />
           </div>
           <div className="group-data-[collapsible=icon]:hidden">
             <h2 className="text-sm font-bold text-white leading-tight tracking-wide truncate max-w-[150px]">
               {namaPesantren} <span className="text-blue-400 font-bold drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]">AI</span>
             </h2>
-            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5 truncate max-w-[150px]">
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5 leading-tight max-w-[150px] whitespace-normal break-words">
               asisten chat & pay AI 24 jam
             </p>
           </div>
