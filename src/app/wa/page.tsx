@@ -66,30 +66,12 @@ export default function StatusWAPage() {
     // Initial fetch
     fetchStatus()
 
-    // Connect to SSE for real-time updates
-    const eventSource = new EventSource(`${botUrl}/api/events`)
-    
-    eventSource.onmessage = (event) => {
-      try {
-        const parsed = JSON.parse(event.data)
-        if (parsed.type === 'connected') {
-          fetchStatus() // refresh status
-        } else if (parsed.type === 'disconnected') {
-          setStatus('disconnected')
-          setPhone('')
-        } else if (parsed.type === 'message_sent') {
-          console.log("Pesan berhasil terkirim via queue:", parsed.data)
-        }
-      } catch(e) {}
-    }
+    // Poll for status every 3 seconds to update UI automatically
+    const interval = setInterval(() => {
+      fetchStatus()
+    }, 3000)
 
-    eventSource.onerror = () => {
-      console.log("SSE Connection lost. Retrying...")
-    }
-
-    return () => {
-      eventSource.close()
-    }
+    return () => clearInterval(interval)
   }, [])
 
   return (
