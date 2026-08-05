@@ -125,8 +125,8 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
     <Sidebar side={language === 'ar' ? 'right' : 'left'} variant="sidebar" collapsible="icon" className="border-r border-slate-800/60 bg-[var(--color-dash-bg)] hidden md:flex">
       <SidebarHeader className="p-4 bg-[var(--color-dash-bg)] border-b border-slate-800/60">
         <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-500/50 shadow-sm flex items-center justify-center bg-[#1e293b] flex-shrink-0">
-            <UserCircle className="w-6 h-6 text-blue-400" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-500/50 shadow-sm flex items-center justify-center bg-white flex-shrink-0">
+            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <div className="group-data-[collapsible=icon]:hidden">
             <h2 className="text-sm font-bold text-white leading-tight tracking-wide truncate max-w-[150px]">{ownerName}</h2>
