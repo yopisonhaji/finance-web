@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Fingerprint, User, Phone, Sparkles, Building2, GraduationCap, Mail } from "lucide-react";
 import { saveSetupData } from "@/app/actions/setup";
-import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "@/lib/firebase";
+import { useEffect } from "react";
 
 export function SetupScreen() {
   const [nama, setNama] = useState("");
@@ -18,6 +19,23 @@ export function SetupScreen() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth!);
+        if (result) {
+          setEmail(result.user.email || "");
+          setNama(result.user.displayName || "");
+          setFirebaseUid(result.user.uid);
+          setIsGoogleSignedIn(true);
+        }
+      } catch (err: any) {
+        setError("Gagal memproses login: " + err.message);
+      }
+    };
+    checkRedirect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,9 +75,18 @@ export function SetupScreen() {
       setFirebaseUid(result.user.uid);
       setIsGoogleSignedIn(true);
     } catch (err: any) {
-      setError("Gagal login dengan Google: " + err.message);
-    } finally {
-      setLoading(false);
+      if (err.code === "auth/popup-blocked") {
+        setError("Popup diblokir browser, mengalihkan halaman...");
+        try {
+          await signInWithRedirect(auth!, googleProvider);
+        } catch (redirectErr: any) {
+          setError("Gagal mengalihkan halaman: " + redirectErr.message);
+          setLoading(false);
+        }
+      } else {
+        setError("Gagal login dengan Google: " + err.message);
+        setLoading(false);
+      }
     }
   };
 

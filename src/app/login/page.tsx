@@ -1,15 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Wallet, ArrowRight, ShieldCheck } from "lucide-react";
-import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth!);
+        if (result) {
+          setLoading(true);
+          const email = result.user.email;
+          const firebaseUid = result.user.uid;
+          
+          const { verifyLogin } = await import("@/app/actions/auth");
+          const data = await verifyLogin(email || "", firebaseUid);
+
+          if (data.success) {
+            localStorage.setItem("token", data.token!);
+            document.cookie = `token=${data.token}; path=/; max-age=864000`;
+            router.push("/");
+          } else {
+            setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
+            setLoading(false);
+          }
+        }
+      } catch (err: any) {
+        setError("Gagal memproses login: " + err.message);
+        setLoading(false);
+      }
+    };
+    checkRedirect();
+  }, [router]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -34,9 +63,18 @@ export default function LoginPage() {
         setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
       }
     } catch (err: any) {
-      setError("Terjadi kesalahan saat menghubungi server: " + err.message);
-    } finally {
-      setLoading(false);
+      if (err.code === "auth/popup-blocked") {
+        setError("Popup diblokir browser, mengalihkan ke halaman login...");
+        try {
+          await signInWithRedirect(auth!, googleProvider);
+        } catch (redirectErr: any) {
+          setError("Gagal mengalihkan halaman: " + redirectErr.message);
+          setLoading(false);
+        }
+      } else {
+        setError("Terjadi kesalahan saat menghubungi server: " + err.message);
+        setLoading(false);
+      }
     }
   };
 

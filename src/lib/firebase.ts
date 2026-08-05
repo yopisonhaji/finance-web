@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,4 +15,4 @@ const app = !getApps().length && firebaseConfig.apiKey ? initializeApp(firebaseC
 const auth = firebaseConfig.apiKey ? getAuth(app) : null;
 const googleProvider = new GoogleAuthProvider();
 
-export { app, auth, googleProvider, signInWithPopup, signOut };
+export { app, auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut };
