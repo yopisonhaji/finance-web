@@ -13,8 +13,8 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nama, noWa }),
-        // Timeout 5 detik agar tidak hang jika server down
-        signal: AbortSignal.timeout(5000)
+        // Timeout 15 detik agar memberi waktu pada server pusat (terutama jika ia juga mengirim notif Telegram yang lama)
+        signal: AbortSignal.timeout(15000)
       });
       
       if (response.ok) {
