@@ -74,6 +74,7 @@ export function SetupScreen() {
       setNama(result.user.displayName || "");
       setFirebaseUid(result.user.uid);
       setIsGoogleSignedIn(true);
+      setLoading(false);
     } catch (err: any) {
       if (err.code === "auth/popup-blocked") {
         setError("Popup diblokir browser, mengalihkan halaman...");
