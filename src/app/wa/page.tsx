@@ -102,7 +102,9 @@ export default function StatusWAPage() {
                   <CheckCircle2 className="h-12 w-12" />
                 </div>
                 <h3 className="text-xl font-bold">Terhubung Secara Aman</h3>
-                <p className="text-sm mt-2 font-medium">WhatsApp siap membalas otomatis 24/7</p>
+                <p className="text-sm mt-2 font-medium">
+                  {phone ? `Koneksi berhasil ke nomor: ${phone}` : 'WhatsApp siap membalas otomatis 24/7'}
+                </p>
                 <Button variant="destructive" className="mt-6" onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" /> Keluar (Log Out)
                 </Button>
