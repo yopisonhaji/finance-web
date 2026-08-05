@@ -111,6 +111,7 @@ export function LayoutWrapper({
             <div className="hidden sm:block">
               <AboutApp />
             </div>
+            <HeaderProfile ownerName={ownerName} />
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 animate-page-enter relative">
