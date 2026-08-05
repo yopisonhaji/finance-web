@@ -2,6 +2,7 @@ import { getSantri } from "./actions"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { AddSantriDialog } from "./AddSantriDialog"
+import { SantriMobileList } from "./SantriMobileList"
 import { db } from "@/db"
 import { pengaturan } from "@/db/schema"
 import { eq } from "drizzle-orm"
@@ -26,9 +27,13 @@ export default async function SantriPage() {
         </div>
       </div>
       
-      <div className="flex-1 bg-[#0f172a] text-white rounded-xl border border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
+      {/* Desktop Table View */}
+      <div className="hidden md:block flex-1 bg-[#1e293b] text-white rounded-xl border border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
         <DataTable columns={columns} data={data} />
       </div>
+
+      {/* Mobile Card List View */}
+      <SantriMobileList data={data} />
     </div>
   )
 }

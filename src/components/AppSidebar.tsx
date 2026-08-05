@@ -12,7 +12,6 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar"
 import {
-  LayoutDashboard,
   MessageSquareShare,
   Users,
   Wallet,
@@ -22,7 +21,8 @@ import {
   FileBox,
   KeyRound,
   MessageSquare,
-  RefreshCw
+  RefreshCw,
+  UserCircle
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -30,136 +30,159 @@ import Link from "next/link"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAppConfig } from "@/contexts/AppConfigContext"
 
-const getNavItems = (t: (key: string) => string, clientTerm: string) => [
+const getNavGroups = (t: (key: string) => string, clientTerm: string) => [
   {
-    title: t("sidebar.dashboard"),
-    url: "/",
-    icon: LayoutDashboard,
-    color: "text-blue-400",
-    hoverColor: "group-hover:text-blue-300",
+    title: "UTAMA",
+    items: [
+      {
+        title: "Dashboard",
+        url: "/",
+        icon: LayoutDashboard,
+        color: "text-blue-400",
+        hoverColor: "group-hover:text-blue-300",
+      }
+    ]
   },
   {
-    title: `Data ${clientTerm}`,
-    url: "/santri",
-    icon: Users,
-    color: "text-indigo-400",
-    hoverColor: "group-hover:text-indigo-300",
+    title: "MANAJEMEN DATA",
+    items: [
+      {
+        title: `Direktori Klien/Siswa`,
+        url: "/santri",
+        icon: Users,
+        color: "text-indigo-400",
+        hoverColor: "group-hover:text-indigo-300",
+      }
+    ]
   },
   {
-    title: t("sidebar.arrears"),
-    url: "/tunggakan",
-    icon: FileText,
-    color: "text-rose-400",
-    hoverColor: "group-hover:text-rose-300",
+    title: "KEUANGAN & TRANSAKSI",
+    items: [
+      {
+        title: "Point of Sale (POS)",
+        url: "/kasir",
+        icon: Wallet,
+        color: "text-emerald-400",
+        hoverColor: "group-hover:text-emerald-300",
+      },
+      {
+        title: "Kelola Tagihan",
+        url: "/tunggakan",
+        icon: FileText,
+        color: "text-rose-400",
+        hoverColor: "group-hover:text-rose-300",
+      },
+      {
+        title: "Laporan Keuangan",
+        url: "/laporan",
+        icon: FileBox,
+        color: "text-orange-400",
+        hoverColor: "group-hover:text-orange-300",
+      }
+    ]
   },
   {
-    title: t("sidebar.wa_template"),
-    url: "/template",
-    icon: FileBox,
-    color: "text-orange-400",
-    hoverColor: "group-hover:text-orange-300",
+    title: "OTOMASI & INTEGRASI",
+    items: [
+      {
+        title: "Terminal WhatsApp AI",
+        url: "/wa",
+        icon: MessageSquareShare,
+        color: "text-teal-400",
+        hoverColor: "group-hover:text-teal-300",
+      },
+      {
+        title: "Template Pesan WA",
+        url: "/template",
+        icon: MessageSquare,
+        color: "text-orange-400",
+        hoverColor: "group-hover:text-orange-300",
+      }
+    ]
   },
   {
-    title: t("sidebar.pos"),
-    url: "/kasir",
-    icon: Wallet,
-    color: "text-emerald-400",
-    hoverColor: "group-hover:text-emerald-300",
-  },
-  {
-    title: "WhatsApp Bot", // Intentionally kept for now since it's a specific brand name
-    url: "/wa",
-    icon: MessageSquareShare,
-    color: "text-teal-400",
-    hoverColor: "group-hover:text-teal-300",
-  },
-  {
-    title: t("sidebar.reports"),
-    url: "/laporan",
-    icon: FileText,
-    color: "text-rose-400",
-    hoverColor: "group-hover:text-rose-300",
-  },
-  {
-    title: t("sidebar.settings"),
-    url: "/settings",
-    icon: Settings,
-    color: "text-slate-400",
-    hoverColor: "group-hover:text-slate-300",
-  },
-]
+    title: "SISTEM",
+    items: [
+      {
+        title: "Pengaturan",
+        url: "/settings",
+        icon: Settings,
+        color: "text-slate-400",
+        hoverColor: "group-hover:text-slate-300",
+      }
+    ]
+  }
+];
 
-export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "" }: { namaPesantren?: string, alamatPesantren?: string }) {
+export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ownerName = "Admin" }: { namaPesantren?: string, alamatPesantren?: string, ownerName?: string }) {
   const pathname = usePathname();
   const { t, language } = useLanguage();
   const { clientTerm } = useAppConfig();
-  const items = getNavItems(t, clientTerm);
+  const groups = getNavGroups(t, clientTerm);
 
   return (
-    <Sidebar side={language === 'ar' ? 'right' : 'left'} variant="sidebar" className="border-r border-slate-800/60 bg-[var(--color-dash-bg)] rtl:border-r-0 rtl:border-l">
-      <SidebarHeader className="p-6 bg-[var(--color-dash-bg)]">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-500/50 shadow-sm flex items-center justify-center bg-white flex-shrink-0">
-            <img src="/logo-finance.png" alt="Logo" className="w-full h-full object-contain p-1" />
+    <Sidebar side={language === 'ar' ? 'right' : 'left'} variant="sidebar" collapsible="icon" className="border-r border-slate-800/60 bg-[var(--color-dash-bg)] hidden md:flex">
+      <SidebarHeader className="p-4 bg-[var(--color-dash-bg)] border-b border-slate-800/60">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-500/50 shadow-sm flex items-center justify-center bg-[#1e293b] flex-shrink-0">
+            <UserCircle className="w-6 h-6 text-blue-400" />
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-white leading-tight tracking-wide">{namaPesantren} <span className="text-blue-500">AI</span></h2>
-            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5">Asisten Chat & Pay AI 24 jam</p>
+          <div className="group-data-[collapsible=icon]:hidden">
+            <h2 className="text-sm font-bold text-white leading-tight tracking-wide truncate max-w-[150px]">{ownerName}</h2>
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5 truncate max-w-[150px]">{namaPesantren}</p>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent className="bg-[var(--color-dash-bg)] px-3 pt-2">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-1 mt-1">
-              {items.map((item) => {
-                const isActive = pathname === item.url;
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    {/* @ts-ignore */}
-                    <SidebarMenuButton asChild tooltip={item.title} className="h-auto p-0 hover:bg-transparent">
-                      <Link 
-                        href={item.url} 
-                        className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
-                          isActive 
-                            ? 'bg-blue-500/10 text-white border border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800/30 hover:translate-x-[3px] border border-transparent'
-                        }`}
-                      >
-                        {/* Subtle Highlight inside active item */}
-                        {isActive && (
-                          <>
-                            <div className="absolute inset-0 bg-blue-500/5 rounded-lg"></div>
-                            <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
-                          </>
-                        )}
-                        
-                        {/* Icon Wrapper for 3D feel */}
-                        <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 ${
-                          isActive 
-                            ? 'bg-blue-500/20 text-white border border-blue-500/30' 
-                            : `bg-slate-800/30 ${item.color} group-hover:bg-slate-700/50 ${item.hoverColor}`
-                        }`}>
-                          <item.icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
-                        </div>
-                        
-                        <span className={`relative z-10 font-medium tracking-wide transition-all duration-200 text-[14px] ${isActive ? 'font-semibold text-white' : item.hoverColor}`}>
-                          {item.title}
-                        </span>
-
-                        {/* Right Dot Indicator for Active Item */}
-                        {isActive && (
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-blue-400"></div>
-                        )}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {groups.map((group) => (
+          <SidebarGroup key={group.title} className="group-data-[collapsible=icon]:p-0">
+            <div className="text-[10px] font-bold text-slate-500 mb-2 mt-4 uppercase tracking-wider group-data-[collapsible=icon]:hidden px-2">
+              {group.title}
+            </div>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {group.items.map((item) => {
+                  const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      {/* @ts-ignore */}
+                      <SidebarMenuButton asChild tooltip={item.title} className="h-auto p-0 hover:bg-transparent">
+                        <Link 
+                          href={item.url} 
+                          className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
+                            isActive 
+                              ? 'bg-blue-500/10 text-white border border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
+                              : 'text-slate-400 hover:text-white hover:bg-[#1e293b] border border-transparent'
+                          }`}
+                        >
+                          {isActive && (
+                            <>
+                              <div className="absolute inset-0 bg-blue-500/5 rounded-lg"></div>
+                              <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
+                            </>
+                          )}
+                          
+                          <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 shrink-0 ${
+                            isActive 
+                              ? 'bg-blue-500/20 text-white border border-blue-500/30' 
+                              : `bg-slate-800/30 ${item.color} group-hover:bg-slate-700/50 ${item.hoverColor}`
+                          }`}>
+                            <item.icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
+                          </div>
+                          
+                          <span className={`relative z-10 font-medium tracking-wide transition-all duration-200 text-[13px] group-data-[collapsible=icon]:hidden ${isActive ? 'font-semibold text-white' : item.hoverColor}`}>
+                            {item.title}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="p-4 bg-[var(--color-dash-bg)]">

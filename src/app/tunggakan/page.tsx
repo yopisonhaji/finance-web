@@ -2,6 +2,7 @@ import { getTunggakan } from "./actions"
 import { columns } from "./columns"
 import { DataTable } from "../santri/data-table"
 import { TranslatedText } from "@/components/TranslatedText"
+import { TunggakanMobileList } from "./TunggakanMobileList"
 
 export default async function TunggakanPage() {
   const data = await getTunggakan()
@@ -19,9 +20,13 @@ export default async function TunggakanPage() {
         </div>
       </div>
       
-      <div className="flex-1 bg-[#0f172a] text-white rounded-xl border border-slate-700 shadow-2xl p-6 overflow-hidden">
+      {/* Desktop Table View */}
+      <div className="hidden md:block flex-1 bg-[#1e293b] text-white rounded-xl border border-slate-700 shadow-2xl p-6 overflow-hidden">
         <DataTable columns={columns} data={data} />
       </div>
+
+      {/* Mobile Card List View */}
+      <TunggakanMobileList data={data} />
     </div>
   )
 }
