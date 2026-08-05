@@ -22,7 +22,13 @@ if (!url && isVercel) {
 
 const client = globalForDb.libsqlClient ?? createClient({ 
   url: url || 'file:./finance.db',
-  authToken: process.env.TURSO_AUTH_TOKEN
+  authToken: process.env.TURSO_AUTH_TOKEN,
+  fetch: function (reqUrl: string, init?: RequestInit) {
+    return fetch(reqUrl, {
+      ...init,
+      cache: 'no-store'
+    });
+  }
 });
 
 // Tidak perlu set PRAGMA untuk Serverless Turso (dikelola oleh platform)
