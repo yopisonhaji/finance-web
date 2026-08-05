@@ -13,9 +13,11 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
+  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "https://caulocarpous-nonsubtractively-jackelyn.ngrok-free.dev";
+
   const fetchStatus = async () => {
     try {
-      const res = await fetch("http://localhost:8081/api/wa/status")
+      const res = await fetch(`${botUrl}/api/wa/status`)
       const data = await res.json()
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
@@ -31,7 +33,7 @@ export default function StatusWAPage() {
     setLoading(true);
     setPairingCode("");
     try {
-      const response = await fetch("http://localhost:8081/api/wa/pairing", {
+      const response = await fetch(`${botUrl}/api/wa/pairing`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: inputPhone })
@@ -52,7 +54,7 @@ export default function StatusWAPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8080/api/wa/logout", { method: "POST" });
+      await fetch(`${botUrl}/api/wa/logout`, { method: "POST" });
       setStatus("disconnected");
       setPhone("");
     } catch (e) {
@@ -65,7 +67,7 @@ export default function StatusWAPage() {
     fetchStatus()
 
     // Connect to SSE for real-time updates
-    const eventSource = new EventSource("http://localhost:8080/api/events")
+    const eventSource = new EventSource(`${botUrl}/api/events`)
     
     eventSource.onmessage = (event) => {
       try {
