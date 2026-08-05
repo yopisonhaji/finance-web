@@ -144,7 +144,7 @@ export function DataTable<TData, TValue>({
       <div className="flex flex-col gap-4 py-4">
         <div className="w-full">
           <Input
-            placeholder={t("students.search_placeholder")}
+            placeholder={t("students.search")}
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(String(event.target.value))}
             className="w-full bg-[#0b172a] border-slate-700 text-white focus-visible:ring-blue-500 h-12 rounded-xl text-base"

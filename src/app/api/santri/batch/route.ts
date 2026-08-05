@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { santri } from "@/db/schema"
 import { getServerTenantId } from "@/server/auth"
+import { eq, and } from "drizzle-orm"
 
 export async function POST(req: Request) {
   try {
@@ -35,18 +36,12 @@ export async function POST(req: Request) {
           continue;
         }
 
-        await db.insert(santri).values({
-          tenantId: tenantId,
-          nis: String(item.nis),
-          nama: String(item.nama),
-          kelas: item.kelas ? String(item.kelas) : null,
-          nama_wali: item.nama_wali ? String(item.nama_wali) : null,
-          no_wa: item.no_wa ? String(item.no_wa) : null,
-          saldo: item.saldo ? parseInt(item.saldo, 10) : 0,
-          status_bulan_ini: item.status_bulan_ini ? String(item.status_bulan_ini) : "BELUM_BAYAR",
-        }).onConflictDoUpdate({
-          target: santri.nis,
-          set: {
+        const existing = await db.select().from(santri).where(
+          and(eq(santri.tenantId, tenantId), eq(santri.nis, String(item.nis)))
+        );
+
+        if (existing.length > 0) {
+          await db.update(santri).set({
             nama: String(item.nama),
             kelas: item.kelas ? String(item.kelas) : null,
             nama_wali: item.nama_wali ? String(item.nama_wali) : null,
@@ -54,8 +49,21 @@ export async function POST(req: Request) {
             saldo: item.saldo ? parseInt(item.saldo, 10) : 0,
             status_bulan_ini: item.status_bulan_ini ? String(item.status_bulan_ini) : "BELUM_BAYAR",
             updatedAt: new Date().toISOString()
-          }
-        });
+          }).where(
+            and(eq(santri.tenantId, tenantId), eq(santri.nis, String(item.nis)))
+          );
+        } else {
+          await db.insert(santri).values({
+            tenantId: tenantId,
+            nis: String(item.nis),
+            nama: String(item.nama),
+            kelas: item.kelas ? String(item.kelas) : null,
+            nama_wali: item.nama_wali ? String(item.nama_wali) : null,
+            no_wa: item.no_wa ? String(item.no_wa) : null,
+            saldo: item.saldo ? parseInt(item.saldo, 10) : 0,
+            status_bulan_ini: item.status_bulan_ini ? String(item.status_bulan_ini) : "BELUM_BAYAR",
+          });
+        }
       } catch (e: any) {
         errors.push(`Error NIS ${item.nis}: ${e.message}`);
       }
