@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { requestWaPairing } from "@/server/wa"
 
 export default function StatusWAPage() {
   const [status, setStatus] = useState<string>("disconnected")
@@ -16,7 +15,7 @@ export default function StatusWAPage() {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/wa/status")
+      const res = await fetch("http://localhost:8081/api/wa/status")
       const data = await res.json()
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
@@ -32,16 +31,33 @@ export default function StatusWAPage() {
     setLoading(true);
     setPairingCode("");
     try {
-      const res = await requestWaPairing(inputPhone);
-      if (res.success && res.code) {
-        setPairingCode(res.code);
+      const response = await fetch("http://localhost:8081/api/wa/pairing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: inputPhone })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.code) {
+        setPairingCode(data.code);
       } else {
-        alert(res.message || "Gagal meminta kode");
+        alert(data.error + (data.details ? ` (${data.details})` : ""));
       }
     } catch (e) {
-      alert("Gagal memanggil server action");
+      alert("Gagal memanggil Bot lokal. Pastikan terminal Bot Go sudah berjalan.");
     }
     setLoading(false);
+  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:8080/api/wa/logout", { method: "POST" });
+      setStatus("disconnected");
+      setPhone("");
+    } catch (e) {
+      alert("Gagal logout. Pastikan server Go berjalan.");
+    }
   }
 
   useEffect(() => {
@@ -103,6 +119,9 @@ export default function StatusWAPage() {
                 </div>
                 <h3 className="text-xl font-bold">Terhubung Secara Aman</h3>
                 <p className="text-sm mt-2 font-medium">WhatsApp siap membalas otomatis 24/7</p>
+                <Button variant="destructive" className="mt-6" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" /> Keluar (Log Out)
+                </Button>
               </div>
             ) : pairingCode ? (
               <div className="flex flex-col items-center py-6">

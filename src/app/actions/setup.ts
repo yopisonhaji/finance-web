@@ -6,42 +6,7 @@ import { revalidatePath } from "next/cache";
 
 export async function saveSetupData(nama: string, noWa: string, email?: string, firebaseUid?: string, tipeBisnis?: string) {
   try {
-    // 1. Validasi ke Server Pusat (satujalan.id) agar tidak ada 2 nomor yang sama
-    // Catatan: Pastikan di hosting satujalan.id Anda sudah membuat endpoint ini
-    try {
-      const response = await fetch("https://satujalan.id/api/finance/check-wa.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nama, noWa }),
-        // Timeout 15 detik agar memberi waktu pada server pusat (terutama jika ia juga mengirim notif Telegram yang lama)
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        // Jika server membalas nomor sudah terdaftar
-        // WORKAROUND: Jika user mendaftar namun gagal masuk dashboard karena cache (bug sebelumnya),
-        // nomor mereka sudah terdaftar di server. Kita bisa tetap menyimpannya ke lokal untuk memperbaiki hal ini.
-        // Jika data.isRegistered true, abaikan saja errornya untuk kasus aplikasi lokal ini.
-        if (data.isRegistered) {
-          console.log(`[Peringatan] Nomor ${noWa} sudah ada di server, namun akan tetap disinkronkan ke lokal.`);
-        }
-        
-        // Jika server pusat mengalami error (misal gagal INSERT)
-        if (data.success === false && !data.isRegistered) {
-           return { success: false, error: "Error Server Pusat: " + (data.message || "Gagal menyimpan ke database pusat.") };
-        }
-      } else {
-        // Jika file check-wa.php error 500 (misal salah ketik PHP)
-        const errText = await response.text();
-        return { success: false, error: `Error Server (HTTP ${response.status}): ` + errText.substring(0, 100) };
-      }
-    } catch (e: any) {
-      return { success: false, error: "Gagal menghubungi server pusat satujalan.id: " + e.message };
-    }
-
-    // 2. Jika aman (belum terdaftar) ATAU kita memaksa simpan ke lokal
-    // Buat Tenant ID unik untuk akun baru ini (Arsitektur Multi-Tenant)
+    // 2. Buat Tenant ID unik untuk akun baru ini (Arsitektur Multi-Tenant)
     const newTenantId = crypto.randomUUID();
 
     await db.insert(pengaturan).values([

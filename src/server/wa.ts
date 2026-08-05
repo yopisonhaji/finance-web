@@ -16,7 +16,8 @@ export async function sendWaMessage(noWa: string, messageText: string) {
     const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
     const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
     
-    const url = urlConfig[0]?.nilai || "http://localhost:8080/send";
+    let url = urlConfig[0]?.nilai || "http://127.0.0.1:8080/api/wa/send";
+    url = url.replace("localhost", "127.0.0.1");
     const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
     
     // Generate JWT token
@@ -52,10 +53,14 @@ export async function requestWaPairing(phone: string) {
 
     const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
     const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
-    
     // Asumsi URL pairing adalah base_url diganti /send jadi /api/wa/pairing
-    const rawUrl = urlConfig[0]?.nilai || "http://localhost:8080/send";
-    const pairingUrl = rawUrl.replace("/send", "/api/wa/pairing");
+    let rawUrl = urlConfig[0]?.nilai || "http://127.0.0.1:8081/api/wa/send";
+    rawUrl = rawUrl.replace("localhost", "127.0.0.1");
+    let pairingUrl = "http://127.0.0.1:8081/api/wa/pairing";
+    try {
+      const parsed = new URL(rawUrl);
+      pairingUrl = `${parsed.protocol}//${parsed.host}/api/wa/pairing`;
+    } catch(e) {}
     const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
     
     const jwtToken = jwt.sign({ sender: "nextjs-client" }, token, { expiresIn: '1h' });

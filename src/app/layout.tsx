@@ -13,6 +13,7 @@ import { AboutApp } from "@/components/AboutApp";
 import { AiTopIndicator } from "@/components/AiTopIndicator";
 import { SetupScreen } from "@/components/SetupScreen";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
+import { ForceLogout } from "@/components/ForceLogout";
 import { Search, Bell, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -80,6 +81,20 @@ export default async function RootLayout({
   
   const usersData = await db.select().from(users);
   const isFreshInstall = usersData.length === 0;
+
+  // Jika user sudah login (punya token) tapi tenantId nya tidak ada di DB (karena dihapus)
+  if (tenantId && !isFreshInstall) {
+    const isTenantExist = usersData.some(u => u.tenantId === tenantId);
+    if (!isTenantExist) {
+      return (
+        <html lang="en" suppressHydrationWarning>
+          <body className={`${inter.className} min-h-screen bg-slate-900 antialiased`}>
+            <ForceLogout />
+          </body>
+        </html>
+      );
+    }
+  }
 
   if (isFreshInstall) {
     return (

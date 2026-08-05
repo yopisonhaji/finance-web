@@ -1,0 +1,4 @@
+DELETE FROM pengaturan WHERE tenant_id='6282138004443' OR tenant_id='082138004443';
+DELETE FROM users WHERE tenant_id='6282138004443' OR tenant_id='082138004443';
+DELETE FROM santri WHERE tenant_id='6282138004443' OR tenant_id='082138004443';
+DELETE FROM transaksi WHERE tenant_id='6282138004443' OR tenant_id='082138004443';
