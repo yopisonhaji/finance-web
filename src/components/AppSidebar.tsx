@@ -12,6 +12,7 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar"
 import {
+  LayoutDashboard,
   MessageSquareShare,
   Users,
   Wallet,
