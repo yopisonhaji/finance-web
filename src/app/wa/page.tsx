@@ -17,7 +17,7 @@ export default function StatusWAPage() {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch(`${botUrl}/api/wa/status`, { cache: "no-store" })
+      const res = await fetch(`${botUrl}/api/wa/status?t=${Date.now()}`, { cache: "no-store" })
       const data = await res.json()
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
