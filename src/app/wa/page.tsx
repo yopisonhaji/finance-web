@@ -53,7 +53,8 @@ export default function StatusWAPage() {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420"
         },
         body: JSON.stringify({ phone: inputPhone })
       });
@@ -82,7 +83,8 @@ export default function StatusWAPage() {
       await fetch(`${botUrl}/api/wa/logout`, { 
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420"
         }
       });
       setStatus("disconnected");
