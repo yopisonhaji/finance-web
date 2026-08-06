@@ -8,6 +8,7 @@ import { Fingerprint, User, Phone, Sparkles, Building2, GraduationCap, Mail } fr
 import { saveSetupData } from "@/app/actions/setup";
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "@/lib/firebase";
 import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 
 export function SetupScreen() {
   const [nama, setNama] = useState("");
@@ -21,6 +22,15 @@ export function SetupScreen() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth!, (user) => {
+      if (user) {
+        setEmail(user.email || "");
+        setNama(user.displayName || "");
+        setFirebaseUid(user.uid);
+        setIsGoogleSignedIn(true);
+      }
+    });
+
     const checkRedirect = async () => {
       try {
         const result = await getRedirectResult(auth!);
@@ -35,6 +45,8 @@ export function SetupScreen() {
       }
     };
     checkRedirect();
+    
+    return () => unsubscribe();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

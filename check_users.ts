@@ -1,12 +1,9 @@
-import { db } from "./src/db";
-import { users, pengaturan } from "./src/db/schema";
+import { db } from './src/db/index';
+import { users } from './src/db/schema';
+import { sql } from 'drizzle-orm';
 
-async function main() {
+async function check() {
   const allUsers = await db.select().from(users);
-  console.log("Users in DB:");
-  console.log(allUsers);
-  
-  const allPengaturan = await db.select().from(pengaturan);
-  console.log("Pengaturan count:", allPengaturan.length);
+  console.log('Users in DB:', allUsers);
 }
-main();
+check().catch(console.error);

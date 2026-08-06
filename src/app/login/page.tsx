@@ -23,13 +23,16 @@ export default function LoginPage() {
           const { verifyLogin } = await import("@/app/actions/auth");
           const data = await verifyLogin(email || "", firebaseUid);
 
-          if (data.success) {
-            localStorage.setItem("token", data.token!);
-            document.cookie = `token=${data.token}; path=/; max-age=864000`;
-            router.push("/");
-          } else {
-            setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
-            setLoading(false);
+            if (data.success) {
+              localStorage.setItem("token", data.token!);
+              document.cookie = `token=${data.token}; path=/; max-age=864000`;
+              router.push("/");
+            } else {
+              setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
+              setTimeout(() => {
+                router.push("/register");
+              }, 1500);
+            }
           }
         }
       } catch (err: any) {
@@ -60,7 +63,10 @@ export default function LoginPage() {
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
         router.push("/");
       } else {
-        setError(data.error || "Login gagal, pastikan Anda menggunakan akun Google yang terdaftar.");
+        setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
+        setTimeout(() => {
+          router.push("/register");
+        }, 1500);
       }
     } catch (err: any) {
       if (err.code === "auth/popup-blocked") {

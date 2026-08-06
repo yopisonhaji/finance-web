@@ -1,8 +1,9 @@
-import { db } from "./src/db";
-import { pengaturan } from "./src/db/schema";
+import { db } from './src/db/index';
+import { pengaturan } from './src/db/schema';
+import { sql } from 'drizzle-orm';
 
-async function main() {
-  const all = await db.select().from(pengaturan);
-  console.log(all.map(a => `${a.tenantId.substring(0, 8)} - ${a.kunci}: ${a.nilai}`));
+async function check() {
+  const allPengaturan = await db.select().from(pengaturan);
+  console.log('Pengaturan in DB:', allPengaturan);
 }
-main();
+check().catch(console.error);

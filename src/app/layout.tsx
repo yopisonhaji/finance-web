@@ -79,12 +79,16 @@ export default async function RootLayout({
     });
   }
   
-  const usersData = await db.select().from(users);
-  const isFreshInstall = usersData.length === 0;
+  let isFreshInstall = false;
+  let isTenantExist = false;
 
-  // Jika user sudah login (punya token) tapi tenantId nya tidak ada di DB (karena dihapus)
+  const usersCheck = await db.select({ tenantId: users.tenantId }).from(users).limit(10);
+  isFreshInstall = usersCheck.length === 0;
+
   if (tenantId && !isFreshInstall) {
-    const isTenantExist = usersData.some(u => u.tenantId === tenantId);
+    const currentTenant = await db.select({ id: users.id }).from(users).where(eq(users.tenantId, tenantId)).limit(1);
+    isTenantExist = currentTenant.length > 0;
+    
     if (!isTenantExist) {
       return (
         <html lang="en" suppressHydrationWarning>
