@@ -3,12 +3,18 @@
 import { useState } from "react";
 import { User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { auth, signOut } from "@/lib/firebase";
 
 export function HeaderProfile({ ownerName }: { ownerName: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth!);
+    } catch (e) {
+      console.error("Firebase logout error", e);
+    }
     localStorage.removeItem("token");
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push("/login");

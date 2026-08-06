@@ -2,8 +2,9 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { MessageSquareShare, FileBox, FileText, Settings, X, LogOut } from "lucide-react"
+import { auth, signOut } from "@/lib/firebase"
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -12,6 +13,7 @@ interface MobileDrawerProps {
 
 export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   // Prevent background scrolling when drawer is open
   useEffect(() => {
@@ -34,10 +36,13 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     { title: "Pengaturan", url: "/settings", icon: Settings, color: "text-slate-400" },
   ]
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth!);
+    } catch (e) {}
     localStorage.removeItem("token")
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    window.location.href = "/"
+    router.push("/login")
   }
 
   return (
