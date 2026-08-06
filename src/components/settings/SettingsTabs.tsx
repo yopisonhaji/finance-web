@@ -35,8 +35,12 @@ const settingsSchema = z.object({
   ipaymu_va: z.string(),
   ipaymu_key: z.string(),
   deepseek_key: z.string(),
-  ai_prompt: z.string(),
-  ai_target_reply: z.string().optional().or(z.literal("")),
+  ai_prompt: z.string().optional().or(z.literal("")),
+  usage_token: z.string().optional(),
+  limit_token: z.string().optional(),
+  masa_aktif: z.string().optional(),
+  ai_model: z.string().optional(),
+  ai_target_reply: z.string().optional().or(z.literal("all")),
   wa_bot_url: z.string().optional().or(z.literal("")),
   wa_bot_token: z.string().optional().or(z.literal("")),
   telegram_bot_token: z.string().optional().or(z.literal("")),
@@ -78,6 +82,8 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       ai_prompt: initialData.ai_prompt || "",
       usage_token: initialData.usage_token || "0",
       limit_token: initialData.limit_token || "0",
+      masa_aktif: initialData.masa_aktif || "Belum Diset",
+      ai_model: initialData.ai_model || "deepseek-chat",
       ai_target_reply: initialData.ai_target_reply || "all",
       wa_bot_url: initialData.wa_bot_url || "",
       wa_bot_token: initialData.wa_bot_token || "",
@@ -349,6 +355,12 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       {Number(initialData.limit_token || 0) > 0 ? Number(initialData.limit_token || 0).toLocaleString() : t('settings.unlimited')}
                     </p>
                   </div>
+                  <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+                    <p className="text-sm text-slate-400 mb-1">Masa Aktif</p>
+                    <p className="text-xl font-bold text-indigo-400">
+                      {initialData.masa_aktif || "Belum Diset"}
+                    </p>
+                  </div>
                 </div>
                 {Number(initialData.limit_token || 0) > 0 && (
                   <div className="mt-4">
@@ -427,6 +439,26 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormDescription>
                         {t('settings.prompt_desc')}
                       </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ai_model"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-indigo-400">Model AI</FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                        >
+                          <option value="deepseek-chat">DeepSeek Chat (Lebih Cepat)</option>
+                          <option value="deepseek-reasoner">DeepSeek Reasoner (Lebih Cerdas R1)</option>
+                        </select>
+                      </FormControl>
+                      <FormDescription>Pilih model kecerdasan buatan yang digunakan.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
