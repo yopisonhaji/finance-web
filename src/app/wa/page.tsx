@@ -16,6 +16,7 @@ export default function StatusWAPage() {
   const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "https://caulocarpous-nonsubtractively-jackelyn.ngrok-free.dev";
 
   const fetchStatus = async () => {
+    try {
       const token = localStorage.getItem("token") || ""
       const res = await fetch(`${botUrl}/api/wa/status?t=${Date.now()}`, { 
         cache: "no-store",
