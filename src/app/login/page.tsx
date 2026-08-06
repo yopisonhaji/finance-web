@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword } from "@/lib/firebase";
+import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, signOut } from "@/lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,10 +28,9 @@ export default function LoginPage() {
             document.cookie = `token=${data.token}; path=/; max-age=864000`;
             router.push("/");
           } else {
-            setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
-            setTimeout(() => {
-              router.push("/register");
-            }, 1500);
+            await signOut(auth!);
+            setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
+            setLoading(false);
           }
         }
       } catch (err: any) {
@@ -61,10 +60,9 @@ export default function LoginPage() {
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
         router.push("/");
       } else {
-        setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
-        setTimeout(() => {
-          router.push("/register");
-        }, 1500);
+        await signOut(auth!);
+        setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
+        setLoading(false);
       }
     } catch (err: any) {
       if (err.code === "auth/popup-blocked") {
@@ -101,10 +99,9 @@ export default function LoginPage() {
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
         router.push("/");
       } else {
-        setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
-        setTimeout(() => {
-          router.push("/register");
-        }, 1500);
+        await signOut(auth!);
+        setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
+        setLoading(false);
       }
     } catch (err: any) {
       if (err.code === "auth/popup-blocked") {
@@ -140,10 +137,9 @@ export default function LoginPage() {
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
         router.push("/");
       } else {
-        setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
-        setTimeout(() => {
-          router.push("/register");
-        }, 1500);
+        await signOut(auth!);
+        setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
+        setLoading(false);
       }
     } catch (err: any) {
       setError("Email atau kata sandi salah.");
