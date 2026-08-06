@@ -19,8 +19,14 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     // 3. Simpan User untuk Login
     if (email && firebaseUid) {
       const { users } = await import("@/db/schema");
+      const { eq } = await import("drizzle-orm");
       
-      // Hapus try-catch agar jika error, fungsi me-return error yang sesungguhnya!
+      // Cek apakah email sudah ada di Turso
+      const existingUser = await db.select().from(users).where(eq(users.email, email));
+      if (existingUser.length > 0) {
+        return { success: false, error: "Akun dengan email ini sudah terdaftar. Silakan login dari halaman depan." };
+      }
+
       await db.insert(users).values({
         tenantId: newTenantId,
         email: email, // email digunakan sebagai username
