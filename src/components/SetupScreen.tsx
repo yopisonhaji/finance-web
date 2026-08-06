@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { saveSetupData } from "@/app/actions/setup";
-import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "@/lib/firebase";
+import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 export function SetupScreen() {
@@ -120,11 +120,22 @@ export function SetupScreen() {
           currentEmail = userCredential.user.email || email;
           setFirebaseUid(currentUid);
         } catch (authErr: any) {
-          setError(authErr.message.includes("email-already-in-use") 
-            ? "Email sudah digunakan. Silakan login." 
-            : "Gagal membuat akun: " + authErr.message);
-          setLoading(false);
-          return;
+          if (authErr.message.includes("email-already-in-use")) {
+            try {
+              const userCredential = await signInWithEmailAndPassword(auth!, email, password);
+              currentUid = userCredential.user.uid;
+              currentEmail = userCredential.user.email || email;
+              setFirebaseUid(currentUid);
+            } catch (signInErr: any) {
+              setError("Email sudah terdaftar di sistem. Jika ini milik Anda, password yang dimasukkan salah. Silakan login.");
+              setLoading(false);
+              return;
+            }
+          } else {
+            setError("Gagal membuat akun: " + authErr.message);
+            setLoading(false);
+            return;
+          }
         }
       }
 
