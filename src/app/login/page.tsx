@@ -152,14 +152,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-800 p-4">
-      <div className="w-full max-w-md p-8">
+    <div className="flex min-h-screen bg-white text-gray-800">
+      
+      {/* Left Side: Form */}
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 z-10 bg-white relative">
+        <div className="w-full max-w-md">
         
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <img src="/app-logo.png" alt="Logo" className="w-20 h-20 rounded-2xl shadow-sm object-cover" />
-          </div>
           <h1 className="text-2xl font-bold mb-2">Masuk ke Finance AI</h1>
           <p className="text-gray-500 text-sm">
             Selamat datang kembali! Silakan masuk ke akun Anda.
@@ -252,12 +252,26 @@ export default function LoginPage() {
         </form>
 
         {/* Footer Links */}
-        <div className="text-center mt-6 text-sm text-gray-600">
-          <p>
+          <p className="text-sm text-gray-600 mt-6 text-center">
             Belum memiliki akun? <a href="/register" className="text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
           </p>
         </div>
+      </div>
 
+      {/* Right Side: Giant Logo Showcase (hidden on small screens) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-950 relative items-center justify-center overflow-hidden">
+        {/* Subtle background glow effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        {/* Giant Logo */}
+        <img 
+          src="/app-logo.png" 
+          alt="Finance AI Giant Logo" 
+          className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] relative z-10 opacity-90"
+        />
+        
+        {/* Optional decorative overlay pattern (if needed, keep it minimal) */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-900/80 z-0"></div>
       </div>
     </div>
   );
