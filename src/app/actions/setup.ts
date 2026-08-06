@@ -3,6 +3,9 @@
 import { db } from "@/db";
 import { pengaturan } from "@/db/schema";
 import { revalidatePath } from "next/cache";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET_KEY || "super_secret_default_key_change_in_production";
 
 export async function saveSetupData(nama: string, noWa: string, email?: string, firebaseUid?: string, tipeBisnis?: string) {
   try {
@@ -62,7 +65,17 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     revalidatePath("/");
     revalidatePath("/settings");
     
-    return { success: true, tenantId: newTenantId };
+    const token = jwt.sign(
+      { 
+        tenant_id: newTenantId,
+        email: email,
+        role: "ADMIN"
+      },
+      JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+    
+    return { success: true, tenantId: newTenantId, token };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

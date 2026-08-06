@@ -144,9 +144,9 @@ export function SetupScreen() {
       
       if (res.success) {
         setSuccess(true);
-        if (res.tenantId) {
-          localStorage.setItem("token", res.tenantId);
-          document.cookie = `token=${res.tenantId}; path=/; max-age=864000`;
+        if (res.token) {
+          localStorage.setItem("token", res.token!);
+          document.cookie = `token=${res.token}; path=/; max-age=864000`;
         }
         setTimeout(() => {
           window.location.href = "/";
