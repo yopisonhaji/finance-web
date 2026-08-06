@@ -78,7 +78,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       ADMIN_WA: initialData.ADMIN_WA || "",
       ipaymu_va: initialData.ipaymu_va || "",
       ipaymu_key: initialData.ipaymu_key || "",
-      deepseek_api_key: initialData.deepseek_api_key || "",
+      deepseek_key: initialData.deepseek_key || "",
       ai_prompt: initialData.ai_prompt || "",
       usage_token: initialData.usage_token || "0",
       limit_token: initialData.limit_token || "0",
@@ -339,8 +339,8 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
                     <p className="text-sm text-slate-400 mb-1">{t('settings.api_status')}</p>
-                    <p className={`text-xl font-bold ${initialData.deepseek_api_key ? 'text-emerald-400' : 'text-rose-400'}`}>
-                      {initialData.deepseek_api_key ? t('settings.api_active') : t('settings.api_unset')}
+                    <p className={`text-xl font-bold ${initialData.deepseek_key ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {initialData.deepseek_key ? t('settings.api_active') : t('settings.api_unset')}
                     </p>
                   </div>
                   <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
