@@ -211,7 +211,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
             <div className="pt-3 mt-3 border-t border-slate-700/50">
               <p className="text-[10px] text-slate-500 font-medium">{namaPesantren}</p>
               {alamatPesantren && <p className="text-[9px] text-slate-600 mt-0.5">{alamatPesantren}</p>}
-              <p className="text-[9px] text-slate-500 mt-2">© {new Date().getFullYear()} satujalan.id</p>
+              <p className="text-[10px] text-slate-400 font-semibold mt-2 tracking-wide uppercase">Powered by <span className="text-blue-400">satujalan.id</span></p>
             </div>
           </div>
         </div>

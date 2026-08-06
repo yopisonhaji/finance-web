@@ -252,8 +252,12 @@ export default function LoginPage() {
         </form>
 
         {/* Footer Links */}
-          <p className="text-sm text-gray-600 mt-6 text-center">
+        <div className="text-center mt-6 text-sm text-gray-600">
+          <p className="mb-4">
             Belum memiliki akun? <a href="/register" className="text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
+          </p>
+          <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-400">
+            Powered by <span className="text-blue-500">satujalan.id</span>
           </p>
         </div>
       </div>
@@ -264,14 +268,19 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Giant Logo */}
-        <img 
-          src="/app-logo.png" 
-          alt="Finance AI Giant Logo" 
-          className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] relative z-10 opacity-90"
-        />
+        <div className="relative z-10 flex flex-col items-center justify-center">
+          <img 
+            src="/app-logo.png" 
+            alt="Finance AI Giant Logo" 
+            className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
+          />
+          <p className="text-slate-400 font-medium tracking-[0.2em] uppercase text-sm">
+            Powered by <span className="text-blue-400 font-bold">satujalan.id</span>
+          </p>
+        </div>
         
         {/* Optional decorative overlay pattern (if needed, keep it minimal) */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-900/80 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-900/80 z-0 pointer-events-none"></div>
       </div>
     </div>
   );
