@@ -26,6 +26,14 @@ export default function StatusWAPage() {
         }
       })
       const data = await res.json()
+      
+      if (res.status === 401) {
+        localStorage.removeItem("token");
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/login";
+        return;
+      }
+      
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
     } catch (e) {
@@ -54,6 +62,11 @@ export default function StatusWAPage() {
       
       if (response.ok && data.code) {
         setPairingCode(data.code);
+      } else if (response.status === 401) {
+        alert("Sesi Anda telah kadaluarsa karena pembaruan keamanan. Silakan login kembali.");
+        localStorage.removeItem("token");
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/login";
       } else {
         alert(data.error + (data.details ? ` (${data.details})` : ""));
       }
