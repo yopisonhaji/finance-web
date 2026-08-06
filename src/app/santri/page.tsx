@@ -2,6 +2,7 @@ import { getSantri } from "./actions"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { AddSantriDialog } from "./AddSantriDialog"
+import { ImportExcelDialog } from "./ImportExcelDialog"
 import { SantriMobileList } from "./SantriMobileList"
 import { db } from "@/db"
 import { pengaturan } from "@/db/schema"
@@ -22,7 +23,8 @@ export default async function SantriPage() {
             Kelola data dan tagihan {clientTerm.toLowerCase()} Anda
           </p>
         </div>
-        <div className="w-full sm:w-auto">
+        <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
+          <ImportExcelDialog />
           <AddSantriDialog />
         </div>
       </div>
