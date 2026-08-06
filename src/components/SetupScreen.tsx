@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { saveSetupData } from "@/app/actions/setup";
 import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -140,6 +139,7 @@ export function SetupScreen() {
       }
 
       // Lanjutkan menyimpan data ke Turso database
+      const { saveSetupData } = await import("@/app/actions/setup");
       const res = await saveSetupData(nama, noWa, currentEmail, currentUid, tipeBisnis);
       
       if (res.success) {

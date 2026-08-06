@@ -154,8 +154,8 @@ export default function StatusWAPage() {
         {/* Panel Kanan: Status Mesin */}
         <Card className="border-slate-800 shadow-xl bg-[#0f172a]">
           <CardHeader>
-            <CardTitle className="text-white">Status Mesin Golang</CardTitle>
-            <CardDescription className="text-slate-400">Sistem backend ringan & anti-blokir</CardDescription>
+            <CardTitle className="text-white">Status Gateway Sistem</CardTitle>
+            <CardDescription className="text-slate-400">Sinkronisasi pesan & antrian real-time</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className={`p-4 rounded-xl border flex items-center justify-between ${status === 'connected' ? 'bg-emerald-900/20 border-emerald-800' : 'bg-rose-900/20 border-rose-800'}`}>
@@ -163,19 +163,19 @@ export default function StatusWAPage() {
                 {status === "connected" ? <Wifi className="h-6 w-6 text-emerald-500" /> : <WifiOff className="h-6 w-6 text-rose-500" />}
                 <div>
                   <h4 className={`font-bold ${status === 'connected' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {status === 'connected' ? 'Modul Terkoneksi' : 'Menunggu Sesi'}
+                    {status === 'connected' ? 'Gateway Terhubung' : 'Menunggu Sesi'}
                   </h4>
-                  <p className="text-sm text-slate-400 mt-0.5">Proxy IPRoyal Aktif</p>
+                  <p className="text-sm text-slate-400 mt-0.5">Koneksi Aman & Stabil</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="text-slate-500">Framework Mesin:</div>
-                <div className="font-semibold text-slate-700 dark:text-slate-300">Golang (whatsmeow)</div>
-                <div className="text-slate-500">Metode Proteksi:</div>
-                <div className="font-semibold text-slate-700 dark:text-slate-300">Residential SOCKS5</div>
+                <div className="text-slate-500">Arsitektur Core:</div>
+                <div className="font-semibold text-slate-700 dark:text-slate-300">Enterprise Gateway v2.4</div>
+                <div className="text-slate-500">Protokol Keamanan:</div>
+                <div className="font-semibold text-slate-700 dark:text-slate-300">End-to-End Encryption</div>
               </div>
               
               <div className="grid grid-cols-1 gap-3 mt-6">

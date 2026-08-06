@@ -30,7 +30,7 @@ export function LayoutWrapper({
 }: LayoutWrapperProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const isAuthPage = pathname === "/login" || pathname === "/onboarding";
+  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/onboarding") || pathname.startsWith("/register");
 
   // Polling to detect if account was deleted via Telegram
   useEffect(() => {

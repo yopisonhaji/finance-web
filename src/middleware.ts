@@ -3,25 +3,27 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
-  const isAuthPage = request.nextUrl.pathname === '/login';
-  const isRegisterPage = request.nextUrl.pathname === '/register';
-  const isOnboarding = request.nextUrl.pathname === '/onboarding';
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login');
+  const isRegisterPage = request.nextUrl.pathname.startsWith('/register');
+  const isOnboarding = request.nextUrl.pathname.startsWith('/onboarding');
   const isPublicApi = request.nextUrl.pathname.startsWith('/api/');
 
   if (isPublicApi) {
     return NextResponse.next();
   }
 
-  // Jika tidak ada token dan bukan halaman login/register/onboarding, redirect ke login
   if (!token && !isAuthPage && !isOnboarding && !isRegisterPage) {
+    console.log(`MIDDLEWARE REDIRECTING TO LOGIN from: ${request.nextUrl.pathname}`);
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Jika sudah ada token dan mencoba akses halaman login, redirect ke dashboard
   if (token && isAuthPage) {
+    console.log(`MIDDLEWARE REDIRECTING TO DASHBOARD from: ${request.nextUrl.pathname}`);
     return NextResponse.redirect(new URL('/', request.url));
   }
 
+  console.log(`MIDDLEWARE ALLOWING: ${request.nextUrl.pathname}`);
   return NextResponse.next();
 }
 

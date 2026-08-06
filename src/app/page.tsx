@@ -1,9 +1,10 @@
 import { db } from "@/db"
 import { pengaturan } from "@/db/schema"
 import { inArray } from "drizzle-orm"
-import fs from "fs"
 import path from "path"
 import { DashboardClient } from "./DashboardClient"
+
+export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
   // Fetch real API status from DB
@@ -17,15 +18,21 @@ export default async function Dashboard() {
     if (s.kunci === "ipaymu_key" && s.nilai && s.nilai.length > 5) hasIpaymuKey = true;
   });
 
-  // Fetch WA Status from wa-state.json
   let waStatus = "disconnected";
   try {
-    const waStatePath = path.join(process.cwd(), "wa-state.json");
-    if (fs.existsSync(waStatePath)) {
-      const waState = JSON.parse(fs.readFileSync(waStatePath, "utf-8"));
-      waStatus = waState.status;
+    const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://127.0.0.1:8081";
+    console.log("Fetching WA Status from:", `${botUrl}/api/wa/status`);
+    const res = await fetch(`${botUrl}/api/wa/status`, { cache: "no-store", next: { revalidate: 0 } });
+    if (res.ok) {
+      const data = await res.json();
+      console.log("WA Status response:", data);
+      waStatus = data.status || "disconnected";
+    } else {
+      console.error("WA Status fetch failed with status:", res.status);
     }
-  } catch(e) {}
+  } catch(e) {
+    console.error("WA Status fetch error:", e);
+  }
   
   const isWaActive = waStatus === "connected";
 
