@@ -276,110 +276,33 @@ export function SetupScreen() {
               <p className="text-xs text-gray-500">
                 Silakan masukkan kata sandi minimal 8 karakter.
               </p>
-                    onChange={(e) => setNama(e.target.value)}
-                    placeholder="Masukkan nama Anda..."
-                    className="pl-10 border-slate-200 focus:border-cyan-500 focus:ring-cyan-500/20 bg-white/50 text-slate-900 placeholder:text-slate-400 font-semibold"
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2 group">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 group-focus-within:text-purple-600 transition-colors">
-                  Nomor WhatsApp Aktif
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="h-5 w-5 text-slate-400 group-focus-within:text-purple-500 transition-colors" />
-                  </div>
-                  <Input 
-                    value={noWa}
-                    onChange={(e) => setNoWa(e.target.value)}
-                    placeholder="Contoh: 08123456789"
-                    className="pl-10 border-slate-200 focus:border-purple-500 focus:ring-purple-500/20 bg-white/50 text-slate-900 placeholder:text-slate-400 font-semibold"
-                    disabled={loading}
-                  />
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium">
-                  Nomor ini akan digunakan sebagai jalur admin utama.
-                </p>
-              </div>
-
-              <div className="space-y-2 group">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 group-focus-within:text-indigo-600 transition-colors">
-                  Tipe Aplikasi
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setTipeBisnis("PENDIDIKAN")}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${tipeBisnis === "PENDIDIKAN" ? "border-indigo-600 bg-indigo-50 text-indigo-700" : "border-slate-200 text-slate-500 hover:border-indigo-300"}`}
-                  >
-                    <GraduationCap className="w-5 h-5" />
-                    <span className="font-semibold text-sm">Pendidikan</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTipeBisnis("BISNIS")}
-                    className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${tipeBisnis === "BISNIS" ? "border-indigo-600 bg-indigo-50 text-indigo-700" : "border-slate-200 text-slate-500 hover:border-indigo-300"}`}
-                  >
-                    <Building2 className="w-5 h-5" />
-                    <span className="font-semibold text-sm">Perusahaan</span>
-                  </button>
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full h-12 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white font-bold tracking-wide shadow-lg hover:shadow-xl transition-all"
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    MENYIAPKAN SISTEM...
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    AKTIFKAN TERMINAL
-                  </div>
-                )}
-              </Button>
-            </form>
+            </div>
           )}
 
-          {!isGoogleSignedIn && (
-            <>
-              <div className="mt-6 space-y-4">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-slate-200" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white/80 px-2 text-slate-400 font-semibold backdrop-blur-xl">Atau</span>
-                  </div>
-                </div>
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-blue-600 text-white font-semibold rounded-md py-2 mt-6 hover:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              "Pendaftaran"
+            )}
+          </button>
+        </form>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => window.location.href = '/login'}
-                  className="w-full h-11 border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-800 font-semibold border-2 rounded-xl transition-all"
-                >
-                  Sudah punya akun? Login Disini
-                </Button>
-              </div>
-            </>
-          )}
-          
-          <div className="mt-6 text-center">
-            <p className="text-[11px] font-semibold text-slate-400">
-              Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline">satujalan.id</a>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Footer Links */}
+        <div className="text-center mt-6 text-sm text-gray-600">
+          <p className="mb-4 text-xs">
+            Dengan melanjutkan, Anda setuju dengan Syarat layanan dan Kebijakan privasi aplikasi kami.
+          </p>
+          <p>
+            Sudah memiliki akun? <a href="/login" className="text-blue-600 font-semibold hover:underline">Masuk</a>
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
