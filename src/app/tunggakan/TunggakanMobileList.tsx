@@ -58,7 +58,7 @@ export function TunggakanMobileList({ data }: { data: SantriTunggakan[] }) {
             <Button 
               onClick={() => handleLunas(santri.id)}
               disabled={loadingId === santri.id}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-slate-900 dark:text-white font-semibold shadow-lg shadow-emerald-900/20"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-900/20"
             >
               {loadingId === santri.id ? "Memproses..." : "Tandai Lunas Manual"}
             </Button>

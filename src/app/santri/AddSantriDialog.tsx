@@ -76,7 +76,7 @@ export function AddSantriDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       {/* @ts-ignore */}
       <DialogTrigger asChild>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-slate-900 dark:text-white">
+        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
           <Plus className="w-4 h-4 mr-2" /> Tambah {termStudent}
         </Button>
       </DialogTrigger>

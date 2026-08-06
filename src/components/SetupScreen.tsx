@@ -334,7 +334,7 @@ export function SetupScreen() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-orange-600 dark:bg-blue-600 text-slate-900 dark:text-white font-semibold rounded-md py-2 mt-6 hover:bg-orange-700 dark:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
+            className="w-full bg-orange-600 dark:bg-blue-600 text-white font-semibold rounded-md py-2 mt-6 hover:bg-orange-700 dark:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -210,7 +210,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
                 {!isWaActive && (
                   <div className="mt-2 flex flex-col gap-2">
                     <p className="text-xs text-slate-500 dark:text-slate-400">Silakan tautkan nomor via Terminal Golang</p>
-                    <a href="/wa" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 bg-orange-600 dark:bg-blue-600 text-slate-900 dark:text-white shadow hover:bg-orange-600 dark:bg-blue-600/90 h-9 px-4 py-2 w-full">
+                    <a href="/wa" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 bg-orange-600 dark:bg-blue-600 text-white shadow hover:bg-orange-600 dark:bg-blue-600/90 h-9 px-4 py-2 w-full">
                       Buka Terminal WhatsApp
                     </a>
                   </div>

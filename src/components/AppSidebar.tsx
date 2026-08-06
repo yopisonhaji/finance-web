@@ -157,7 +157,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
                           href={item.url} 
                           className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
                             isActive 
-                              ? 'bg-orange-500 dark:bg-blue-500/10 text-slate-900 dark:text-white border border-orange-500 dark:border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
+                              ? 'bg-orange-500 dark:bg-blue-500/10 text-white border border-orange-500 dark:border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
                               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-[#1e293b] border border-transparent'
                           }`}
                         >
@@ -170,7 +170,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
                           
                           <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 shrink-0 ${
                             isActive 
-                              ? 'bg-orange-500 dark:bg-blue-500/20 text-slate-900 dark:text-white border border-orange-500 dark:border-blue-500/30' 
+                              ? 'bg-orange-500 dark:bg-blue-500/20 text-white border border-orange-500 dark:border-blue-500/30' 
                               : `bg-slate-100 dark:bg-slate-800/30 ${item.color} group-hover:bg-slate-700/50 ${item.hoverColor}`
                           }`}>
                             <item.icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />

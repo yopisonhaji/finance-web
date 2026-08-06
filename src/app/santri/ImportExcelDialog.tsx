@@ -180,7 +180,7 @@ export function ImportExcelDialog() {
           <Button variant="outline" onClick={() => setOpen(false)} disabled={loading} className="bg-transparent border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white">
             Tutup
           </Button>
-          <Button onClick={handleImport} disabled={!file || loading} className="bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-slate-900 dark:text-white">
+          <Button onClick={handleImport} disabled={!file || loading} className="bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-white">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? "Memproses..." : "Import Data"}
           </Button>

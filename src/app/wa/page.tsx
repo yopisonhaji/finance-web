@@ -16,10 +16,11 @@ export default function StatusWAPage() {
   const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "https://caulocarpous-nonsubtractively-jackelyn.ngrok-free.dev";
 
   const fetchStatus = async () => {
-    try {
+      const token = localStorage.getItem("token") || ""
       const res = await fetch(`${botUrl}/api/wa/status?t=${Date.now()}`, { 
         cache: "no-store",
         headers: {
+          "Authorization": `Bearer ${token}`,
           "ngrok-skip-browser-warning": "69420"
         }
       })
@@ -38,9 +39,13 @@ export default function StatusWAPage() {
     setLoading(true);
     setPairingCode("");
     try {
+      const token = localStorage.getItem("token") || ""
       const response = await fetch(`${botUrl}/api/wa/pairing`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ phone: inputPhone })
       });
       
@@ -59,7 +64,13 @@ export default function StatusWAPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${botUrl}/api/wa/logout`, { method: "POST" });
+      const token = localStorage.getItem("token") || ""
+      await fetch(`${botUrl}/api/wa/logout`, { 
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       setStatus("disconnected");
       setPhone("");
     } catch (e) {
@@ -136,13 +147,13 @@ export default function StatusWAPage() {
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
                     className="h-12 text-lg font-medium bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 placeholder:text-slate-500 focus:bg-white dark:bg-[#0f172a] focus-visible:ring-orange-500 dark:ring-blue-500"
-                    style={{ backgroundColor: "#0f172a", color: "white" }}
+                    
                   />
                 </div>
                 <Button 
                   type="submit" 
                   disabled={loading || !inputPhone}
-                  className="w-full h-12 text-md font-bold bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-slate-900 dark:text-white"
+                  className="w-full h-12 text-md font-bold bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-white"
                 >
                   {loading ? "Meminta Kode..." : "Dapatkan Pairing Code"}
                 </Button>

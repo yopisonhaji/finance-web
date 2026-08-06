@@ -48,7 +48,7 @@ export function MobileBottomNav() {
 
           {/* Floating Action Button (Center) */}
           <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[40%] flex flex-col items-center z-50">
-            <Link href="/kasir" className="w-14 h-14 rounded-full bg-orange-600 dark:bg-blue-600 border-[6px] border-[#0f172a] shadow-lg flex items-center justify-center text-slate-900 dark:text-white hover:bg-orange-500 dark:bg-blue-500 active:scale-95 transition-transform">
+            <Link href="/kasir" className="w-14 h-14 rounded-full bg-orange-600 dark:bg-blue-600 border-[6px] border-[#0f172a] shadow-lg flex items-center justify-center text-white hover:bg-orange-500 dark:bg-blue-500 active:scale-95 transition-transform">
               <Wallet className="w-6 h-6" />
             </Link>
             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1">Kasir</span>
