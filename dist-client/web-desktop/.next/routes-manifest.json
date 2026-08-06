@@ -1,0 +1,195 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/admin-delete",
+      "regex": "^/api/admin\\-delete(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin\\-delete(?:/)?$"
+    },
+    {
+      "page": "/api/debug-db",
+      "regex": "^/api/debug\\-db(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debug\\-db(?:/)?$"
+    },
+    {
+      "page": "/api/debug-users",
+      "regex": "^/api/debug\\-users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/debug\\-users(?:/)?$"
+    },
+    {
+      "page": "/api/santri/batch",
+      "regex": "^/api/santri/batch(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/santri/batch(?:/)?$"
+    },
+    {
+      "page": "/api/search",
+      "regex": "^/api/search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/search(?:/)?$"
+    },
+    {
+      "page": "/api/status",
+      "regex": "^/api/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/status(?:/)?$"
+    },
+    {
+      "page": "/api/update",
+      "regex": "^/api/update(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/update(?:/)?$"
+    },
+    {
+      "page": "/api/wa/action",
+      "regex": "^/api/wa/action(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/wa/action(?:/)?$"
+    },
+    {
+      "page": "/api/wa/status",
+      "regex": "^/api/wa/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/wa/status(?:/)?$"
+    },
+    {
+      "page": "/api/webhook-wa",
+      "regex": "^/api/webhook\\-wa(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhook\\-wa(?:/)?$"
+    },
+    {
+      "page": "/icon.png",
+      "regex": "^/icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon\\.png(?:/)?$"
+    },
+    {
+      "page": "/kasir",
+      "regex": "^/kasir(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/kasir(?:/)?$"
+    },
+    {
+      "page": "/laporan",
+      "regex": "^/laporan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/laporan(?:/)?$"
+    },
+    {
+      "page": "/lisensi",
+      "regex": "^/lisensi(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/lisensi(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/register",
+      "regex": "^/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/santri",
+      "regex": "^/santri(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/santri(?:/)?$"
+    },
+    {
+      "page": "/settings",
+      "regex": "^/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings(?:/)?$"
+    },
+    {
+      "page": "/template",
+      "regex": "^/template(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/template(?:/)?$"
+    },
+    {
+      "page": "/tunggakan",
+      "regex": "^/tunggakan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tunggakan(?:/)?$"
+    },
+    {
+      "page": "/update",
+      "regex": "^/update(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/update(?:/)?$"
+    },
+    {
+      "page": "/wa",
+      "regex": "^/wa(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/wa(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

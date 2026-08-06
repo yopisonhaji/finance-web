@@ -95,14 +95,14 @@ export function ImportExcelDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       {/* @ts-ignore */}
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2 bg-[#1e293b] border-slate-700 hover:bg-slate-800 text-white">
+        <Button variant="outline" className="gap-2 bg-[#1e293b] border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white">
           <Upload className="w-4 h-4" /> Import Excel
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#1e293b] text-white border-slate-700">
+      <DialogContent className="sm:max-w-[425px] bg-[#1e293b] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle>Import Data dari Excel</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-slate-500 dark:text-slate-400">
             Unggah file .xlsx atau .csv dengan kolom minimal: NIS dan Nama.
           </DialogDescription>
         </DialogHeader>
@@ -110,21 +110,21 @@ export function ImportExcelDialog() {
         <div className="flex flex-col gap-4 py-4">
           {!file ? (
             <div 
-              className="border-2 border-dashed border-slate-600 rounded-xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-slate-800/50 transition-colors"
+              className="border-2 border-dashed border-slate-600 rounded-xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-slate-100 dark:bg-slate-800/50 transition-colors"
               onClick={() => fileInputRef.current?.click()}
             >
-              <FileSpreadsheet className="w-12 h-12 text-slate-400" />
-              <p className="text-sm text-center text-slate-400">
+              <FileSpreadsheet className="w-12 h-12 text-slate-500 dark:text-slate-400" />
+              <p className="text-sm text-center text-slate-500 dark:text-slate-400">
                 Klik untuk memilih file Excel / CSV
               </p>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
+              <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-700">
                 <FileSpreadsheet className="w-6 h-6 text-green-400" />
                 <div className="flex-1 overflow-hidden">
                   <p className="text-sm font-medium truncate">{file.name}</p>
-                  <p className="text-xs text-slate-400">{(file.size / 1024).toFixed(1)} KB</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{(file.size / 1024).toFixed(1)} KB</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => { setFile(null); setPreview([]); }} disabled={loading}>
                   Batal
@@ -133,17 +133,17 @@ export function ImportExcelDialog() {
 
               {preview.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-400">Preview (3 baris pertama):</p>
-                  <div className="bg-slate-900 rounded border border-slate-800 p-2 overflow-x-auto">
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Preview (3 baris pertama):</p>
+                  <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-2 overflow-x-auto">
                     <table className="w-full text-xs text-left">
                       <thead>
                         <tr>
-                          {Object.keys(preview[0]).map(k => <th key={k} className="px-2 py-1 text-slate-400">{k}</th>)}
+                          {Object.keys(preview[0]).map(k => <th key={k} className="px-2 py-1 text-slate-500 dark:text-slate-400">{k}</th>)}
                         </tr>
                       </thead>
                       <tbody>
                         {preview.map((row, i) => (
-                          <tr key={i} className="border-t border-slate-800">
+                          <tr key={i} className="border-t border-slate-200 dark:border-slate-800">
                             {Object.values(row).map((v: any, j) => <td key={j} className="px-2 py-1 truncate max-w-[100px]">{v}</td>)}
                           </tr>
                         ))}
@@ -163,7 +163,7 @@ export function ImportExcelDialog() {
             onChange={handleFileChange} 
           />
 
-          <div className="bg-blue-900/20 border border-blue-800/50 rounded-lg p-3 flex gap-3 text-blue-200">
+          <div className="bg-orange-100 dark:bg-blue-900/20 border border-blue-800/50 rounded-lg p-3 flex gap-3 text-blue-200">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <p className="text-xs">
               Pastikan header kolom di Excel sesuai. Contoh: <strong>NIS, Nama, Kelas, Nama Wali, No WA, Nominal SPP</strong>.
@@ -177,10 +177,10 @@ export function ImportExcelDialog() {
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)} disabled={loading} className="bg-transparent border-slate-700 text-white">
+          <Button variant="outline" onClick={() => setOpen(false)} disabled={loading} className="bg-transparent border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white">
             Tutup
           </Button>
-          <Button onClick={handleImport} disabled={!file || loading} className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button onClick={handleImport} disabled={!file || loading} className="bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-slate-900 dark:text-white">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? "Memproses..." : "Import Data"}
           </Button>

@@ -222,7 +222,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
@@ -237,14 +237,14 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-semibold rounded-md py-2 mt-4 hover:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
+            className="w-full bg-orange-600 dark:bg-blue-600 text-slate-900 dark:text-white font-semibold rounded-md py-2 mt-4 hover:bg-orange-700 dark:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
           >
             {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Masuk"}
           </button>
@@ -253,19 +253,19 @@ export default function LoginPage() {
         {/* Footer Links */}
         <div className="text-center mt-6 text-sm text-gray-600">
           <p className="mb-4">
-            Belum memiliki akun? <a href="/register" className="text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
+            Belum memiliki akun? <a href="/register" className="text-orange-600 dark:text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
           </p>
           <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-400">
-            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors cursor-pointer relative z-20">satujalan.id</a>
+            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-600 dark:text-blue-500 hover:text-orange-500 dark:text-blue-400 transition-colors cursor-pointer relative z-20">satujalan.id</a>
           </p>
         </div>
       </div>
       </div>
 
       {/* Right Side: Giant Logo Showcase (hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-950 relative items-center justify-center overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-50 dark:bg-slate-950 relative items-center justify-center overflow-hidden">
         {/* Subtle background glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-600 dark:bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center">
@@ -274,8 +274,8 @@ export default function LoginPage() {
             alt="Finance AI Giant Logo" 
             className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
           />
-          <p className="text-slate-400 font-medium tracking-[0.2em] uppercase text-sm relative z-20">
-            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
+          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-[0.2em] uppercase text-sm relative z-20">
+            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
           </p>
         </div>
         

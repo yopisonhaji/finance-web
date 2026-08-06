@@ -37,16 +37,16 @@ export function KasirSearch({ santriList, onSelect }: KasirSearchProps) {
         {filtered.map((s) => (
           <Card 
             key={s.id} 
-            className="cursor-pointer bg-[#1e293b] border-slate-700 text-slate-100 hover:bg-[#334155] hover:border-blue-500 transition-all group"
+            className="cursor-pointer bg-[#1e293b] border-slate-300 dark:border-slate-700 text-slate-100 hover:bg-[#334155] hover:border-orange-500 dark:border-blue-500 transition-all group"
             onClick={() => onSelect(s)}
           >
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="bg-blue-500/20 p-2 rounded-full text-blue-400 group-hover:scale-110 transition-transform">
+              <div className="bg-orange-500 dark:bg-blue-500/20 p-2 rounded-full text-orange-500 dark:text-blue-400 group-hover:scale-110 transition-transform">
                 <UserCircle2 size={24} />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-white">{s.nama}</h3>
-                <p className="text-sm text-slate-400">NIS: {s.nis} • {t("pos.class")}: {s.kelas}</p>
+                <h3 className="font-semibold text-lg text-slate-900 dark:text-white">{s.nama}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">NIS: {s.nis} • {t("pos.class")}: {s.kelas}</p>
               </div>
             </CardContent>
           </Card>

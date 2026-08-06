@@ -1,3 +1,0 @@
-module.exports=[55110,a=>{"use strict";var b=a.i(87924),c=a.i(50194);a.s(["TranslatedInput",0,function({tKey:a,className:d}){let{t:e}=(0,c.useLanguage)();return(0,b.jsx)("input",{type:"text",placeholder:e(a),className:d})},"TranslatedText",0,function({tKey:a,params:d}){let{t:e}=(0,c.useLanguage)();return(0,b.jsx)(b.Fragment,{children:e(a,d)})}])}];
-
-//# sourceMappingURL=src_components_TranslatedText_tsx_0m6hwe2._.js.map

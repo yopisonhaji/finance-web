@@ -1,0 +1,41 @@
+{
+  "node": {
+    "7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": 39019,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "web-desktop/src/app/actions/setup.ts"
+        }
+      },
+      "exportedName": "saveSetupData",
+      "filename": "web-desktop/src/app/actions/setup.ts"
+    },
+    "00ac0612999931a5d4b231fa8ce6d18d08165cfad2": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": 39019,
+          "async": true,
+          "exportedName": "getServerTenantId",
+          "filename": "web-desktop/src/server/auth.ts"
+        }
+      },
+      "exportedName": "getServerTenantId",
+      "filename": "web-desktop/src/server/auth.ts"
+    },
+    "6042079ebf457117bc46c677822f880a7cd2544a62": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": 39019,
+          "async": true,
+          "exportedName": "verifyLogin",
+          "filename": "web-desktop/src/app/actions/auth.ts"
+        }
+      },
+      "exportedName": "verifyLogin",
+      "filename": "web-desktop/src/app/actions/auth.ts"
+    }
+  },
+  "edge": {}
+}

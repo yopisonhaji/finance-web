@@ -147,12 +147,12 @@ export function DataTable<TData, TValue>({
             placeholder={t("students.search")}
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(String(event.target.value))}
-            className="w-full bg-[#0b172a] border-slate-700 text-white focus-visible:ring-blue-500 h-12 rounded-xl text-base"
+            className="w-full bg-[#0b172a] border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus-visible:ring-orange-500 dark:ring-blue-500 h-12 rounded-xl text-base"
           />
         </div>
         <div className="grid grid-cols-2 gap-3 w-full sm:flex sm:flex-row sm:w-auto">
-          <Button variant="outline" onClick={handleExport} disabled={isExporting} className="w-full border-slate-700 bg-slate-800/50 hover:bg-slate-800 h-11 rounded-lg">
-            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4 text-blue-400" />}
+          <Button variant="outline" onClick={handleExport} disabled={isExporting} className="w-full border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-100 dark:bg-slate-800 h-11 rounded-lg">
+            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4 text-orange-500 dark:text-blue-400" />}
             {t("students.export")}
           </Button>
           
@@ -164,7 +164,7 @@ export function DataTable<TData, TValue>({
               disabled={isImporting}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10" 
             />
-            <Button variant="outline" disabled={isImporting} className="w-full border-slate-700 bg-slate-800/50 hover:bg-slate-800 h-11 rounded-lg">
+            <Button variant="outline" disabled={isImporting} className="w-full border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-100 dark:bg-slate-800 h-11 rounded-lg">
               {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4 text-green-400" />}
               {t("students.import")}
             </Button>

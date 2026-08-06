@@ -54,9 +54,9 @@ async function build() {
   if (!fs.existsSync(nextDir)) fs.mkdirSync(nextDir);
   copyRecursiveSync(path.join(__dirname, '.next', 'static'), path.join(distDir, '.next', 'static'));
   
-  // 5. Compile worker.ts
-  console.log("\n🔨 Mengompilasi WhatsApp Worker...");
-  execSync('npx esbuild src/worker.ts --bundle --platform=node --target=node20 --format=cjs --external:sqlite3 --external:better-sqlite3 --external:@libsql/client --external:canvas --outfile=dist-client/worker.js', { stdio: 'inherit' });
+  // 5. Compile worker.ts (Dihapus karena file tidak ada)
+  console.log("\n🔨 Mengompilasi WhatsApp Worker... (Dilewati)");
+  // execSync('npx esbuild src/worker.ts --bundle --platform=node --target=node20 --format=cjs --external:sqlite3 --external:better-sqlite3 --external:@libsql/client --external:canvas --outfile=dist-client/worker.js', { stdio: 'inherit' });
   
   // 6. Copy start script and create bat file
   console.log("\n⚙️ Menyiapkan file peluncur (start.js & run.bat)...");

@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
+  --color-dash-bg: #f8fafc;
+  --color-dash-panel: #ffffff;
+  --color-dash-panel-hover: #f1f5f9;
 }
 
-@import "tailwindcss";
-
-:root {
+.dark {
   --background: #0f172a;
   --foreground: #f8fafc;
+  --color-dash-bg: #0f172a;
+  --color-dash-panel: #1e293b;
+  --color-dash-panel-hover: #334155;
 }
 
 @theme inline {
@@ -17,9 +23,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-dash-bg: #0f172a;
-  --color-dash-panel: #1e293b;
-  --color-dash-panel-hover: #334155;
+  --color-dash-bg: var(--color-dash-bg);
+  --color-dash-panel: var(--color-dash-panel);
+  --color-dash-panel-hover: var(--color-dash-panel-hover);
   
   --color-accent-blue: #3b82f6;
   --color-accent-green: #10b981;
@@ -51,6 +57,12 @@ body {
 }
 
 .glass-panel {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(248, 250, 252, 0.82));
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.dark .glass-panel {
   background: linear-gradient(145deg, rgba(24, 45, 74, 0.88), rgba(12, 27, 48, 0.82));
   border: 1px solid rgba(148, 190, 255, 0.12);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.05);

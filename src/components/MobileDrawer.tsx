@@ -33,7 +33,7 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     { title: "Terminal WhatsApp AI", url: "/wa", icon: MessageSquareShare, color: "text-teal-400" },
     { title: "Template Pesan WA", url: "/template", icon: FileBox, color: "text-orange-400" },
     { title: "Laporan Keuangan", url: "/laporan", icon: FileText, color: "text-rose-400" },
-    { title: "Pengaturan", url: "/settings", icon: Settings, color: "text-slate-400" },
+    { title: "Pengaturan", url: "/settings", icon: Settings, color: "text-slate-500 dark:text-slate-400" },
   ]
 
   const handleLogout = async () => {
@@ -57,10 +57,10 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
       <div className="fixed bottom-0 left-0 right-0 bg-[#1e293b] rounded-t-3xl z-[70] animate-in slide-in-from-bottom-full duration-300 pb-[env(safe-area-inset-bottom)]">
         <div className="flex flex-col p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-white">Menu Tambahan</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Menu Tambahan</h3>
             <button 
               onClick={onClose}
-              className="p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white"
+              className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
             >
               <X className="w-5 h-5" />
             </button>
@@ -74,12 +74,12 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   key={item.title} 
                   href={item.url}
                   onClick={onClose}
-                  className={`flex items-center gap-4 p-4 rounded-xl transition-colors ${isActive ? 'bg-blue-600/20 border border-blue-500/30' : 'bg-[#0f172a] border border-transparent'}`}
+                  className={`flex items-center gap-4 p-4 rounded-xl transition-colors ${isActive ? 'bg-orange-600 dark:bg-blue-600/20 border border-orange-500 dark:border-blue-500/30' : 'bg-white dark:bg-[#0f172a] border border-transparent'}`}
                 >
-                  <div className={`w-10 h-10 rounded-lg bg-slate-800/50 flex items-center justify-center ${item.color}`}>
+                  <div className={`w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center ${item.color}`}>
                     <item.icon className="w-5 h-5" />
                   </div>
-                  <span className={`font-semibold ${isActive ? 'text-white' : 'text-slate-300'}`}>
+                  <span className={`font-semibold ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                     {item.title}
                   </span>
                 </Link>
@@ -87,7 +87,7 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             })}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-700">
+          <div className="mt-8 pt-6 border-t border-slate-300 dark:border-slate-700">
             <button 
               onClick={handleLogout}
               className="flex items-center gap-4 p-4 w-full rounded-xl transition-colors bg-red-500/10 text-red-500 border border-red-500/20"

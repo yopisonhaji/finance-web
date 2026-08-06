@@ -1,0 +1,77 @@
+{
+  "node": {
+    "7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "web-desktop/src/app/actions/setup.ts"
+        }
+      },
+      "exportedName": "saveSetupData",
+      "filename": "web-desktop/src/app/actions/setup.ts"
+    },
+    "00ac0612999931a5d4b231fa8ce6d18d08165cfad2": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "getServerTenantId",
+          "filename": "web-desktop/src/server/auth.ts"
+        }
+      },
+      "exportedName": "getServerTenantId",
+      "filename": "web-desktop/src/server/auth.ts"
+    },
+    "0054868bb0b4699069b7c3023d49c40baefb77c050": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "getSantri",
+          "filename": "web-desktop/src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "getSantri",
+      "filename": "web-desktop/src/app/santri/actions.ts"
+    },
+    "40186c208d355d8a9f139e51e571387d106f33987d": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "addSantri",
+          "filename": "web-desktop/src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "addSantri",
+      "filename": "web-desktop/src/app/santri/actions.ts"
+    },
+    "40bf27e16a2fa98cec765d8d9aefc3e527ea05607e": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "deleteSantri",
+          "filename": "web-desktop/src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "deleteSantri",
+      "filename": "web-desktop/src/app/santri/actions.ts"
+    },
+    "603362d163fbf8ef530d4a33b3a7d260c657c0b5b6": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 30039,
+          "async": true,
+          "exportedName": "updateSantri",
+          "filename": "web-desktop/src/app/santri/actions.ts"
+        }
+      },
+      "exportedName": "updateSantri",
+      "filename": "web-desktop/src/app/santri/actions.ts"
+    }
+  },
+  "edge": {}
+}

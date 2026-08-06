@@ -79,7 +79,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
     }}>
       {/* @ts-ignore */}
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 mr-1">
+        <Button variant="ghost" size="icon" className="text-orange-600 dark:text-blue-500 hover:text-blue-700 hover:bg-orange-50 dark:bg-blue-50 mr-1">
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -99,7 +99,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>NIS / ID Santri</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: 1001" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input placeholder="Contoh: 1001" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +112,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>Nama Lengkap Santri</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: Ahmad Yasin" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input placeholder="Contoh: Ahmad Yasin" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,7 +125,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>Kelas / Asrama</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: 10 A" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input placeholder="Contoh: 10 A" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +138,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>Nama Wali</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: Bpk. Supardi" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input placeholder="Contoh: Bpk. Supardi" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,7 +151,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>Nomor WA Wali (Awali dengan 62)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: 62812345678" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input placeholder="Contoh: 62812345678" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,7 +164,7 @@ export function EditSantriDialog({ santri }: { santri: Santri }) {
                 <FormItem>
                   <FormLabel>Nominal Tagihan SPP Bulanan (Rp)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Contoh: 500000" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                    <Input type="number" placeholder="Contoh: 500000" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

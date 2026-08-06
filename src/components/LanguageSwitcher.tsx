@@ -31,14 +31,14 @@ export function LanguageSwitcher() {
     <div className="relative" ref={menuRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-7 h-7 rounded-full hover:ring-2 hover:ring-slate-700 transition-all border border-slate-700/50 shadow-sm overflow-hidden"
+        className="flex items-center justify-center w-7 h-7 rounded-full hover:ring-2 hover:ring-slate-700 transition-all border border-slate-300 dark:border-slate-700/50 shadow-sm overflow-hidden"
         title="Ganti Bahasa"
       >
         <img src={currentLang.flagUrl} alt={currentLang.label} className="w-full h-full object-cover" />
       </button>
 
       {isOpen && (
-        <div className="absolute end-0 mt-2 w-40 bg-[var(--color-dash-panel)] border border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50">
+        <div className="absolute end-0 mt-2 w-40 bg-[var(--color-dash-panel)] border border-slate-300 dark:border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50">
           <div className="py-1">
             {languageOptions.map((lang) => (
               <button
@@ -49,11 +49,11 @@ export function LanguageSwitcher() {
                 }}
                 className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors
                   ${language === lang.code 
-                    ? "bg-blue-500/10 text-blue-400 font-semibold" 
-                    : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+                    ? "bg-orange-500 dark:bg-blue-500/10 text-orange-500 dark:text-blue-400 font-semibold" 
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-800/50 hover:text-slate-900 dark:text-white"
                   }`}
               >
-                <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-700/50">
+                <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-slate-700/50">
                   <img src={lang.flagUrl} alt={lang.label} className="w-full h-full object-cover" />
                 </div>
                 {lang.label}

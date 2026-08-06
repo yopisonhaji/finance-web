@@ -11,7 +11,7 @@ export default function LisensiPage() {
         </p>
       </div>
 
-      <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl">
+      <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
         <CardHeader className="bg-primary/5 pb-4 border-b border-border/50">
           <div className="flex items-center justify-between">
             <div>

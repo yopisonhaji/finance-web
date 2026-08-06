@@ -113,15 +113,15 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs defaultValue="umum" className="w-full flex-col">
-          <TabsList className="flex flex-nowrap md:grid md:grid-cols-4 h-auto w-full mb-6 bg-[#0f172a] gap-2 p-2 rounded-xl border border-slate-800 overflow-x-auto overflow-y-hidden snap-x scrollbar-hide justify-start">
-            <TabsTrigger value="umum" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-300 hover:text-white data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_general")}</TabsTrigger>
-            <TabsTrigger value="keuangan" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-300 hover:text-white data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_payment")}</TabsTrigger>
-            <TabsTrigger value="ai" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-300 hover:text-white data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_ai")}</TabsTrigger>
-            <TabsTrigger value="penagihan" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-300 hover:text-white data-active:bg-blue-600 data-active:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_billing")}</TabsTrigger>
+          <TabsList className="flex flex-nowrap md:grid md:grid-cols-4 h-auto w-full mb-6 bg-white dark:bg-[#0f172a] gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-800 overflow-x-auto overflow-y-hidden snap-x scrollbar-hide justify-start">
+            <TabsTrigger value="umum" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white data-active:bg-orange-600 dark:bg-blue-600 data-active:text-slate-900 dark:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-orange-500 dark:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_general")}</TabsTrigger>
+            <TabsTrigger value="keuangan" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white data-active:bg-orange-600 dark:bg-blue-600 data-active:text-slate-900 dark:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-orange-500 dark:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_payment")}</TabsTrigger>
+            <TabsTrigger value="ai" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white data-active:bg-orange-600 dark:bg-blue-600 data-active:text-slate-900 dark:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-orange-500 dark:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_ai")}</TabsTrigger>
+            <TabsTrigger value="penagihan" className="shrink-0 min-w-[140px] md:w-full py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white data-active:bg-orange-600 dark:bg-blue-600 data-active:text-slate-900 dark:text-white data-active:shadow-[0_0_15px_rgba(37,99,235,0.5)] data-active:border-orange-500 dark:border-blue-500 border border-transparent transition-all whitespace-nowrap h-full text-xs sm:text-sm snap-center">{t("settings.tab_billing")}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="umum">
-            <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl">
+            <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
               <CardHeader>
                 <CardTitle>{t("settings.general_title")}</CardTitle>
                 <CardDescription>
@@ -137,7 +137,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel className="flex items-center gap-1.5">{t('settings.owner_name')} <Lock size={12} className="text-slate-500" /></FormLabel>
                         <FormControl>
-                          <Input {...field} readOnly className="bg-slate-800/60 text-slate-400 cursor-not-allowed border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
+                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -150,7 +150,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel className="flex items-center gap-1.5">{t('settings.owner_wa')} <Lock size={12} className="text-slate-500" /></FormLabel>
                         <FormControl>
-                          <Input {...field} readOnly className="bg-slate-800/60 text-slate-400 cursor-not-allowed border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
+                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -166,7 +166,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
                         >
                           <option value="PENDIDIKAN">Institusi Pendidikan (Siswa)</option>
                           <option value="PERUSAHAAN">Perusahaan / Bisnis Umum (Pelanggan/Klien)</option>
@@ -185,7 +185,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.principal_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.principal_desc')}</FormDescription>
                         <FormMessage />
@@ -199,7 +199,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.admin_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.admin_desc')}</FormDescription>
                         <FormMessage />
@@ -214,7 +214,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     <FormItem>
                       <FormLabel>{t('settings.school_name')}</FormLabel>
                       <FormControl>
-                        <Input {...field} className="bg-slate-900 border-slate-700 text-white h-11" />
+                        <Input {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white h-11" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -227,7 +227,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     <FormItem>
                       <FormLabel>{t('settings.school_address')}</FormLabel>
                       <FormControl>
-                        <Textarea {...field} className="bg-slate-900 border-slate-700 text-white min-h-[100px]" />
+                        <Textarea {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px]" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -239,7 +239,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
           </TabsContent>
 
           <TabsContent value="keuangan">
-            <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl">
+            <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
               <CardHeader>
                 <CardTitle>{t('settings.ipaymu_title')}</CardTitle>
                 <CardDescription>
@@ -260,7 +260,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                             placeholder="0000000000000000" 
                             {...field} 
                             readOnly={lockIpaymuVa}
-                            className={`h-11 pr-20 text-white border-slate-700 ${lockIpaymuVa ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
+                            className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockIpaymuVa ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
                           />
                           <div className="absolute right-2 flex items-center space-x-1">
                             <button
@@ -297,7 +297,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                             type={showIpaymuKey ? "text" : "password"} 
                             {...field} 
                             readOnly={lockIpaymu}
-                            className={`h-11 pr-20 text-white border-slate-700 ${lockIpaymu ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
+                            className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockIpaymu ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
                           />
                           <div className="absolute right-2 flex items-center space-x-1">
                             <button
@@ -330,33 +330,33 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
           </TabsContent>
 
           <TabsContent value="ai">
-            <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl mb-6">
+            <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl mb-6">
               <CardHeader className="bg-emerald-500/5 pb-4">
                 <CardTitle className="text-emerald-500 flex items-center">{t('settings.ai_status_title')}</CardTitle>
                 <CardDescription>{t('settings.ai_status_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
-                    <p className="text-sm text-slate-400 mb-1">{t('settings.api_status')}</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.api_status')}</p>
                     <p className={`text-xl font-bold ${initialData.deepseek_key ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {initialData.deepseek_key ? t('settings.api_active') : t('settings.api_unset')}
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
-                    <p className="text-sm text-slate-400 mb-1">{t('settings.token_used')}</p>
-                    <p className="text-xl font-bold text-blue-400">
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.token_used')}</p>
+                    <p className="text-xl font-bold text-orange-500 dark:text-blue-400">
                       {Number(initialData.usage_token || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">Token</span>
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
-                    <p className="text-sm text-slate-400 mb-1">{t('settings.token_limit')}</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.token_limit')}</p>
                     <p className="text-xl font-bold text-amber-400">
                       {Number(initialData.limit_token || 0) > 0 ? Number(initialData.limit_token || 0).toLocaleString() : t('settings.unlimited')}
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
-                    <p className="text-sm text-slate-400 mb-1">Masa Aktif</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Masa Aktif</p>
                     <p className="text-xl font-bold text-indigo-400">
                       {initialData.masa_aktif || "Belum Diset"}
                     </p>
@@ -364,28 +364,28 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 </div>
                 {Number(initialData.limit_token || 0) > 0 && (
                   <div className="mt-4">
-                    <div className="flex justify-between text-xs text-slate-400 mb-1">
+                    <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
                       <span>{t('settings.usage_percentage')}</span>
                       <span>{Math.min(100, Math.round((Number(initialData.usage_token || 0) / Number(initialData.limit_token || 1)) * 100))}%</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-blue-500 rounded-full" 
+                        className="h-full bg-orange-500 dark:bg-blue-500 rounded-full" 
                         style={{ width: `${Math.min(100, Math.round((Number(initialData.usage_token || 0) / Number(initialData.limit_token || 1)) * 100))}%` }}
                       ></div>
                     </div>
                   </div>
                 )}
                 
-                <div className="mt-6 pt-4 border-t border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="text-sm text-slate-400">
+                <div className="mt-6 pt-4 border-t border-slate-300 dark:border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="text-sm text-slate-500 dark:text-slate-400">
                     <p>{t('settings.token_empty')}</p>
                   </div>
                   <a 
                     href="https://wa.me/6282138004443?text=Halo%20Admin,%20saya%20ingin%20Top%20Up%20Token%20AI%20untuk%20Aplikasi%20Finance%20saya." 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-emerald-900/20"
+                    className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-emerald-900/20"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     {t('settings.topup')}
@@ -394,7 +394,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl">
+            <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
               <CardHeader className="bg-primary/5 pb-4">
                 <CardTitle className="text-primary flex items-center">{t('settings.ai_brain_title')}</CardTitle>
                 <CardDescription>
@@ -452,7 +452,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
                         >
                           <option value="deepseek-chat">DeepSeek Chat (Lebih Cepat)</option>
                           <option value="deepseek-reasoner">DeepSeek Reasoner (Lebih Cerdas R1)</option>
@@ -472,7 +472,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
                         >
                           <option value="all">{t('settings.reply_all')}</option>
                           <option value="unsaved_only">{t('settings.reply_unsaved')}</option>
@@ -491,7 +491,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.wa_url')}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} className="bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.wa_url_desc')}</FormDescription>
                         <FormMessage />
@@ -511,7 +511,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                               placeholder={t('settings.token_placeholder') || "Token keamanan (opsional)"} 
                               {...field} 
                               readOnly={lockWa}
-                              className={`h-11 pr-20 text-white border-slate-700 ${lockWa ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
+                              className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockWa ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
                             />
                             <div className="absolute right-2 flex items-center space-x-1">
                               <button
@@ -539,8 +539,8 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                   />
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-slate-700">
-                  <h3 className="text-lg font-medium text-blue-400 mb-4">Telegram Bot API (Webhook)</h3>
+                <div className="mt-6 pt-6 border-t border-slate-300 dark:border-slate-700">
+                  <h3 className="text-lg font-medium text-orange-500 dark:text-blue-400 mb-4">Telegram Bot API (Webhook)</h3>
                   <FormField
                     control={form.control}
                     name="telegram_bot_token"
@@ -554,7 +554,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                               placeholder="1234567890:AAH_xxxxxxxxxxx" 
                               {...field} 
                               readOnly={lockTelegram}
-                              className={`h-11 pr-20 text-white border-slate-700 ${lockTelegram ? 'opacity-70 bg-slate-800/80' : 'bg-slate-900'}`} 
+                              className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockTelegram ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
                             />
                             <div className="absolute right-2 flex items-center space-x-1">
                               <button
@@ -583,9 +583,9 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     )}
                   />
                   {form.watch("telegram_bot_token") && (
-                    <div className="mt-4 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                      <p className="text-sm text-slate-400 mb-2">Salin dan akses URL berikut di browser untuk mengaktifkan Webhook Bot Anda:</p>
-                      <code className="text-xs text-blue-400 break-all select-all block bg-slate-900 p-2 rounded border border-slate-800">
+                    <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg border border-slate-300 dark:border-slate-700">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Salin dan akses URL berikut di browser untuk mengaktifkan Webhook Bot Anda:</p>
+                      <code className="text-xs text-orange-500 dark:text-blue-400 break-all select-all block bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
                         https://api.telegram.org/bot{form.watch("telegram_bot_token")}/setWebhook?url=https://app.satujalan.id/api/webhook-telegram?token={form.watch("telegram_bot_token")}
                       </code>
                     </div>
@@ -598,9 +598,9 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
           <TabsContent value="penagihan">
             <div className="space-y-6">
               {/* PENGINGAT AWAL */}
-              <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl">
-                <CardHeader className="bg-blue-500/5 pb-4">
-                  <CardTitle className="text-blue-400">{t('settings.early_reminder_title')}</CardTitle>
+              <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
+                <CardHeader className="bg-orange-500 dark:bg-blue-500/5 pb-4">
+                  <CardTitle className="text-orange-500 dark:text-blue-400">{t('settings.early_reminder_title')}</CardTitle>
                   <CardDescription>{t('settings.early_reminder_desc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-6">
@@ -614,7 +614,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                           <FormControl>
                             <select 
                               {...field}
-                              className="flex h-11 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                              className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
                             >
                               {[...Array(31)].map((_, i) => (
                                 <option key={i+1} value={(i+1).toString()}>{t('settings.date')} {i+1}</option>
@@ -633,7 +633,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormItem>
                           <FormLabel>{t('settings.send_time')}</FormLabel>
                           <FormControl>
-                            <Input type="time" className="bg-slate-900 border-slate-700 text-white h-11 block w-full" {...field} />
+                            <Input type="time" className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white h-11 block w-full" {...field} />
                           </FormControl>
                           <FormDescription>{t('settings.time_desc')}</FormDescription>
                           <FormMessage />
@@ -650,7 +650,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormLabel>{t('settings.early_template')}</FormLabel>
                         <FormControl>
                           <Textarea 
-                            className="min-h-[120px] bg-slate-900 border-slate-700 text-white" 
+                            className="min-h-[120px] bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white" 
                             {...field} 
                           />
                         </FormControl>
@@ -665,7 +665,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
               </Card>
 
               {/* PENAGIHAN TUNGGAKAN */}
-              <Card className="bg-[#0f172a] text-white border-slate-700 shadow-2xl mb-6">
+              <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl mb-6">
                 <CardHeader className="bg-rose-500/5 pb-4">
                   <CardTitle className="text-rose-500">{t('settings.arrears_title')}</CardTitle>
                   <CardDescription>{t('settings.arrears_desc')}</CardDescription>
@@ -681,7 +681,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormControl>
                           <select 
                             {...field}
-                            className="flex h-11 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50 text-white"
+                            className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
                           >
                             <option value="Setiap Hari">{t('settings.every_day')}</option>
                             {[...Array(31)].map((_, i) => (
@@ -701,7 +701,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.arrears_time')}</FormLabel>
                         <FormControl>
-                          <Input type="time" className="bg-slate-900 border-slate-700 text-white h-11 block w-full" {...field} />
+                          <Input type="time" className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white h-11 block w-full" {...field} />
                         </FormControl>
                         <FormDescription>{t('settings.time_desc')}</FormDescription>
                         <FormMessage />
@@ -718,7 +718,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormLabel>{t('settings.wa_template')}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          className="min-h-[150px] bg-slate-900 border-slate-700 text-white" 
+                          className="min-h-[150px] bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white" 
                           {...field} 
                         />
                       </FormControl>

@@ -1,0 +1,10 @@
+module.exports=[91345,a=>a.a(async(b,c)=>{try{var d=a.i(18953),e=a.i(22863),f=a.i(20335),g=a.i(15085),h=a.i(85848),i=b([e,f]);async function j(b,c,d,h,i){try{let j=crypto.randomUUID();if(await e.db.insert(f.pengaturan).values([{tenantId:j,kunci:"OWNER_NAMA",nilai:b},{tenantId:j,kunci:"nama_pesantren",nilai:b},{tenantId:j,kunci:"OWNER_WA",nilai:c},{tenantId:j,kunci:"TIPE_BISNIS",nilai:i||"PENDIDIKAN"}]),d&&h){let{users:f}=await a.A(99764),{eq:g}=await a.A(56295);if((await e.db.select().from(f).where(g(f.email,d))).length>0)return{success:!1,error:"Akun dengan email ini sudah terdaftar. Silakan login dari halaman depan."};await e.db.insert(f).values({tenantId:j,email:d,firebaseUid:h,namaSekolah:b,role:"SUPER_ADMIN"});let i=process.env.TELEGRAM_BOT_TOKEN||"8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo",k=process.env.TELEGRAM_CHAT_ID||"1359122786";{let a=`🎉 *Registrasi Finance AI*
+
+Nama: ${b}
+WA: ${c}
+Email: ${d}
+Login: via Google
+
+Pendaftaran berhasil.`;try{await fetch(`https://api.telegram.org/bot${i}/sendMessage`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:k,text:a,parse_mode:"Markdown"}),signal:AbortSignal.timeout(3e3)})}catch(a){console.error("Gagal kirim ke telegram",a)}}}return(0,g.revalidatePath)("/"),(0,g.revalidatePath)("/settings"),{success:!0,tenantId:j}}catch(a){return{success:!1,error:a.message}}}[e,f]=i.then?(await i)():i,(0,h.ensureServerEntryExports)([j]),(0,d.registerServerReference)(j,"7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf",null),a.s(["saveSetupData",0,j]),c()}catch(a){c(a)}},!1),8995,a=>a.a(async(b,c)=>{try{var d=a.i(91345);a.i(31369);var e=b([d]);[d]=e.then?(await e)():e,a.s([]),c()}catch(a){c(a)}},!1),73199,a=>a.a(async(b,c)=>{try{var d=a.i(8995),e=a.i(91345),f=a.i(31369),g=b([d,e]);[d,e]=g.then?(await g)():g,a.s(["00ac0612999931a5d4b231fa8ce6d18d08165cfad2",()=>f.getServerTenantId,"7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf",()=>e.saveSetupData]),c()}catch(a){c(a)}},!1),99764,a=>{a.v(a=>Promise.resolve().then(()=>a(20335)))},56295,a=>{a.v(a=>Promise.resolve().then(()=>a(95018)))}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__1eyx52i._.js.map

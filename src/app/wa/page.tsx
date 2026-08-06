@@ -82,17 +82,17 @@ export default function StatusWAPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Terminal WhatsApp</h1>
-        <p className="text-slate-400 mt-2">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Terminal WhatsApp</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-2">
           Hubungkan sistem dengan WhatsApp menggunakan metode modern (Pairing Code).
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Panel Kiri: Form Pairing */}
-        <Card className="border-slate-800 shadow-xl bg-[#0f172a]">
-          <CardHeader className="bg-blue-900/10 pb-4 border-b border-slate-800">
-            <CardTitle className="flex items-center text-blue-400">
+        <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0f172a]">
+          <CardHeader className="bg-orange-50 dark:bg-blue-900/10 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <CardTitle className="flex items-center text-orange-500 dark:text-blue-400">
               <Smartphone className="mr-2 h-5 w-5" />
               Tautkan Perangkat
             </CardTitle>
@@ -120,7 +120,7 @@ export default function StatusWAPage() {
                   Buka WhatsApp di HP Anda &gt; Perangkat Taut &gt; Tautkan dengan Nomor Telepon. Lalu masukkan kode ini:
                 </p>
                 <div className="bg-slate-100 dark:bg-slate-800 rounded-xl px-8 py-6 shadow-inner w-full flex justify-center">
-                  <span className="text-4xl font-mono font-bold tracking-[0.25em] text-blue-600 dark:text-blue-400">
+                  <span className="text-4xl font-mono font-bold tracking-[0.25em] text-orange-600 dark:text-blue-600 dark:text-blue-400">
                     {pairingCode}
                   </span>
                 </div>
@@ -129,20 +129,20 @@ export default function StatusWAPage() {
             ) : (
               <form onSubmit={handlePairing} className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-300">Nomor WhatsApp Bot</label>
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor WhatsApp Bot</label>
                   <Input 
                     type="text" 
                     placeholder="Contoh: 628123456789 (Gunakan 62)" 
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
-                    className="h-12 text-lg font-medium bg-[#0f172a] text-white border-slate-700 placeholder:text-slate-500 focus:bg-[#0f172a] focus-visible:ring-blue-500"
+                    className="h-12 text-lg font-medium bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 placeholder:text-slate-500 focus:bg-white dark:bg-[#0f172a] focus-visible:ring-orange-500 dark:ring-blue-500"
                     style={{ backgroundColor: "#0f172a", color: "white" }}
                   />
                 </div>
                 <Button 
                   type="submit" 
                   disabled={loading || !inputPhone}
-                  className="w-full h-12 text-md font-bold bg-blue-600 hover:bg-blue-700 text-white"
+                  className="w-full h-12 text-md font-bold bg-orange-600 dark:bg-blue-600 hover:bg-orange-700 dark:bg-blue-700 text-slate-900 dark:text-white"
                 >
                   {loading ? "Meminta Kode..." : "Dapatkan Pairing Code"}
                 </Button>
@@ -152,10 +152,10 @@ export default function StatusWAPage() {
         </Card>
 
         {/* Panel Kanan: Status Mesin */}
-        <Card className="border-slate-800 shadow-xl bg-[#0f172a]">
+        <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0f172a]">
           <CardHeader>
-            <CardTitle className="text-white">Status Gateway Sistem</CardTitle>
-            <CardDescription className="text-slate-400">Sinkronisasi pesan & antrian real-time</CardDescription>
+            <CardTitle className="text-slate-900 dark:text-white">Status Gateway Sistem</CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">Sinkronisasi pesan & antrian real-time</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className={`p-4 rounded-xl border flex items-center justify-between ${status === 'connected' ? 'bg-emerald-900/20 border-emerald-800' : 'bg-rose-900/20 border-rose-800'}`}>
@@ -165,7 +165,7 @@ export default function StatusWAPage() {
                   <h4 className={`font-bold ${status === 'connected' ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {status === 'connected' ? 'Gateway Terhubung' : 'Menunggu Sesi'}
                   </h4>
-                  <p className="text-sm text-slate-400 mt-0.5">Koneksi Aman & Stabil</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Koneksi Aman & Stabil</p>
                 </div>
               </div>
             </div>

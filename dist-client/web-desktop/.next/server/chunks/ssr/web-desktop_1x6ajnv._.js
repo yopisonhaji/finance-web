@@ -1,0 +1,3 @@
+module.exports=[30062,(a,b,c)=>{"use strict";Object.defineProperty(c,"__esModule",{value:!0});var d={callServer:function(){return f.callServer},createServerReference:function(){return h.createServerReference},findSourceMapURL:function(){return g.findSourceMapURL}};for(var e in d)Object.defineProperty(c,e,{enumerable:!0,get:d[e]});let f=a.r(47684),g=a.r(86924),h=a.r(12312)},64222,a=>{"use strict";a.s([],94875),a.i(94875);var b=a.i(30062);let c=(0,b.createServerReference)("7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf",b.callServer,void 0,b.findSourceMapURL,"saveSetupData");a.s(["saveSetupData",0,c],64222)}];
+
+//# sourceMappingURL=web-desktop_1x6ajnv._.js.map

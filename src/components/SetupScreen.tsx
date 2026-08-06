@@ -238,7 +238,7 @@ export function SetupScreen() {
         )}
 
         {isGoogleSignedIn && (
-          <div className="bg-blue-50 text-blue-700 p-4 rounded-md text-sm mb-6 flex flex-col items-center border border-blue-100">
+          <div className="bg-orange-50 dark:bg-blue-50 text-blue-700 p-4 rounded-md text-sm mb-6 flex flex-col items-center border border-blue-100">
             <p className="font-medium">Akun Google terhubung:</p>
             <p className="font-bold">{email}</p>
             <p className="text-xs mt-1">Silakan lengkapi data profil di bawah ini.</p>
@@ -258,7 +258,7 @@ export function SetupScreen() {
               onChange={(e) => setNama(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
@@ -274,7 +274,7 @@ export function SetupScreen() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
               />
             </div>
           )}
@@ -290,7 +290,7 @@ export function SetupScreen() {
               onChange={(e) => setNoWa(e.target.value.replace(/\D/g, ""))}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
@@ -302,7 +302,7 @@ export function SetupScreen() {
               value={tipeBisnis}
               onChange={(e) => setTipeBisnis(e.target.value)}
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500 bg-white"
             >
               <option value="PENDIDIKAN">Institusi Pendidikan (Sekolah/Pesantren)</option>
               <option value="PERUSAHAAN">Perusahaan / Toko / Umum</option>
@@ -323,7 +323,7 @@ export function SetupScreen() {
                 disabled={loading}
                 minLength={8}
                 maxLength={20}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-1"
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500 mb-1"
               />
               <p className="text-xs text-gray-500">
                 Silakan masukkan kata sandi minimal 8 karakter.
@@ -334,7 +334,7 @@ export function SetupScreen() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-semibold rounded-md py-2 mt-6 hover:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
+            className="w-full bg-orange-600 dark:bg-blue-600 text-slate-900 dark:text-white font-semibold rounded-md py-2 mt-6 hover:bg-orange-700 dark:bg-blue-700 transition-colors disabled:opacity-70 flex justify-center items-center"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -350,10 +350,10 @@ export function SetupScreen() {
             Dengan melanjutkan, Anda setuju dengan Syarat layanan dan Kebijakan privasi aplikasi kami.
           </p>
           <p className="mb-4">
-            Sudah memiliki akun? <a href="/login" className="text-blue-600 font-semibold hover:underline">Masuk</a>
+            Sudah memiliki akun? <a href="/login" className="text-orange-600 dark:text-blue-600 font-semibold hover:underline">Masuk</a>
           </p>
           <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-400">
-            Powered by <span className="text-blue-500">satujalan.id</span>
+            Powered by <span className="text-orange-600 dark:text-blue-500">satujalan.id</span>
           </p>
         </div>
         
@@ -361,9 +361,9 @@ export function SetupScreen() {
       </div>
 
       {/* Right Side: Giant Logo Showcase (hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-950 relative items-center justify-center overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-50 dark:bg-slate-950 relative items-center justify-center overflow-hidden">
         {/* Subtle background glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-600 dark:bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center">
@@ -372,8 +372,8 @@ export function SetupScreen() {
             alt="Finance AI Giant Logo" 
             className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
           />
-          <p className="text-slate-400 font-medium tracking-[0.2em] uppercase text-sm">
-            Powered by <span className="text-blue-400 font-bold">satujalan.id</span>
+          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-[0.2em] uppercase text-sm">
+            Powered by <span className="text-orange-500 dark:text-blue-400 font-bold">satujalan.id</span>
           </p>
         </div>
         

@@ -92,7 +92,7 @@ export default async function RootLayout({
     if (!isTenantExist) {
       return (
         <html lang="en" suppressHydrationWarning>
-          <body className={`${inter.className} min-h-screen bg-slate-900 antialiased`}>
+          <body className={`${inter.className} min-h-screen bg-white dark:bg-slate-900 antialiased`}>
             <ForceLogout />
           </body>
         </html>
@@ -113,12 +113,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-[var(--color-dash-bg)] text-white antialiased`}>
+      <body className={`${inter.className} min-h-screen bg-[var(--color-dash-bg)] text-slate-900 dark:text-white antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          forcedTheme="dark"
-          enableSystem={false}
+          defaultTheme="system"
+          enableSystem
           disableTransitionOnChange
         >
           <AppConfigProvider initialTipeBisnis={tipeBisnis}>

@@ -20,7 +20,7 @@ export function ForceLogout() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       <p>Sesi telah berakhir atau dihapus. Mengalihkan ke halaman login...</p>
     </div>
   );
