@@ -32,11 +32,45 @@ export function CurrentDate() {
           year: 'numeric'
         }).format(now);
         
-        const hijri = new Intl.DateTimeFormat(localeHijri, {
+        // Menggunakan en-US sebagai base untuk kalender Hijriah agar aman di semua browser mobile
+        // Browser mobile ID sering bug menampilkan "SM" (Sebelum Masehi) pada kalender Hijriah
+        const parts = new Intl.DateTimeFormat('en-US-u-ca-islamic-nu-latn', {
           day: 'numeric',
           month: 'long',
           year: 'numeric'
-        }).format(now) + ' H';
+        }).formatToParts(now);
+
+        let d = '', m = '', y = '';
+        for (const part of parts) {
+          if (part.type === 'day') d = part.value;
+          if (part.type === 'month') m = part.value;
+          if (part.type === 'year') y = part.value;
+        }
+
+        const monthMap: Record<string, string> = {
+          "Muharram": "Muharram",
+          "Safar": "Safar",
+          "Rabiʻ I": "Rabiul Awal",
+          "Rabiʻ II": "Rabiul Akhir",
+          "Jumada I": "Jumadil Awal",
+          "Jumada II": "Jumadil Akhir",
+          "Rajab": "Rajab",
+          "Shaʻban": "Sya'ban",
+          "Ramadan": "Ramadhan",
+          "Shawwal": "Syawal",
+          "Dhuʻl-Qiʻdah": "Dzulqa'dah",
+          "Dhuʻl-Hijjah": "Dzulhijjah"
+        };
+        
+        let hijriStr = `${d} ${monthMap[m] || m} ${y} H`;
+        // Jika bahasa yang dipilih adalah Arab, gunakan locale arab asli (biasanya aman)
+        if (language === 'ar') {
+          hijriStr = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          }).format(now) + ' H';
+        }
+
+        const hijri = hijriStr;
 
         setDate({ gregorian, hijri });
       } catch (e) {
