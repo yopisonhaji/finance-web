@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { saveSetupData } from "@/app/actions/setup";
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "@/lib/firebase";
+import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 export function SetupScreen() {
@@ -64,6 +64,29 @@ export function SetupScreen() {
         await signInWithRedirect(auth!, googleProvider);
       } else {
         setError("Gagal daftar dengan Google: " + err.message);
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const popupPromise = signInWithPopup(auth!, facebookProvider);
+      const result = await popupPromise;
+      
+      setEmail(result.user.email || "");
+      setNama(result.user.displayName || "");
+      setFirebaseUid(result.user.uid);
+      setIsGoogleSignedIn(true);
+      setLoading(false);
+    } catch (err: any) {
+      if (err.code === "auth/popup-blocked") {
+        setError("Popup diblokir, mengalihkan halaman...");
+        await signInWithRedirect(auth!, facebookProvider);
+      } else {
+        setError("Gagal daftar dengan Facebook: " + err.message);
         setLoading(false);
       }
     }
@@ -151,6 +174,9 @@ export function SetupScreen() {
         
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <img src="/app-logo.png" alt="Logo" className="w-20 h-20 rounded-2xl shadow-sm object-cover" />
+          </div>
           <h1 className="text-2xl font-bold mb-2">Buat akun Gratis Anda</h1>
           <p className="text-gray-500 text-sm">
             Mulai kelola pembayaran otomatis dengan Finance AI.
@@ -165,16 +191,28 @@ export function SetupScreen() {
 
         {!isGoogleSignedIn && (
           <>
-            {/* Google Login Button */}
-            <button 
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              type="button"
-              className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors mb-6 disabled:opacity-50"
-            >
-              <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
-              <span className="font-medium">Daftar dengan Google</span>
-            </button>
+            {/* Social Login Buttons */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <button 
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                type="button"
+                className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
+                <span className="font-medium text-sm">Google</span>
+              </button>
+
+              <button 
+                onClick={handleFacebookLogin}
+                disabled={loading}
+                type="button"
+                className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <img src="/facebook-icon.svg" alt="Facebook" className="w-5 h-5" />
+                <span className="font-medium text-sm">Facebook</span>
+              </button>
+            </div>
 
             {/* Divider */}
             <div className="relative flex py-5 items-center mb-4">

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword } from "@/lib/firebase";
+import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword } from "@/lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -82,6 +82,46 @@ export default function LoginPage() {
     }
   };
 
+  const handleFacebookLogin = async () => {
+    try {
+      const popupPromise = signInWithPopup(auth!, facebookProvider);
+      
+      setLoading(true);
+      setError("");
+      
+      const result = await popupPromise;
+      const email = result.user.email;
+      const firebaseUid = result.user.uid;
+
+      const { verifyLogin } = await import("@/app/actions/auth");
+      const data = await verifyLogin(email || "", firebaseUid);
+
+      if (data.success) {
+        localStorage.setItem("token", data.token!);
+        document.cookie = `token=${data.token}; path=/; max-age=864000`;
+        router.push("/");
+      } else {
+        setError("Akun belum terdaftar. Mengalihkan ke pendaftaran...");
+        setTimeout(() => {
+          router.push("/register");
+        }, 1500);
+      }
+    } catch (err: any) {
+      if (err.code === "auth/popup-blocked") {
+        setError("Popup diblokir browser, mengalihkan ke halaman login...");
+        try {
+          await signInWithRedirect(auth!, facebookProvider);
+        } catch (redirectErr: any) {
+          setError("Gagal mengalihkan halaman: " + redirectErr.message);
+          setLoading(false);
+        }
+      } else {
+        setError("Gagal masuk dengan Facebook: " + err.message);
+        setLoading(false);
+      }
+    }
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -117,6 +157,9 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <img src="/app-logo.png" alt="Logo" className="w-20 h-20 rounded-2xl shadow-sm object-cover" />
+          </div>
           <h1 className="text-2xl font-bold mb-2">Masuk ke Finance AI</h1>
           <p className="text-gray-500 text-sm">
             Selamat datang kembali! Silakan masuk ke akun Anda.
@@ -129,20 +172,36 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Google Login Button */}
-        <button 
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          type="button"
-          className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors mb-6 disabled:opacity-50"
-        >
-          {loading ? (
-            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-          ) : (
-            <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
-          )}
-          <span className="font-medium">Google</span>
-        </button>
+        {/* Social Login Buttons */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <button 
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            type="button"
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+            ) : (
+              <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
+            )}
+            <span className="font-medium text-sm">Google</span>
+          </button>
+
+          <button 
+            onClick={handleFacebookLogin}
+            disabled={loading}
+            type="button"
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+            ) : (
+              <img src="/facebook-icon.svg" alt="Facebook" className="w-5 h-5" />
+            )}
+            <span className="font-medium text-sm">Facebook</span>
+          </button>
+        </div>
 
         {/* Divider */}
         <div className="relative flex py-5 items-center mb-4">
