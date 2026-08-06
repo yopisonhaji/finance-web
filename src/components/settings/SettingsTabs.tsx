@@ -74,8 +74,10 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       ADMIN_WA: initialData.ADMIN_WA || "",
       ipaymu_va: initialData.ipaymu_va || "",
       ipaymu_key: initialData.ipaymu_key || "",
-      deepseek_key: initialData.deepseek_key || "",
+      deepseek_api_key: initialData.deepseek_api_key || "",
       ai_prompt: initialData.ai_prompt || "",
+      usage_token: initialData.usage_token || "0",
+      limit_token: initialData.limit_token || "0",
       ai_target_reply: initialData.ai_target_reply || "all",
       wa_bot_url: initialData.wa_bot_url || "",
       wa_bot_token: initialData.wa_bot_token || "",
@@ -331,33 +333,33 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
                     <p className="text-sm text-slate-400 mb-1">{t('settings.api_status')}</p>
-                    <p className={`text-xl font-bold ${initialData.deepseek_key ? 'text-emerald-400' : 'text-rose-400'}`}>
-                      {initialData.deepseek_key ? t('settings.api_active') : t('settings.api_unset')}
+                    <p className={`text-xl font-bold ${initialData.deepseek_api_key ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {initialData.deepseek_api_key ? t('settings.api_active') : t('settings.api_unset')}
                     </p>
                   </div>
                   <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
                     <p className="text-sm text-slate-400 mb-1">{t('settings.token_used')}</p>
                     <p className="text-xl font-bold text-blue-400">
-                      {Number(initialData.token_usage || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">Token</span>
+                      {Number(initialData.usage_token || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">Token</span>
                     </p>
                   </div>
                   <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
                     <p className="text-sm text-slate-400 mb-1">{t('settings.token_limit')}</p>
                     <p className="text-xl font-bold text-amber-400">
-                      {Number(initialData.token_limit || 0) > 0 ? Number(initialData.token_limit || 0).toLocaleString() : t('settings.unlimited')}
+                      {Number(initialData.limit_token || 0) > 0 ? Number(initialData.limit_token || 0).toLocaleString() : t('settings.unlimited')}
                     </p>
                   </div>
                 </div>
-                {Number(initialData.token_limit || 0) > 0 && (
+                {Number(initialData.limit_token || 0) > 0 && (
                   <div className="mt-4">
                     <div className="flex justify-between text-xs text-slate-400 mb-1">
                       <span>{t('settings.usage_percentage')}</span>
-                      <span>{Math.min(100, Math.round((Number(initialData.token_usage || 0) / Number(initialData.token_limit || 1)) * 100))}%</span>
+                      <span>{Math.min(100, Math.round((Number(initialData.usage_token || 0) / Number(initialData.limit_token || 1)) * 100))}%</span>
                     </div>
                     <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-500 rounded-full" 
-                        style={{ width: `${Math.min(100, Math.round((Number(initialData.token_usage || 0) / Number(initialData.token_limit || 1)) * 100))}%` }}
+                        style={{ width: `${Math.min(100, Math.round((Number(initialData.usage_token || 0) / Number(initialData.limit_token || 1)) * 100))}%` }}
                       ></div>
                     </div>
                   </div>
