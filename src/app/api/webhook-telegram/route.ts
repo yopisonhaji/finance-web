@@ -5,9 +5,10 @@ import { eq, and } from "drizzle-orm";
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo";
 
-async function sendMessage(chatId: string | number, text: string) {
+async function sendMessage(chatId: string | number, text: string, botToken: string) {
   try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    const token = botToken || process.env.TELEGRAM_BOT_TOKEN || "8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo";
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text }),
@@ -19,6 +20,9 @@ async function sendMessage(chatId: string | number, text: string) {
 
 export async function POST(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const botToken = searchParams.get("token") || "";
+
     const body = await req.json();
     
     // Telegram webhook payload structure
@@ -63,10 +67,10 @@ export async function POST(req: Request) {
           });
         }
 
-        await sendMessage(chatId, `✅ Berhasil! Akun Telegram Anda telah ditautkan ke sistem (Tenant: ${tenantId}).\n\nKirimkan perintah berikut untuk injeksi API:\n- 'API WA <URL> <TOKEN>'\n- 'API AI <TOKEN_DEEPSEEK>'`);
+        await sendMessage(chatId, `✅ Berhasil! Akun Telegram Anda telah ditautkan ke sistem (Tenant: ${tenantId}).\n\nKirimkan perintah berikut untuk injeksi API:\n- 'API WA <URL> <TOKEN>'\n- 'API AI <TOKEN_DEEPSEEK>'`, botToken);
         return NextResponse.json({ success: true });
       } else {
-        await sendMessage(chatId, `❌ Gagal! Nomor HP ${phone} tidak ditemukan sebagai pemilik (Owner) di sistem.`);
+        await sendMessage(chatId, `❌ Gagal! Nomor HP ${phone} tidak ditemukan sebagai pemilik (Owner) di sistem.`, botToken);
         return NextResponse.json({ success: true });
       }
     }
@@ -79,7 +83,7 @@ export async function POST(req: Request) {
       );
 
       if (tenantData.length === 0) {
-        await sendMessage(chatId, `❌ Akun Anda belum tertaut! Kirim perintah:\nLOGIN <Nomor WA Terdaftar>`);
+        await sendMessage(chatId, `❌ Akun Anda belum tertaut! Kirim perintah:\nLOGIN <Nomor WA Terdaftar>`, botToken);
         return NextResponse.json({ success: true });
       }
 
@@ -89,7 +93,7 @@ export async function POST(req: Request) {
 
       if (type === "WA") {
         if (args.length < 4) {
-          await sendMessage(chatId, `❌ Format salah! Gunakan:\nAPI WA <URL> <TOKEN>`);
+          await sendMessage(chatId, `❌ Format salah! Gunakan:\nAPI WA <URL> <TOKEN>`, botToken);
           return NextResponse.json({ success: true });
         }
         const url = args[2];
@@ -105,10 +109,10 @@ export async function POST(req: Request) {
         if (existingWaToken.length > 0) await db.update(pengaturan).set({ nilai: token }).where(eq(pengaturan.id, existingWaToken[0].id));
         else await db.insert(pengaturan).values({ tenantId, kunci: "wa_bot_token", nilai: token });
 
-        await sendMessage(chatId, `✅ Berhasil! API Token WhatsApp untuk tenant Anda berhasil disuntikkan.`);
+        await sendMessage(chatId, `✅ Berhasil! API Token WhatsApp untuk tenant Anda berhasil disuntikkan.`, botToken);
       } else if (type === "AI") {
         if (args.length < 3) {
-          await sendMessage(chatId, `❌ Format salah! Gunakan:\nAPI AI <TOKEN_DEEPSEEK>`);
+          await sendMessage(chatId, `❌ Format salah! Gunakan:\nAPI AI <TOKEN_DEEPSEEK>`, botToken);
           return NextResponse.json({ success: true });
         }
         const aiToken = args[2];
@@ -118,15 +122,15 @@ export async function POST(req: Request) {
         if (existingAi.length > 0) await db.update(pengaturan).set({ nilai: aiToken }).where(eq(pengaturan.id, existingAi[0].id));
         else await db.insert(pengaturan).values({ tenantId, kunci: "deepseek_key", nilai: aiToken });
 
-        await sendMessage(chatId, `✅ Berhasil! API Token DeepSeek/AI untuk tenant Anda berhasil disuntikkan.`);
+        await sendMessage(chatId, `✅ Berhasil! API Token DeepSeek/AI untuk tenant Anda berhasil disuntikkan.`, botToken);
       } else {
-        await sendMessage(chatId, `❌ Perintah API tidak dikenali! Gunakan 'API WA' atau 'API AI'.`);
+        await sendMessage(chatId, `❌ Perintah API tidak dikenali! Gunakan 'API WA' atau 'API AI'.`, botToken);
       }
       return NextResponse.json({ success: true });
     }
 
     // Default reply
-    await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA)\n3. 'API AI <TOKEN>' (Suntik API AI)`);
+    await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA)\n3. 'API AI <TOKEN>' (Suntik API AI)`, botToken);
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
