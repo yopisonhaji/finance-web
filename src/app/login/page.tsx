@@ -160,6 +160,9 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="flex lg:hidden justify-center mb-6">
+            <img src="/app-logo.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
+          </div>
           <h1 className="text-2xl font-bold mb-2">Masuk ke Finance AI</h1>
           <p className="text-gray-500 text-sm">
             Selamat datang kembali! Silakan masuk ke akun Anda.
@@ -257,7 +260,7 @@ export default function LoginPage() {
             Belum memiliki akun? <a href="/register" className="text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
           </p>
           <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-400">
-            Powered by <span className="text-blue-500">satujalan.id</span>
+            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors cursor-pointer relative z-20">satujalan.id</a>
           </p>
         </div>
       </div>
@@ -275,8 +278,8 @@ export default function LoginPage() {
             alt="Finance AI Giant Logo" 
             className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
           />
-          <p className="text-slate-400 font-medium tracking-[0.2em] uppercase text-sm">
-            Powered by <span className="text-blue-400 font-bold">satujalan.id</span>
+          <p className="text-slate-400 font-medium tracking-[0.2em] uppercase text-sm relative z-20">
+            Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
           </p>
         </div>
         

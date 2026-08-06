@@ -177,6 +177,9 @@ export function SetupScreen() {
         
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="flex lg:hidden justify-center mb-6">
+            <img src="/app-logo.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
+          </div>
           <h1 className="text-2xl font-bold mb-2">Buat akun Gratis Anda</h1>
           <p className="text-gray-500 text-sm">
             Mulai kelola pembayaran otomatis dengan Finance AI.
