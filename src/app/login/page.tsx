@@ -261,6 +261,7 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+      </div>
 
       {/* Right Side: Giant Logo Showcase (hidden on small screens) */}
       <div className="hidden lg:flex lg:w-1/2 bg-slate-950 relative items-center justify-center overflow-hidden">
