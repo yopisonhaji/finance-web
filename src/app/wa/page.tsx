@@ -13,7 +13,7 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
-  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "https://caulocarpous-nonsubtractively-jackelyn.ngrok-free.dev";
+  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
 
   const fetchStatus = async () => {
     try {
