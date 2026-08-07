@@ -3,8 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function SetupScreen() {
+  const { t } = useLanguage();
   const [nama, setNama] = useState("");
   const [noWa, setNoWa] = useState("");
   const [email, setEmail] = useState("");
@@ -180,20 +184,24 @@ export function SetupScreen() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white text-gray-800">
-      
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white relative">
+      <div className="absolute top-6 right-6 flex items-center gap-3 z-50">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+
       {/* Left Side: Form */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 z-10 bg-white relative overflow-y-auto">
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 z-10 bg-white dark:bg-slate-950 relative overflow-y-auto">
         <div className="w-full max-w-md">
         
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex lg:hidden justify-center mb-6">
-            <img src="/app-logo.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
+            <img src="/app-logo-hq.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Buat akun Gratis Anda</h1>
-          <p className="text-gray-700 text-sm">
-            Mulai kelola pembayaran otomatis dengan Finance AI.
+          <h1 className="text-2xl font-bold mb-2">{t("auth.setup_title")}</h1>
+          <p className="text-gray-700 dark:text-gray-400 text-sm">
+            {t("auth.setup_subtitle")}
           </p>
         </div>
 
@@ -214,7 +222,7 @@ export function SetupScreen() {
                 className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
               >
                 <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
-                <span className="font-medium text-sm">Google</span>
+                <span className="font-medium text-sm">{t("auth.google")}</span>
               </button>
 
               <button 
@@ -224,15 +232,15 @@ export function SetupScreen() {
                 className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
               >
                 <img src="/facebook-icon.svg" alt="Facebook" className="w-5 h-5" />
-                <span className="font-medium text-sm">Facebook</span>
+                <span className="font-medium text-sm">{t("auth.facebook")}</span>
               </button>
             </div>
 
             {/* Divider */}
             <div className="relative flex py-5 items-center mb-4">
-              <div className="flex-grow border-t border-gray-200"></div>
-              <span className="flex-shrink-0 mx-4 text-gray-600 font-medium text-sm">Atau daftar dengan Email</span>
-              <div className="flex-grow border-t border-gray-200"></div>
+              <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+              <span className="flex-shrink-0 mx-4 text-gray-600 dark:text-gray-400 font-medium text-sm">{t("auth.or_email")}</span>
+              <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
             </div>
           </>
         )}
@@ -249,84 +257,84 @@ export function SetupScreen() {
         <form onSubmit={handleEmailRegisterAndSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">
-              Nama Lengkap / Institusi <span className="text-red-500">*</span>
+              {t("auth.fullname")} <span className="text-red-500">*</span>
             </label>
             <input 
               type="text" 
-              placeholder="Masukkan nama Anda"
+              placeholder={t("auth.fullname")}
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
           {!isGoogleSignedIn && (
             <div>
               <label className="block text-sm font-medium mb-1">
-                Alamat Email <span className="text-red-500">*</span>
+                {t("auth.email")} <span className="text-red-500">*</span>
               </label>
               <input 
                 type="email" 
-                placeholder="Alamat Email"
+                placeholder={t("auth.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
+                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
               />
             </div>
           )}
 
           <div>
             <label className="block text-sm font-medium mb-1">
-              Nomor WhatsApp <span className="text-red-500">*</span>
+              {t("auth.whatsapp")} <span className="text-red-500">*</span>
             </label>
             <input 
               type="text" 
-              placeholder="Contoh: 08123456789"
+              placeholder="08123456789"
               value={noWa}
               onChange={(e) => setNoWa(e.target.value.replace(/\D/g, ""))}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">
-              Tipe Bisnis <span className="text-red-500">*</span>
+              {t("auth.business_type")} <span className="text-red-500">*</span>
             </label>
             <select
               value={tipeBisnis}
               onChange={(e) => setTipeBisnis(e.target.value)}
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500 bg-white"
+              className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             >
-              <option value="PENDIDIKAN">Institusi Pendidikan (Sekolah/Pesantren)</option>
-              <option value="PERUSAHAAN">Perusahaan / Toko / Umum</option>
+              <option value="PENDIDIKAN">{t("auth.business_edu")}</option>
+              <option value="PERUSAHAAN">{t("auth.business_corp")}</option>
             </select>
           </div>
 
           {!isGoogleSignedIn && (
             <div>
               <label className="block text-sm font-medium mb-1">
-                Buat Kata Sandi <span className="text-red-500">*</span>
+                {t("auth.create_pwd")} <span className="text-red-500">*</span>
               </label>
               <input 
                 type="password" 
-                placeholder="Kata Sandi"
+                placeholder={t("auth.create_pwd")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
                 minLength={8}
                 maxLength={20}
-                className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500 mb-1"
+                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500 mb-1"
               />
-              <p className="text-xs text-gray-700">
-                Silakan masukkan kata sandi minimal 8 karakter.
+              <p className="text-xs text-gray-700 dark:text-gray-400">
+                {t("auth.pwd_hint")}
               </p>
             </div>
           )}
@@ -339,18 +347,18 @@ export function SetupScreen() {
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              "Pendaftaran"
+              t("auth.register_btn")
             )}
           </button>
         </form>
 
         {/* Footer Links */}
-        <div className="text-center mt-6 text-sm text-gray-600">
+        <div className="text-center mt-6 text-sm text-gray-600 dark:text-gray-400">
           <p className="mb-4 text-xs">
-            Dengan melanjutkan, Anda setuju dengan Syarat layanan dan Kebijakan privasi aplikasi kami.
+            {t("auth.agree_terms")}
           </p>
           <p className="mb-4">
-            Sudah memiliki akun? <a href="/login" className="text-orange-600 dark:text-blue-600 font-semibold hover:underline">Masuk</a>
+            {t("auth.already_have")} <a href="/login" className="text-orange-600 dark:text-blue-600 font-semibold hover:underline">{t("auth.login_here")}</a>
           </p>
           <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-600 font-medium">
             Powered by <span className="text-orange-600 dark:text-blue-500">satujalan.id</span>
@@ -368,7 +376,7 @@ export function SetupScreen() {
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center">
           <img 
-            src="/app-logo.png" 
+            src="/app-logo-hq.png" 
             alt="Finance AI Giant Logo" 
             className="w-full max-w-[900px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-16 transform -rotate-12 scale-150 hover:scale-[1.6] hover:-rotate-6 transition-all duration-1000 ease-in-out"
           />

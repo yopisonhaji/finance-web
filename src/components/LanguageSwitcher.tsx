@@ -38,7 +38,7 @@ export function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute end-0 mt-2 w-40 bg-[var(--color-dash-panel)] border border-slate-300 dark:border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50">
+        <div className="absolute right-0 end-0 mt-2 min-w-[160px] w-auto bg-[var(--color-dash-panel)] border border-slate-300 dark:border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50">
           <div className="py-1">
             {languageOptions.map((lang) => (
               <button
@@ -56,7 +56,7 @@ export function LanguageSwitcher() {
                 <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-slate-700/50">
                   <img src={lang.flagUrl} alt={lang.label} className="w-full h-full object-cover" />
                 </div>
-                {lang.label}
+                <span className="flex-1 text-left truncate" dir="auto">{lang.label}</span>
               </button>
             ))}
           </div>

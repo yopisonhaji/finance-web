@@ -104,8 +104,19 @@ export default async function RootLayout({
     return (
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} min-h-screen bg-slate-50 antialiased`}>
-          <SetupScreen />
-          <div style={{ display: 'none' }}>{children}</div>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AppConfigProvider initialTipeBisnis={tipeBisnis}>
+              <LanguageProvider>
+                <SetupScreen />
+                <div style={{ display: 'none' }}>{children}</div>
+              </LanguageProvider>
+            </AppConfigProvider>
+          </ThemeProvider>
         </body>
       </html>
     );
