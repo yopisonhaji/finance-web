@@ -129,8 +129,94 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true });
     }
 
+    // 3. SUPER ADMIN COMMANDS
+    if (chatId === process.env.TELEGRAM_CHAT_ID) {
+      if (text.startsWith("/users")) {
+        const users = await db.select().from(pengaturan).where(eq(pengaturan.kunci, "OWNER_WA"));
+        if (users.length === 0) {
+          await sendMessage(chatId, "Belum ada tenant yang mendaftar.", botToken);
+          return NextResponse.json({ success: true });
+        }
+        
+        let msg = `📊 *Total Pendaftar: ${users.length} Tenant*\n\n`;
+        for (let i = 0; i < users.length; i++) {
+          const tId = users[i].tenantId;
+          const namaData = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "OWNER_NAMA")));
+          const nama = namaData.length > 0 ? namaData[0].nilai : "Tanpa Nama";
+          msg += `${i+1}. *${nama}* (WA: ${users[i].nilai})\nID: \`${tId}\`\n\n`;
+        }
+        await sendMessage(chatId, msg, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (text.startsWith("/delete ")) {
+        const waToDelete = text.substring(8).trim();
+        const tenantData = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, waToDelete)));
+        
+        if (tenantData.length === 0) {
+          await sendMessage(chatId, `❌ Tenant dengan nomor WA ${waToDelete} tidak ditemukan.`, botToken);
+          return NextResponse.json({ success: true });
+        }
+
+        const tId = tenantData[0].tenantId;
+        // Delete all settings for this tenant
+        await db.delete(pengaturan).where(eq(pengaturan.tenantId, tId));
+        // Delete user login
+        const { users: usersTable } = await import("@/db/schema");
+        await db.delete(usersTable).where(eq(usersTable.tenantId, tId));
+
+        await sendMessage(chatId, `✅ Berhasil menghapus seluruh data Tenant dengan WA ${waToDelete} dari sistem.`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (text.startsWith("/inject ")) {
+        const args = text.split(" ");
+        if (args.length < 4) {
+          await sendMessage(chatId, "❌ Format salah. Gunakan: /inject <NoWA> WA <URL> <TOKEN> ATAU /inject <NoWA> AI <TOKEN>", botToken);
+          return NextResponse.json({ success: true });
+        }
+
+        const targetWa = args[1];
+        const type = args[2].toUpperCase();
+
+        const tenantData = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, targetWa)));
+        if (tenantData.length === 0) {
+          await sendMessage(chatId, `❌ Tenant dengan nomor WA ${targetWa} tidak ditemukan.`, botToken);
+          return NextResponse.json({ success: true });
+        }
+
+        const tId = tenantData[0].tenantId;
+
+        if (type === "WA") {
+          const url = args[3];
+          const token = args.slice(4).join(" ");
+          
+          const existingUrl = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "wa_bot_url")));
+          if (existingUrl.length > 0) await db.update(pengaturan).set({ nilai: url }).where(eq(pengaturan.id, existingUrl[0].id));
+          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "wa_bot_url", nilai: url });
+          
+          const existingWaToken = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "wa_bot_token")));
+          if (existingWaToken.length > 0) await db.update(pengaturan).set({ nilai: token }).where(eq(pengaturan.id, existingWaToken[0].id));
+          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "wa_bot_token", nilai: token });
+
+          await sendMessage(chatId, `✅ Injeksi API WA berhasil untuk tenant ${targetWa}.`, botToken);
+        } else if (type === "AI") {
+          const aiToken = args[3];
+          const existingAi = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "deepseek_key")));
+          if (existingAi.length > 0) await db.update(pengaturan).set({ nilai: aiToken }).where(eq(pengaturan.id, existingAi[0].id));
+          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "deepseek_key", nilai: aiToken });
+
+          await sendMessage(chatId, `✅ Injeksi API AI berhasil untuk tenant ${targetWa}.`, botToken);
+        }
+        return NextResponse.json({ success: true });
+      }
+    }
+
     // Default reply
-    await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA)\n3. 'API AI <TOKEN>' (Suntik API AI)`, botToken);
+    const adminHelp = chatId === process.env.TELEGRAM_CHAT_ID ? 
+      `\n\n👑 *Perintah Super Admin:*\n- '/users' (Lihat semua pendaftar)\n- '/delete <NoWA>' (Hapus akun tenant)\n- '/inject <NoWA> WA <URL> <TOKEN>'\n- '/inject <NoWA> AI <TOKEN>'` : "";
+
+    await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA ke akun sendiri)\n3. 'API AI <TOKEN>' (Suntik API AI ke akun sendiri)${adminHelp}`, botToken);
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
