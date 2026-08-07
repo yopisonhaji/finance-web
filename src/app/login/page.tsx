@@ -272,7 +272,7 @@ export default function LoginPage() {
           <img 
             src="/app-logo.png" 
             alt="Finance AI Giant Logo" 
-            className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
+            className="w-full max-w-[900px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-16 transform -rotate-12 scale-150 hover:scale-[1.6] hover:-rotate-6 transition-all duration-1000 ease-in-out"
           />
           <p className="text-slate-700 dark:text-slate-300 font-medium font-medium tracking-[0.2em] uppercase text-sm relative z-20">
             Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
