@@ -43,7 +43,7 @@ const settingsSchema = z.object({
   ai_target_reply: z.string().optional().or(z.literal("all")),
   wa_bot_url: z.string().optional().or(z.literal("")),
   wa_bot_token: z.string().optional().or(z.literal("")),
-  telegram_bot_token: z.string().optional().or(z.literal("")),
+
   spp_reminder_day: z.string().optional().or(z.literal("")),
   spp_reminder_time: z.string().optional().or(z.literal("")),
   spp_reminder_template: z.string().optional().or(z.literal("")),
@@ -87,7 +87,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       ai_target_reply: initialData.ai_target_reply || "all",
       wa_bot_url: initialData.wa_bot_url || "",
       wa_bot_token: initialData.wa_bot_token || "",
-      telegram_bot_token: initialData.telegram_bot_token || "",
+
       spp_reminder_day: initialData.spp_reminder_day || "Setiap Hari",
       spp_reminder_time: initialData.spp_reminder_time || "07:00",
       spp_reminder_template: initialData.spp_reminder_template || "Assalamu'alaikum Bapak/Ibu {{nama_wali}},\n\nKami dari Bagian Keuangan {{nama_pesantren}} mengingatkan bahwa terdapat tagihan SPP bulanan yang belum lunas untuk ananda *{{nama_santri}}* (Kelas {{kelas_santri}}).\n\nMohon untuk segera menyelesaikan pembayaran di loket kasir atau via transfer.\n\nWassalamu'alaikum Wr. Wb.",
@@ -551,58 +551,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                   />
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-slate-300 dark:border-slate-700">
-                  <h3 className="text-lg font-medium text-orange-500 dark:text-blue-400 mb-4">Telegram Bot API (Webhook)</h3>
-                  <FormField
-                    control={form.control}
-                    name="telegram_bot_token"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Token Bot Telegram (dari BotFather)</FormLabel>
-                        <FormControl>
-                          <div className="relative flex items-center">
-                            <Input 
-                              type={showTelegramKey ? "text" : "password"} 
-                              placeholder="1234567890:AAH_xxxxxxxxxxx" 
-                              {...field} 
-                              readOnly={lockTelegram}
-                              className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockTelegram ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
-                            />
-                            <div className="absolute right-2 flex items-center space-x-1">
-                              <button
-                                type="button"
-                                onClick={() => setShowTelegramKey(!showTelegramKey)}
-                                className="p-1.5 text-muted-foreground hover:text-foreground"
-                              >
-                                {showTelegramKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setLockTelegram(!lockTelegram)}
-                                className={`p-1.5 ${lockTelegram ? 'text-red-400' : 'text-green-400'} hover:opacity-80`}
-                                title={lockTelegram ? "Buka Kunci untuk Mengedit" : "Kunci Kembali"}
-                              >
-                                {lockTelegram ? <Lock size={16} /> : <Unlock size={16} />}
-                              </button>
-                            </div>
-                          </div>
-                        </FormControl>
-                        <FormDescription>
-                          Masukkan token Bot Telegram untuk memantau dan menginjeksi API jarak jauh.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {form.watch("telegram_bot_token") && (
-                    <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-900 rounded-lg border border-slate-300 dark:border-slate-700">
-                      <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-2">Salin dan akses URL berikut di browser untuk mengaktifkan Webhook Bot Anda:</p>
-                      <code className="text-xs text-orange-500 dark:text-blue-400 break-all select-all block bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
-                        https://api.telegram.org/bot{form.watch("telegram_bot_token")}/setWebhook?url=https://app.satujalan.id/api/webhook-telegram?token={form.watch("telegram_bot_token")}
-                      </code>
-                    </div>
-                  )}
-                </div>
+
               </CardContent>
             </Card>
           </TabsContent>
