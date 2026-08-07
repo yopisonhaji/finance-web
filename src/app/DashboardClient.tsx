@@ -46,10 +46,10 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               <Users className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total {clientTerm}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">Total {clientTerm}</p>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{stats.totalSantri}</span>
-                <span className="text-[10px] text-slate-500 font-medium">{clientTerm}</span>
+                <span className="text-[10px] text-slate-700 font-medium">{clientTerm}</span>
               </div>
             </div>
           </CardContent>
@@ -62,7 +62,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               <FileText className="w-5 h-5 text-orange-400" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t("dashboard.total_shortage") || "Total Kekurangan"}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">{t("dashboard.total_shortage") || "Total Kekurangan"}</p>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Rp {stats.totalKekurangan.toLocaleString('id-ID')}</span>
               </div>
@@ -77,7 +77,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               <Wallet className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t("dashboard.today_income") || "Masuk Hari Ini"}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">{t("dashboard.today_income") || "Masuk Hari Ini"}</p>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Rp {stats.pemasukanHariIni.toLocaleString('id-ID')}</span>
               </div>
@@ -96,7 +96,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               <span className="text-[10px] font-bold text-orange-500 dark:text-blue-400">{stats.persentase}%</span>
             </div>
             <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t("dashboard.payment_rate") || "Tingkat Pelunasan"}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">{t("dashboard.payment_rate") || "Tingkat Pelunasan"}</p>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{stats.persentase}%</span>
               </div>
@@ -118,7 +118,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
                  <circle cx="80" cy="80" r="60" stroke="#10b981" strokeWidth="20" fill="transparent" strokeDasharray="377" strokeDashoffset={377 - (377 * stats.persentase / 100)} className="transition-all duration-700 ease-out" />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total {clientTerm}</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">Total {clientTerm}</span>
                 <span className="text-2xl font-bold text-slate-900 dark:text-white leading-tight">{stats.totalSantri}</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
           </div>
           <CardContent className="p-0 flex-1 flex flex-col">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/60">
+              <thead className="text-xs text-slate-700 dark:text-slate-300 font-medium bg-white dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/60">
                 <tr>
                   <th className="px-5 py-3 font-medium">Nama {clientTerm}</th>
                   <th className="px-5 py-3 font-medium">{clientTerm === "Siswa" ? "Wali/Orang Tua" : "Penanggung Jawab"}</th>
@@ -169,7 +169,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
                 </svg>
               </div>
               <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-1">Alhamdulillah, Semua Lunas!</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[200px]">Tidak ada satupun {clientTerm.toLowerCase()} yang menunggak bulan ini.</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium max-w-[200px]">Tidak ada satupun {clientTerm.toLowerCase()} yang menunggak bulan ini.</p>
             </div>
           </CardContent>
         </Card>
@@ -183,7 +183,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
                 {t("reports.recent_tx")}
               </h3>
             </div>
-            <CardContent className="p-5 flex flex-col items-center justify-center h-full text-sm text-slate-500 relative overflow-hidden">
+            <CardContent className="p-5 flex flex-col items-center justify-center h-full text-sm text-slate-700 relative overflow-hidden">
               <span className="relative z-10">{t("reports.no_tx_data") || "Belum ada riwayat transaksi bulan ini."}</span>
             </CardContent>
           </Card>
@@ -196,12 +196,12 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               {/* WA Status & Pairing Code */}
               <div className={`group flex flex-col gap-3 p-3 rounded-xl border transition-colors ${isWaActive ? 'bg-teal-500/10 border-teal-500/20' : 'bg-slate-100 dark:bg-slate-800/30 border-slate-300 dark:border-slate-700/50'}`}>
                 <div className="flex items-center gap-3">
-                  <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isWaActive ? 'bg-teal-500/20 text-teal-400' : 'bg-slate-700/50 text-slate-500'}`}>
+                  <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isWaActive ? 'bg-teal-500/20 text-teal-400' : 'bg-slate-700/50 text-slate-700'}`}>
                     <MessageSquareShare className="w-4 h-4 relative z-10" />
                   </div>
                   <div className="flex-1">
-                    <h4 className={`text-sm font-semibold ${isWaActive ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>{t("dashboard.wa_notif")}</h4>
-                    <p className={`text-[10px] flex items-center gap-1 ${isWaActive ? 'text-teal-400' : 'text-slate-500'}`}>
+                    <h4 className={`text-sm font-semibold ${isWaActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>{t("dashboard.wa_notif")}</h4>
+                    <p className={`text-[10px] flex items-center gap-1 ${isWaActive ? 'text-teal-400' : 'text-slate-700'}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${isWaActive ? 'bg-teal-400 animate-status-pulse' : 'bg-slate-600'}`}></span> 
                       {isWaActive ? (t("dashboard.module_ready") || 'Modul Terhubung & Siap') : (t("wa.disconnected") || 'Mesin WA Terputus')}
                     </p>
@@ -209,8 +209,8 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
                 </div>
                 {!isWaActive && (
                   <div className="mt-2 flex flex-col gap-2">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Silakan tautkan nomor via Terminal Golang</p>
-                    <a href="/wa" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 bg-orange-600 dark:bg-blue-600 text-white shadow hover:bg-orange-600 dark:bg-blue-600/90 h-9 px-4 py-2 w-full">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">Silakan tautkan nomor via Terminal Golang</p>
+                    <a href="/wa" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:pointer-events-none disabled:opacity-80 bg-orange-600 dark:bg-blue-600 text-white shadow hover:bg-orange-600 dark:bg-blue-600/90 h-9 px-4 py-2 w-full">
                       Buka Terminal WhatsApp
                     </a>
                   </div>
@@ -219,12 +219,12 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
               
               {/* AI Status */}
               <div className={`group flex items-center gap-3 p-3 rounded-xl border transition-colors ${hasAiKey ? 'bg-purple-500/10 border-purple-500/20' : 'bg-slate-100 dark:bg-slate-800/30 border-slate-300 dark:border-slate-700/50'}`}>
-                <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${hasAiKey ? 'bg-purple-500/20 text-purple-400' : 'bg-slate-700/50 text-slate-500'}`}>
+                <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${hasAiKey ? 'bg-purple-500/20 text-purple-400' : 'bg-slate-700/50 text-slate-700'}`}>
                   <Bot className="w-4 h-4 relative z-10" />
                 </div>
                 <div>
-                  <h4 className={`text-sm font-semibold ${hasAiKey ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>{t("dashboard.cs_bot")}</h4>
-                  <p className={`text-[10px] flex items-center gap-1 ${hasAiKey ? 'text-purple-400' : 'text-slate-500'}`}>
+                  <h4 className={`text-sm font-semibold ${hasAiKey ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>{t("dashboard.cs_bot")}</h4>
+                  <p className={`text-[10px] flex items-center gap-1 ${hasAiKey ? 'text-purple-400' : 'text-slate-700'}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${hasAiKey ? 'bg-purple-400 animate-status-pulse' : 'bg-slate-600'}`}></span> 
                     {hasAiKey ? (t("dashboard.standby") || 'API Aktif (Standby 24 Jam)') : (t("settings.api_unset") || 'API Key Belum Diatur')}
                   </p>
@@ -233,12 +233,12 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
 
               {/* Payment Gateway Status */}
               <div className={`group flex items-center gap-3 p-3 rounded-xl border transition-colors ${hasIpaymuKey ? 'bg-orange-500 dark:bg-blue-500/10 border-orange-500 dark:border-blue-500/20' : 'bg-slate-100 dark:bg-slate-800/30 border-slate-300 dark:border-slate-700/50'}`}>
-                <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${hasIpaymuKey ? 'bg-orange-500 dark:bg-blue-500/20 text-orange-500 dark:text-blue-400' : 'bg-slate-700/50 text-slate-500'}`}>
+                <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${hasIpaymuKey ? 'bg-orange-500 dark:bg-blue-500/20 text-orange-500 dark:text-blue-400' : 'bg-slate-700/50 text-slate-700'}`}>
                   <Wallet className="w-4 h-4 relative z-10" />
                 </div>
                 <div>
-                  <h4 className={`text-sm font-semibold ${hasIpaymuKey ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>{t("settings.tab_payment") || 'Payment Gateway'}</h4>
-                  <p className={`text-[10px] flex items-center gap-1 ${hasIpaymuKey ? 'text-orange-500 dark:text-blue-400' : 'text-slate-500'}`}>
+                  <h4 className={`text-sm font-semibold ${hasIpaymuKey ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>{t("settings.tab_payment") || 'Payment Gateway'}</h4>
+                  <p className={`text-[10px] flex items-center gap-1 ${hasIpaymuKey ? 'text-orange-500 dark:text-blue-400' : 'text-slate-700'}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${hasIpaymuKey ? 'bg-blue-400 animate-status-pulse' : 'bg-slate-600'}`}></span> 
                     {hasIpaymuKey ? (t("pos.ipaymu") || 'iPaymu Siap Menerima Dana') : (t("settings.api_unset") || 'Belum Dikonfigurasi')}
                   </p>
@@ -251,3 +251,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
     </div>
   )
 }
+
+
+
+

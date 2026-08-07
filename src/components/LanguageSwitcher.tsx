@@ -50,7 +50,7 @@ export function LanguageSwitcher() {
                 className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors
                   ${language === lang.code 
                     ? "bg-orange-500 dark:bg-blue-500/10 text-orange-500 dark:text-blue-400 font-semibold" 
-                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-800/50 hover:text-slate-900 dark:text-white"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-900 hover:text-slate-900 dark:text-white"
                   }`}
               >
                 <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-slate-700/50">
@@ -65,3 +65,7 @@ export function LanguageSwitcher() {
     </div>
   )
 }
+
+
+
+

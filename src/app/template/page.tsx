@@ -17,7 +17,7 @@ export default async function TemplatePage() {
         </p>
       </div>
 
-      <Card className="bg-[#1e293b] border-slate-300 dark:border-slate-700 text-slate-100">
+      <Card className="bg-white dark:bg-[#1e293b] border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100">
         <CardHeader>
           <CardTitle className="flex items-center">
             <MessageSquare className="mr-2 h-5 w-5 text-primary" />
@@ -29,7 +29,7 @@ export default async function TemplatePage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <Textarea 
-            className="h-64 font-mono text-sm border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0f172a] text-slate-100 placeholder:text-slate-500 focus-visible:ring-orange-500 dark:ring-blue-500"
+            className="h-64 font-mono text-sm border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 placeholder:text-slate-700 focus-visible:ring-orange-500 dark:ring-blue-500"
             defaultValue={`Assalamualaikum Wr. Wb.
 Bapak/Ibu Wali Santri dari {nama_santri} (NIS: {nis}),
 
@@ -53,3 +53,7 @@ Pengurus Finance Pesantren.`}
     </div>
   )
 }
+
+
+
+

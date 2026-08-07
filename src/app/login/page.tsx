@@ -160,7 +160,7 @@ export default function LoginPage() {
             <img src="/app-logo.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Masuk ke Finance AI</h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-700 text-sm">
             Selamat datang kembali! Silakan masuk ke akun Anda.
           </p>
         </div>
@@ -177,7 +177,7 @@ export default function LoginPage() {
             onClick={handleGoogleLogin}
             disabled={loading}
             type="button"
-            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
@@ -191,7 +191,7 @@ export default function LoginPage() {
             onClick={handleFacebookLogin}
             disabled={loading}
             type="button"
-            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
@@ -205,7 +205,7 @@ export default function LoginPage() {
         {/* Divider */}
         <div className="relative flex py-5 items-center mb-4">
           <div className="flex-grow border-t border-gray-200"></div>
-          <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">Or</span>
+          <span className="flex-shrink-0 mx-4 text-gray-600 font-medium text-sm">Or</span>
           <div className="flex-grow border-t border-gray-200"></div>
         </div>
 
@@ -222,7 +222,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
@@ -237,7 +237,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:ring-blue-500"
             />
           </div>
 
@@ -255,7 +255,7 @@ export default function LoginPage() {
           <p className="mb-4">
             Belum memiliki akun? <a href="/register" className="text-orange-600 dark:text-blue-600 font-semibold hover:underline">Daftar Gratis</a>
           </p>
-          <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-400">
+          <p className="text-[11px] font-semibold tracking-wider uppercase mt-8 text-gray-600 font-medium">
             Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-600 dark:text-blue-500 hover:text-orange-500 dark:text-blue-400 transition-colors cursor-pointer relative z-20">satujalan.id</a>
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function LoginPage() {
             alt="Finance AI Giant Logo" 
             className="w-3/4 max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] opacity-90 mb-8"
           />
-          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-[0.2em] uppercase text-sm relative z-20">
+          <p className="text-slate-700 dark:text-slate-300 font-medium font-medium tracking-[0.2em] uppercase text-sm relative z-20">
             Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
           </p>
         </div>
@@ -285,3 +285,7 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
+
+

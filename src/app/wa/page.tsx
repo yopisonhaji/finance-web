@@ -110,7 +110,7 @@ export default function StatusWAPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Terminal WhatsApp</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-2">
+        <p className="text-slate-700 dark:text-slate-300 font-medium mt-2">
           Hubungkan sistem dengan WhatsApp menggunakan metode modern (Pairing Code).
         </p>
       </div>
@@ -143,7 +143,7 @@ export default function StatusWAPage() {
               </div>
             ) : pairingCode ? (
               <div className="flex flex-col items-center py-6">
-                <p className="text-sm text-slate-500 mb-4 font-medium text-center">
+                <p className="text-sm text-slate-700 mb-4 font-medium text-center">
                   Buka WhatsApp di HP Anda &gt; Perangkat Taut &gt; Tautkan dengan Nomor Telepon. Lalu masukkan kode ini:
                 </p>
                 <div className="bg-slate-100 dark:bg-slate-800 rounded-xl px-8 py-6 shadow-inner w-full flex justify-center">
@@ -162,7 +162,7 @@ export default function StatusWAPage() {
                     placeholder="Contoh: 628123456789 (Gunakan 62)" 
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
-                    className="h-12 text-lg font-medium bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 placeholder:text-slate-500 focus:bg-white dark:bg-[#0f172a] focus-visible:ring-orange-500 dark:ring-blue-500"
+                    className="h-12 text-lg font-medium bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 placeholder:text-slate-700 focus:bg-white dark:bg-[#0f172a] focus-visible:ring-orange-500 dark:ring-blue-500"
                     
                   />
                 </div>
@@ -182,7 +182,7 @@ export default function StatusWAPage() {
         <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0f172a]">
           <CardHeader>
             <CardTitle className="text-slate-900 dark:text-white">Status Gateway Sistem</CardTitle>
-            <CardDescription className="text-slate-500 dark:text-slate-400">Sinkronisasi pesan & antrian real-time</CardDescription>
+            <CardDescription className="text-slate-700 dark:text-slate-300 font-medium">Sinkronisasi pesan & antrian real-time</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className={`p-4 rounded-xl border flex items-center justify-between ${status === 'connected' ? 'bg-emerald-900/20 border-emerald-800' : 'bg-rose-900/20 border-rose-800'}`}>
@@ -192,16 +192,16 @@ export default function StatusWAPage() {
                   <h4 className={`font-bold ${status === 'connected' ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {status === 'connected' ? 'Gateway Terhubung' : 'Menunggu Sesi'}
                   </h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Koneksi Aman & Stabil</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mt-0.5">Koneksi Aman & Stabil</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="text-slate-500">Arsitektur Core:</div>
+                <div className="text-slate-700">Arsitektur Core:</div>
                 <div className="font-semibold text-slate-700 dark:text-slate-300">Enterprise Gateway v2.4</div>
-                <div className="text-slate-500">Protokol Keamanan:</div>
+                <div className="text-slate-700">Protokol Keamanan:</div>
                 <div className="font-semibold text-slate-700 dark:text-slate-300">End-to-End Encryption</div>
               </div>
               
@@ -217,3 +217,7 @@ export default function StatusWAPage() {
     </div>
   )
 }
+
+
+
+

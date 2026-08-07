@@ -41,13 +41,13 @@ export default function UpdateSoftwarePage() {
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
             Software <span className="text-amber-500">Update</span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 text-lg max-w-2xl">
+          <p className="text-slate-700 dark:text-slate-300 font-medium mt-3 text-lg max-w-2xl">
             Kelola pembaruan sistem dan temukan fitur-fitur mutakhir yang baru saja dirilis oleh tim satujalan.id.
           </p>
         </div>
         
         <div className="flex flex-col items-end">
-          <p className="text-sm text-slate-500 mb-1">Status Server satujalan.id</p>
+          <p className="text-sm text-slate-700 mb-1">Status Server satujalan.id</p>
           <div className="flex items-center gap-2">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -71,11 +71,11 @@ export default function UpdateSoftwarePage() {
               </div>
               
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Versi Saat Ini: v1.2.0</h2>
-              <p className="text-slate-500 dark:text-slate-400 mb-8 px-4">Stable Edition (LTS) - Dirilis pada Juli 2026</p>
+              <p className="text-slate-700 dark:text-slate-300 font-medium mb-8 px-4">Stable Edition (LTS) - Dirilis pada Juli 2026</p>
 
               {checkStatus === "checking" && (
                 <div className="w-full mb-8">
-                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+                  <div className="flex justify-between text-xs text-slate-700 dark:text-slate-300 font-medium mb-2">
                     <span>Mengecek server...</span>
                     <span>{progress}%</span>
                   </div>
@@ -96,7 +96,7 @@ export default function UpdateSoftwarePage() {
                 disabled={isChecking}
                 className={`w-full group relative flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base font-semibold transition-all duration-300 overflow-hidden ${
                   isChecking 
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed' 
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium cursor-not-allowed' 
                     : 'bg-gradient-to-r from-amber-500 to-orange-600 text-slate-900 dark:text-white hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:-translate-y-1'
                 }`}
               >
@@ -115,7 +115,7 @@ export default function UpdateSoftwarePage() {
             </div>
             <div>
               <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Keamanan Terjamin</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Semua file update dienkripsi dan didistribusikan melalui server aman satujalan.id. Tidak ada risiko kehilangan data.</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">Semua file update dienkripsi dan didistribusikan melalui server aman satujalan.id. Tidak ada risiko kehilangan data.</p>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function UpdateSoftwarePage() {
               <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <FileText size={22} className="text-amber-500" /> Riwayat Pembaruan (Changelog)
               </h2>
-              <span className="text-sm text-slate-500 font-medium">Terbaru</span>
+              <span className="text-sm text-slate-700 font-medium">Terbaru</span>
             </div>
             
             <div className="p-8 space-y-10">
@@ -137,7 +137,7 @@ export default function UpdateSoftwarePage() {
                 <div className="flex flex-wrap items-baseline gap-3 mb-4">
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white">v1.2.0</h3>
                   <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider">Major Update</span>
-                  <span className="text-sm text-slate-500 ml-auto">Hari ini</span>
+                  <span className="text-sm text-slate-700 ml-auto">Hari ini</span>
                 </div>
                 
                 <div className="space-y-6">
@@ -146,10 +146,10 @@ export default function UpdateSoftwarePage() {
                       <div className="p-2 rounded-lg bg-orange-500 dark:bg-blue-500/20 text-orange-500 dark:text-blue-400"><Bot size={18} /></div>
                       <h4 className="font-semibold text-slate-900 dark:text-white text-lg">AI Function Calling (Akses Kepsek)</h4>
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    <p className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed mb-4">
                       Revolusi kecerdasan buatan! AI kini tidak hanya menjawab santai, tapi dilengkapi kapabilitas <span className="text-slate-900 dark:text-white font-medium">Function Calling</span>. AI secara otomatis membaca data <i>real-time</i> dari database jika di-chat oleh nomor WhatsApp Kepala Sekolah atau Admin.
                     </p>
-                    <ul className="text-sm text-slate-500 dark:text-slate-400 space-y-2">
+                    <ul className="text-sm text-slate-700 dark:text-slate-300 font-medium space-y-2">
                       <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-emerald-500 mt-0.5 flex-shrink-0" /> AI bisa memberikan laporan pemasukan dan jumlah santri nunggak seketika.</li>
                       <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-emerald-500 mt-0.5 flex-shrink-0" /> Tersedia form eksklusif di menu Settings untuk mendaftarkan No WA Kepsek/Admin.</li>
                     </ul>
@@ -160,7 +160,7 @@ export default function UpdateSoftwarePage() {
                       <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400"><Database size={18} /></div>
                       <h4 className="font-semibold text-slate-900 dark:text-white text-lg">Proteksi Database (Anti-Uninstall)</h4>
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    <p className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed mb-4">
                       File database utama kini di-migrasikan secara otomatis (Auto-Sync) ke folder absolut sistem (<i>My Documents</i>). 
                       Kejadian tidak disengaja seperti menghapus folder aplikasi tidak akan menghilangkan sekeping data pun!
                     </p>
@@ -169,14 +169,14 @@ export default function UpdateSoftwarePage() {
               </div>
 
               {/* Release 1.1.0 */}
-              <div className="relative pl-8 border-l border-slate-200 dark:border-slate-800 opacity-60">
+              <div className="relative pl-8 border-l border-slate-200 dark:border-slate-800 opacity-90">
                 <div className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-slate-700"></div>
                 <div className="flex flex-wrap items-baseline gap-3 mb-3">
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">v1.1.0</h3>
-                  <span className="text-sm text-slate-500 ml-auto">Minggu lalu</span>
+                  <span className="text-sm text-slate-700 ml-auto">Minggu lalu</span>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mb-3">Pembaruan stabilisasi performa dan fitur dasar.</p>
-                <ul className="text-sm text-slate-500 dark:text-slate-400 space-y-2">
+                <p className="text-slate-700 dark:text-slate-300 font-medium text-sm mb-3">Pembaruan stabilisasi performa dan fitur dasar.</p>
+                <ul className="text-sm text-slate-700 dark:text-slate-300 font-medium space-y-2">
                   <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-slate-500 mt-1.5 flex-shrink-0"></div> Integrasi awal dengan Telegram Bot Owner.</li>
                   <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-slate-500 mt-1.5 flex-shrink-0"></div> Perbaikan UI pada tabel tagihan santri.</li>
                   <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-slate-500 mt-1.5 flex-shrink-0"></div> Dukungan engine Baileys untuk WhatsApp multi-device.</li>
@@ -191,3 +191,7 @@ export default function UpdateSoftwarePage() {
     </div>
   );
 }
+
+
+
+

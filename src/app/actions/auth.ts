@@ -5,7 +5,11 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY || "super_secret_default_key_change_in_production";
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
+
+if (!JWT_SECRET) {
+  throw new Error("CRITICAL: JWT_SECRET_KEY is missing from environment variables.");
+}
 
 export async function verifyLogin(email: string, firebaseUid: string) {
   try {

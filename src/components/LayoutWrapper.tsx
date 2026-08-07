@@ -75,10 +75,10 @@ export function LayoutWrapper({
       <SidebarInset className="bg-[var(--color-background)] flex flex-col flex-1 w-full min-w-0 pb-[72px] md:pb-0">
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/80 backdrop-blur-[10px] px-3 sm:px-4 lg:px-6 z-10 sticky top-0 shadow-sm gap-4">
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
-            <SidebarTrigger className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hidden md:flex" />
-            <div className="hidden lg:flex items-center text-sm font-medium text-slate-500 dark:text-slate-400">
+            <SidebarTrigger className="text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hidden md:flex" />
+            <div className="hidden lg:flex items-center text-sm font-medium text-slate-700 dark:text-slate-300 font-medium">
               <span className="hover:text-slate-900 dark:text-white transition-colors cursor-pointer">Utama</span>
-              <ChevronRight className="w-4 h-4 mx-1 opacity-50" />
+              <ChevronRight className="w-4 h-4 mx-1 opacity-80" />
               <span className="text-orange-500 dark:text-blue-400 capitalize">{currentSection}</span>
             </div>
             <div className="lg:hidden text-sm font-bold text-slate-900 dark:text-white capitalize">{currentSection}</div>
@@ -88,7 +88,7 @@ export function LayoutWrapper({
           <div className="flex-1 max-w-md mx-auto hidden md:block">
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-slate-500 group-focus-within:text-orange-500 dark:text-blue-400 transition-colors" />
+                <Search className="h-4 w-4 text-slate-700 group-focus-within:text-orange-500 dark:text-blue-400 transition-colors" />
               </div>
               <input 
                 type="text" 
@@ -126,3 +126,7 @@ export function LayoutWrapper({
     </SidebarProvider>
   );
 }
+
+
+
+

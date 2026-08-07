@@ -95,3 +95,7 @@ export const columns: ColumnDef<Santri>[] = [
     },
   },
 ]
+
+
+
+

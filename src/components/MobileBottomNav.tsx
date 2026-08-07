@@ -37,12 +37,12 @@ export function MobileBottomNav() {
           {/* Nav Items Left */}
           <div className="flex w-2/5 justify-around">
             <Link href={navItems[0].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <LayoutDashboard className={`w-6 h-6 ${pathname === navItems[0].url ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`} />
-              <span className={`text-[10px] font-medium ${pathname === navItems[0].url ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`}>Beranda</span>
+              <LayoutDashboard className={`w-6 h-6 ${pathname === navItems[0].url ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`} />
+              <span className={`text-[10px] font-medium ${pathname === navItems[0].url ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>Beranda</span>
             </Link>
             <Link href={navItems[1].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <Users className={`w-6 h-6 ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`} />
-              <span className={`text-[10px] font-medium ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`}>Siswa</span>
+              <Users className={`w-6 h-6 ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`} />
+              <span className={`text-[10px] font-medium ${pathname === navItems[1].url || pathname.startsWith(navItems[1].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>Siswa</span>
             </Link>
           </div>
 
@@ -51,18 +51,18 @@ export function MobileBottomNav() {
             <Link href="/kasir" className="w-14 h-14 rounded-full bg-orange-600 dark:bg-blue-600 border-[6px] border-[#0f172a] shadow-lg flex items-center justify-center text-white hover:bg-orange-500 dark:bg-blue-500 active:scale-95 transition-transform">
               <Wallet className="w-6 h-6" />
             </Link>
-            <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1">Kasir</span>
+            <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300 font-medium mt-1">Kasir</span>
           </div>
 
           {/* Nav Items Right */}
           <div className="flex w-2/5 justify-around">
             <Link href={navItems[2].url} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1">
-              <FileText className={`w-6 h-6 ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`} />
-              <span className={`text-[10px] font-medium ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`}>Tagihan</span>
+              <FileText className={`w-6 h-6 ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`} />
+              <span className={`text-[10px] font-medium ${pathname === navItems[2].url || pathname.startsWith(navItems[2].url + '/') ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>Tagihan</span>
             </Link>
             <button onClick={() => setIsDrawerOpen(true)} className="flex flex-col items-center justify-center w-full h-full gap-1 pt-1 bg-transparent border-none">
-              <Menu className={`w-6 h-6 ${isDrawerOpen ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`} />
-              <span className={`text-[10px] font-medium ${isDrawerOpen ? 'text-orange-600 dark:text-blue-500' : 'text-slate-500 dark:text-slate-400'}`}>Menu</span>
+              <Menu className={`w-6 h-6 ${isDrawerOpen ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`} />
+              <span className={`text-[10px] font-medium ${isDrawerOpen ? 'text-orange-600 dark:text-blue-500' : 'text-slate-700 dark:text-slate-300 font-medium'}`}>Menu</span>
             </button>
           </div>
 
@@ -73,3 +73,7 @@ export function MobileBottomNav() {
     </>
   )
 }
+
+
+
+

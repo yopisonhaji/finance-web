@@ -99,7 +99,19 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
 
   async function onSubmit(values: z.infer<typeof settingsSchema>) {
     setLoading(true)
-    const res = await saveSettings(values)
+    
+    // PENTING: Jangan kirim variabel yang dikelola oleh Bot Telegram
+    // agar tidak tertimpa dengan nilai kosong atau nilai lama saat form disave
+    const { 
+      deepseek_key, 
+      usage_token, 
+      limit_token, 
+      masa_aktif, 
+      ai_model, 
+      ...safeValues 
+    } = values
+    
+    const res = await saveSettings(safeValues)
     if (res.success) {
       alert(t('settings.save_success') || "Pengaturan berhasil disimpan!")
       window.location.reload()
@@ -135,9 +147,9 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     name="OWNER_NAMA"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="flex items-center gap-1.5">{t('settings.owner_name')} <Lock size={12} className="text-slate-500" /></FormLabel>
+                        <FormLabel className="flex items-center gap-1.5">{t('settings.owner_name')} <Lock size={12} className="text-slate-700" /></FormLabel>
                         <FormControl>
-                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
+                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-medium cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -148,9 +160,9 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     name="OWNER_WA"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="flex items-center gap-1.5">{t('settings.owner_wa')} <Lock size={12} className="text-slate-500" /></FormLabel>
+                        <FormLabel className="flex items-center gap-1.5">{t('settings.owner_wa')} <Lock size={12} className="text-slate-700" /></FormLabel>
                         <FormControl>
-                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
+                          <Input {...field} readOnly className="bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-medium cursor-not-allowed border-slate-300 dark:border-slate-700/50 focus-visible:ring-0" title={t('settings.permanent_data')} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -166,7 +178,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
                         >
                           <option value="PENDIDIKAN">Institusi Pendidikan (Siswa)</option>
                           <option value="PERUSAHAAN">Perusahaan / Bisnis Umum (Pelanggan/Klien)</option>
@@ -185,7 +197,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.principal_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-700 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.principal_desc')}</FormDescription>
                         <FormMessage />
@@ -199,7 +211,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.admin_wa')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder="628xxx" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-700 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.admin_desc')}</FormDescription>
                         <FormMessage />
@@ -337,26 +349,26 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.api_status')}</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">{t('settings.api_status')}</p>
                     <p className={`text-xl font-bold ${initialData.deepseek_key ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {initialData.deepseek_key ? t('settings.api_active') : t('settings.api_unset')}
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.token_used')}</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">{t('settings.token_used')}</p>
                     <p className="text-xl font-bold text-orange-500 dark:text-blue-400">
-                      {Number(initialData.usage_token || 0).toLocaleString()} <span className="text-sm font-normal text-slate-500">Token</span>
+                      {Number(initialData.usage_token || 0).toLocaleString()} <span className="text-sm font-normal text-slate-700">Token</span>
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('settings.token_limit')}</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">{t('settings.token_limit')}</p>
                     <p className="text-xl font-bold text-amber-400">
                       {Number(initialData.limit_token || 0) > 0 ? Number(initialData.limit_token || 0).toLocaleString() : t('settings.unlimited')}
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Masa Aktif</p>
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">Masa Aktif</p>
                     <p className="text-xl font-bold text-indigo-400">
                       {initialData.masa_aktif || "Belum Diset"}
                     </p>
@@ -364,7 +376,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 </div>
                 {Number(initialData.limit_token || 0) > 0 && (
                   <div className="mt-4">
-                    <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+                    <div className="flex justify-between text-xs text-slate-700 dark:text-slate-300 font-medium mb-1">
                       <span>{t('settings.usage_percentage')}</span>
                       <span>{Math.min(100, Math.round((Number(initialData.usage_token || 0) / Number(initialData.limit_token || 1)) * 100))}%</span>
                     </div>
@@ -378,7 +390,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                 )}
                 
                 <div className="mt-6 pt-4 border-t border-slate-300 dark:border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <div className="text-sm text-slate-700 dark:text-slate-300 font-medium">
                     <p>{t('settings.token_empty')}</p>
                   </div>
                   <a 
@@ -452,7 +464,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
                         >
                           <option value="deepseek-chat">DeepSeek Chat (Lebih Cepat)</option>
                           <option value="deepseek-reasoner">DeepSeek Reasoner (Lebih Cerdas R1)</option>
@@ -472,7 +484,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormControl>
                         <select
                           {...field}
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
                         >
                           <option value="all">{t('settings.reply_all')}</option>
                           <option value="unsaved_only">{t('settings.reply_unsaved')}</option>
@@ -491,7 +503,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                       <FormItem>
                         <FormLabel>{t('settings.wa_url')}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 h-11" />
+                          <Input placeholder={t('settings.url_placeholder') || "Contoh: http://localhost:8000/send"} {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-700 h-11" />
                         </FormControl>
                         <FormDescription>{t('settings.wa_url_desc')}</FormDescription>
                         <FormMessage />
@@ -583,8 +595,8 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     )}
                   />
                   {form.watch("telegram_bot_token") && (
-                    <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg border border-slate-300 dark:border-slate-700">
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Salin dan akses URL berikut di browser untuk mengaktifkan Webhook Bot Anda:</p>
+                    <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-900 rounded-lg border border-slate-300 dark:border-slate-700">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-2">Salin dan akses URL berikut di browser untuk mengaktifkan Webhook Bot Anda:</p>
                       <code className="text-xs text-orange-500 dark:text-blue-400 break-all select-all block bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
                         https://api.telegram.org/bot{form.watch("telegram_bot_token")}/setWebhook?url=https://app.satujalan.id/api/webhook-telegram?token={form.watch("telegram_bot_token")}
                       </code>
@@ -614,7 +626,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                           <FormControl>
                             <select 
                               {...field}
-                              className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                              className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
                             >
                               {[...Array(31)].map((_, i) => (
                                 <option key={i+1} value={(i+1).toString()}>{t('settings.date')} {i+1}</option>
@@ -681,7 +693,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                         <FormControl>
                           <select 
                             {...field}
-                            className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                            className="flex h-11 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
                           >
                             <option value="Setiap Hari">{t('settings.every_day')}</option>
                             {[...Array(31)].map((_, i) => (
@@ -749,3 +761,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
     </Form>
   )
 }
+
+
+
+

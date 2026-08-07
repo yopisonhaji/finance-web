@@ -23,7 +23,7 @@ export default function KasirPage() {
     <div className="flex flex-col h-[calc(100vh-8rem)]">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white"><TranslatedText tKey="pos.title" /></h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1"><TranslatedText tKey="pos.subtitle" /></p>
+        <p className="text-slate-700 dark:text-slate-300 font-medium mt-1"><TranslatedText tKey="pos.subtitle" /></p>
       </div>
       
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
@@ -43,3 +43,7 @@ export default function KasirPage() {
     </div>
   )
 }
+
+
+
+

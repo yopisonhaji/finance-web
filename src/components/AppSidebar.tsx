@@ -108,7 +108,7 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string) => [
         title: "Pengaturan",
         url: "/settings",
         icon: Settings,
-        color: "text-slate-500 dark:text-slate-400",
+        color: "text-slate-700 dark:text-slate-300 font-medium",
         hoverColor: "group-hover:text-slate-700 dark:text-slate-300",
       }
     ]
@@ -132,7 +132,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
             <h2 className="text-sm font-bold text-slate-900 dark:text-white leading-tight tracking-wide truncate max-w-[150px]">
               {namaPesantren} <span className="text-orange-500 dark:text-blue-400 font-bold drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]">AI</span>
             </h2>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold mt-0.5 leading-tight max-w-[150px] whitespace-normal break-words">
+            <p className="text-[10px] text-slate-700 dark:text-slate-300 font-medium uppercase tracking-widest font-semibold mt-0.5 leading-tight max-w-[150px] whitespace-normal break-words">
               asisten chat & pay AI 24 jam
             </p>
           </div>
@@ -142,7 +142,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
       <SidebarContent className="bg-[var(--color-dash-bg)] px-3 pt-2">
         {groups.map((group) => (
           <SidebarGroup key={group.title} className="group-data-[collapsible=icon]:p-0">
-            <div className="text-[10px] font-bold text-slate-500 mb-2 mt-4 uppercase tracking-wider group-data-[collapsible=icon]:hidden px-2">
+            <div className="text-[10px] font-bold text-slate-700 mb-2 mt-4 uppercase tracking-wider group-data-[collapsible=icon]:hidden px-2">
               {group.title}
             </div>
             <SidebarGroupContent>
@@ -158,7 +158,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
                           className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
                             isActive 
                               ? 'bg-orange-500 dark:bg-blue-500/10 text-white border border-orange-500 dark:border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
-                              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-[#1e293b] border border-transparent'
+                              : 'text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hover:bg-[#1e293b] border border-transparent'
                           }`}
                         >
                           {isActive && (
@@ -209,9 +209,9 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
               "Kelola keuangan pesantren dengan amanah, transparan, dan penuh keberkahan."
             </p>
             <div className="pt-3 mt-3 border-t border-slate-300 dark:border-slate-700/50">
-              <p className="text-[10px] text-slate-500 font-medium">{namaPesantren}</p>
+              <p className="text-[10px] text-slate-700 font-medium">{namaPesantren}</p>
               {alamatPesantren && <p className="text-[9px] text-slate-600 mt-0.5">{alamatPesantren}</p>}
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold mt-2 tracking-wide uppercase">
+              <p className="text-[10px] text-slate-700 dark:text-slate-300 font-medium font-semibold mt-2 tracking-wide uppercase">
                 Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:text-blue-300 transition-colors">satujalan.id</a>
               </p>
             </div>
@@ -221,3 +221,7 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
     </Sidebar>
   )
 }
+
+
+
+

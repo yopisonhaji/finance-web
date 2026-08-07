@@ -59,14 +59,14 @@ export default async function LaporanPage() {
           {data.length === 0 ? (
             <div className="h-[300px] border-dashed border-slate-300 dark:border-slate-700 border-2 rounded-xl flex items-center justify-center text-muted-foreground bg-white dark:bg-slate-900/50">
               <div className="text-center">
-                <CalendarIcon className="mx-auto h-8 w-8 mb-2 opacity-50" />
+                <CalendarIcon className="mx-auto h-8 w-8 mb-2 opacity-80" />
                 <p><TranslatedText tKey="reports.no_tx_data" /></p>
               </div>
             </div>
           ) : (
             <div className="overflow-x-auto rounded-md border border-slate-300 dark:border-slate-700">
               <table className="w-full text-sm text-left text-slate-700 dark:text-slate-300">
-                <thead className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 uppercase border-b border-slate-300 dark:border-slate-700">
+                <thead className="text-xs text-slate-700 dark:text-slate-300 font-medium bg-slate-100 dark:bg-slate-900 uppercase border-b border-slate-300 dark:border-slate-700">
                   <tr>
                     <th className="px-4 py-3"><TranslatedText tKey="reports.date" /></th>
                     <th className="px-4 py-3"><TranslatedText tKey="reports.student_name" /></th>
@@ -87,7 +87,7 @@ export default async function LaporanPage() {
                       </td>
                       <td className="px-4 py-3 text-slate-900 dark:text-white">
                         {trx.santri?.nama || <TranslatedText tKey="reports.deleted_student" />}
-                        <div className="text-xs text-slate-500">{trx.santri?.kelas || "-"}</div>
+                        <div className="text-xs text-slate-700">{trx.santri?.kelas || "-"}</div>
                       </td>
                       <td className="px-4 py-3">{trx.tipe}</td>
                       <td className="px-4 py-3 font-bold text-emerald-400">
@@ -118,3 +118,7 @@ export default async function LaporanPage() {
     </div>
   )
 }
+
+
+
+

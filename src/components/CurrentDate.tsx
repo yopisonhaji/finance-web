@@ -87,7 +87,11 @@ export function CurrentDate() {
   return (
     <div className="text-xs">
       <p className="font-semibold text-slate-900 dark:text-white">{date.gregorian}</p>
-      <p className="text-slate-500 dark:text-slate-400">{date.hijri}</p>
+      <p className="text-slate-700 dark:text-slate-300 font-medium">{date.hijri}</p>
     </div>
   );
 }
+
+
+
+

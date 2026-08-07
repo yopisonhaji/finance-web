@@ -81,7 +81,7 @@ export function UpdateButton() {
               ? 'bg-rose-500/20 border-rose-500/40 text-rose-400'
               : hasUpdate 
                 ? 'bg-slate-100 dark:bg-slate-800/80 border-amber-500/40 text-amber-400 hover:bg-amber-500/10' 
-                : 'bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:bg-slate-700/50'
+                : 'bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-700/50'
       }`}>
         {showSuccess ? (
           <CheckCircle2 size={16} />
@@ -97,3 +97,7 @@ export function UpdateButton() {
     </button>
   );
 }
+
+
+
+

@@ -30,7 +30,7 @@ export default async function SantriPage() {
       </div>
       
       {/* Desktop Table View */}
-      <div className="hidden md:block flex-1 bg-[#1e293b] text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
+      <div className="hidden md:block flex-1 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
         <DataTable columns={columns} data={data} />
       </div>
 
@@ -39,3 +39,7 @@ export default async function SantriPage() {
     </div>
   )
 }
+
+
+
+

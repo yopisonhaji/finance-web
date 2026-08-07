@@ -67,3 +67,7 @@ export const columns: ColumnDef<SantriTunggakan>[] = [
     },
   },
 ]
+
+
+
+

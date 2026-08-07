@@ -65,7 +65,7 @@ export function HeaderSearch() {
   return (
     <div ref={wrapperRef} className="flex-1 max-w-md ml-8 relative hidden md:block group">
       <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-        <Search className="w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+        <Search className="w-4 h-4 text-slate-700 group-focus-within:text-indigo-400 transition-colors" />
       </div>
       <Input 
         placeholder={t("search.placeholder") || "Cari santri..."}
@@ -75,13 +75,13 @@ export function HeaderSearch() {
           setIsOpen(true)
         }}
         onFocus={() => { if (query.length >= 2) setIsOpen(true) }}
-        className="w-full bg-[#151c2c] border-slate-300 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 placeholder:text-slate-500 pl-10 pr-12 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all shadow-inner"
+        className="w-full bg-white dark:bg-[#151c2c] border-slate-300 dark:border-slate-700/50 text-slate-900 dark:text-slate-300 placeholder:text-slate-700 pl-10 pr-12 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all shadow-inner"
       />
       <div className="absolute inset-y-0 right-3 flex items-center">
         {isLoading ? (
-          <Loader2 className="w-4 h-4 text-slate-500 dark:text-slate-400 animate-spin" />
+          <Loader2 className="w-4 h-4 text-slate-700 dark:text-slate-300 font-medium animate-spin" />
         ) : (
-          <div className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-medium text-slate-500 border border-slate-300 dark:border-slate-700/50">
+          <div className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-medium text-slate-700 border border-slate-300 dark:border-slate-700/50">
             <kbd className="font-sans">⌘</kbd> <kbd className="font-sans">K</kbd>
           </div>
         )}
@@ -89,10 +89,10 @@ export function HeaderSearch() {
 
       {isOpen && query.length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0f172a] border border-slate-300 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50">
-          <div className="p-2 text-xs font-semibold text-slate-500 dark:text-slate-400 px-3 uppercase tracking-wider">Hasil Pencarian</div>
+          <div className="p-2 text-xs font-semibold text-slate-700 dark:text-slate-300 font-medium px-3 uppercase tracking-wider">Hasil Pencarian</div>
           
           {results.length === 0 && !isLoading ? (
-            <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">Tidak ada santri ditemukan.</div>
+            <div className="p-4 text-center text-sm text-slate-700 dark:text-slate-300 font-medium">Tidak ada santri ditemukan.</div>
           ) : (
             <ul className="max-h-80 overflow-y-auto">
               {results.map((santri) => (
@@ -106,13 +106,13 @@ export function HeaderSearch() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-slate-200 truncate">{santri.nama}</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5">
+                      <div className="text-xs text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 mt-0.5">
                         <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px] border border-slate-300 dark:border-slate-700">{santri.kelas}</span>
                         <span>NIS: {santri.nis}</span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-[10px] text-slate-500 flex items-center gap-1 justify-end">
+                      <div className="text-[10px] text-slate-700 flex items-center gap-1 justify-end">
                         <Wallet className="w-3 h-3" /> Saldo
                       </div>
                       <div className="text-sm font-medium text-emerald-400">Rp {santri.saldo.toLocaleString("id-ID")}</div>
@@ -127,3 +127,7 @@ export function HeaderSearch() {
     </div>
   )
 }
+
+
+
+

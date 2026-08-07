@@ -34,7 +34,7 @@ export function HeaderProfile({ ownerName }: { ownerName: string }) {
             {ownerName}
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-status-pulse"></span>
           </p>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400">Superadmin</p>
+          <p className="text-[10px] text-slate-700 dark:text-slate-300 font-medium">Superadmin</p>
         </div>
       </div>
 
@@ -56,3 +56,7 @@ export function HeaderProfile({ ownerName }: { ownerName: string }) {
     </div>
   );
 }
+
+
+
+

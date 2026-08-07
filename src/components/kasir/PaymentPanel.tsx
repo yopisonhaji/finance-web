@@ -49,9 +49,9 @@ export function PaymentPanel({ santri }: PaymentPanelProps) {
   if (!santri) {
     return (
       <Card className="h-full flex flex-col items-center justify-center text-center p-6 border-dashed bg-white dark:bg-[#0f172a] border-slate-300 dark:border-slate-700 shadow-xl">
-        <Receipt className="h-16 w-16 text-slate-500 mb-4" />
+        <Receipt className="h-16 w-16 text-slate-700 mb-4" />
         <h3 className="text-xl font-medium text-slate-200">{t("pos.empty_panel_title")}</h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm">
+        <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mt-2 max-w-sm">
           {t("pos.empty_panel_desc")}
         </p>
       </Card>
@@ -159,3 +159,7 @@ export function PaymentPanel({ santri }: PaymentPanelProps) {
     </Card>
   )
 }
+
+
+
+
