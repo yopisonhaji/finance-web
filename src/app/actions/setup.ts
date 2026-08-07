@@ -9,6 +9,14 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY || "super_secret_default_key_chang
 
 export async function saveSetupData(nama: string, noWa: string, email?: string, firebaseUid?: string, tipeBisnis?: string) {
   try {
+    const { eq, and } = await import("drizzle-orm");
+
+    // 1. Cek apakah nomor WA sudah digunakan
+    const existingWa = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, noWa)));
+    if (existingWa.length > 0) {
+      return { success: false, error: "Nomor WhatsApp ini sudah terdaftar. Silakan gunakan nomor lain." };
+    }
+
     // 2. Buat Tenant ID unik untuk akun baru ini (Arsitektur Multi-Tenant)
     const newTenantId = crypto.randomUUID();
 
