@@ -5,9 +5,9 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
+const JWT_SECRET = (process.env.JWT_SECRET_KEY || "fallback_secret") as string;
 
-if (!JWT_SECRET) {
+if (!process.env.JWT_SECRET_KEY) {
   throw new Error("CRITICAL: JWT_SECRET_KEY is missing from environment variables.");
 }
 
