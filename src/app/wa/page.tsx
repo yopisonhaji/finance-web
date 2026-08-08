@@ -13,7 +13,7 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
-  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://195.88.211.117:8080";
+  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
 
   const fetchStatus = async () => {
     try {
@@ -59,7 +59,16 @@ export default function StatusWAPage() {
         body: JSON.stringify({ phone: inputPhone })
       });
       
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        console.error("Vercel Proxy Error:", text);
+        alert("Gagal koneksi ke VPS. Server VPS mungkin sibuk atau menolak proxy.");
+        setLoading(false);
+        return;
+      }
       
       if (response.ok && data.code) {
         setPairingCode(data.code);
@@ -71,8 +80,9 @@ export default function StatusWAPage() {
       } else {
         alert(data.error + (data.details ? ` (${data.details})` : ""));
       }
-    } catch (e) {
-      alert("Gagal memanggil Bot lokal. Pastikan terminal Bot Go sudah berjalan.");
+    } catch (e: any) {
+      console.error(e);
+      alert("Error jaringan: " + e.message);
     }
     setLoading(false);
   }
