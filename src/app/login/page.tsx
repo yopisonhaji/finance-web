@@ -278,9 +278,9 @@ export default function LoginPage() {
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center p-8">
           <img 
-            src="/app-logo-hq.png" 
+            src="/app-logo-hq.webp" 
             alt="Finance AI Giant Logo" 
-            className="w-full max-w-[400px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-8 transform -rotate-12 scale-110 hover:scale-125 hover:-rotate-6 transition-all duration-1000 ease-in-out"
+            className="w-full max-w-[550px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-8 transform -rotate-12 scale-110 hover:scale-125 hover:-rotate-6 transition-all duration-1000 ease-in-out"
           />
           <p className="text-slate-700 dark:text-slate-300 font-medium tracking-[0.2em] uppercase text-sm relative z-20 mt-4">
             Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 font-bold hover:text-blue-300 transition-colors cursor-pointer">satujalan.id</a>
