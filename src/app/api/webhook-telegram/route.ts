@@ -139,7 +139,18 @@ export async function POST(req: Request) {
       };
 
       const getTenant = async (phone: string) => {
-        const data = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, formatPhone(phone))));
+        const { or } = await import("drizzle-orm");
+        const p1 = phone.trim();
+        const p2 = formatPhone(p1);
+        let p3 = p2;
+        if (p3.startsWith("62")) p3 = "0" + p3.substring(2);
+
+        const data = await db.select().from(pengaturan).where(
+          and(
+            eq(pengaturan.kunci, "OWNER_WA"),
+            or(eq(pengaturan.nilai, p1), eq(pengaturan.nilai, p2), eq(pengaturan.nilai, p3))
+          )
+        );
         return data.length > 0 ? data[0].tenantId : null;
       };
 
