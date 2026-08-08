@@ -54,13 +54,13 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
       />
       
       {/* Drawer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#1e293b] rounded-t-3xl z-[70] animate-in slide-in-from-bottom-full duration-300 pb-[env(safe-area-inset-bottom)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-50 dark:bg-[#1e293b] rounded-t-3xl z-[70] animate-in slide-in-from-bottom-full duration-300 pb-[env(safe-area-inset-bottom)]">
         <div className="flex flex-col p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Menu Tambahan</h3>
             <button 
               onClick={onClose}
-              className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white"
+              className="p-2 bg-slate-200 dark:bg-slate-800 rounded-full text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white"
             >
               <X className="w-5 h-5" />
             </button>
@@ -74,12 +74,12 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   key={item.title} 
                   href={item.url}
                   onClick={onClose}
-                  className={`flex items-center gap-4 p-4 rounded-xl transition-colors ${isActive ? 'bg-orange-600 dark:bg-blue-600/20 border border-orange-500 dark:border-blue-500/30' : 'bg-white dark:bg-[#0f172a] border border-transparent'}`}
+                  className={`flex items-center gap-4 p-4 rounded-xl transition-colors ${isActive ? 'bg-orange-500 dark:bg-blue-600/20 border border-orange-500 dark:border-blue-500/30' : 'bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-transparent'}`}
                 >
                   <div className={`w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 flex items-center justify-center ${item.color}`}>
                     <item.icon className="w-5 h-5" />
                   </div>
-                  <span className={`font-semibold ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
+                  <span className={`font-semibold ${isActive ? 'text-white dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                     {item.title}
                   </span>
                 </Link>
