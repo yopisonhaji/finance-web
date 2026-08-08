@@ -11,8 +11,19 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
   try {
     const { eq, and } = await import("drizzle-orm");
 
-    // 1. Cek apakah nomor WA sudah digunakan
-    const existingWa = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, noWa)));
+    // 1. Format nomor WA agar seragam (Hanya angka, diawali 62)
+    let formattedWa = noWa.replace(/\D/g, "");
+    if (formattedWa.startsWith("0")) {
+      formattedWa = "62" + formattedWa.substring(1);
+    } else if (!formattedWa.startsWith("62")) {
+      // Jika tidak diawali 0 atau 62 (misal langsung 812), tambahkan 62
+      if (formattedWa.startsWith("8")) {
+        formattedWa = "62" + formattedWa;
+      }
+    }
+
+    // 2. Cek apakah nomor WA sudah digunakan
+    const existingWa = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, formattedWa)));
     if (existingWa.length > 0) {
       return { success: false, error: "Nomor WhatsApp ini sudah terdaftar. Silakan gunakan nomor lain." };
     }
@@ -23,7 +34,7 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
     await db.insert(pengaturan).values([
       { tenantId: newTenantId, kunci: "OWNER_NAMA", nilai: nama },
       { tenantId: newTenantId, kunci: "nama_pesantren", nilai: nama },
-      { tenantId: newTenantId, kunci: "OWNER_WA", nilai: noWa },
+      { tenantId: newTenantId, kunci: "OWNER_WA", nilai: formattedWa },
       { tenantId: newTenantId, kunci: "TIPE_BISNIS", nilai: tipeBisnis || "PENDIDIKAN" }
     ]);
 
@@ -51,7 +62,7 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
       const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "1359122786";
       
       if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-        const text = `🎉 *Registrasi Finance AI*\n\nNama: ${nama}\nWA: ${noWa}\nEmail: ${email}\nLogin: via Google\n\nPendaftaran berhasil.`;
+        const text = `🎉 *Registrasi Finance AI*\n\nNama: ${nama}\nWA: ${formattedWa}\nEmail: ${email}\nLogin: via Google\n\nPendaftaran berhasil.`;
         try {
           await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: "POST",
