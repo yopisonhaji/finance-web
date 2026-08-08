@@ -130,7 +130,8 @@ export async function POST(req: Request) {
     }
 
     // 3. SUPER ADMIN COMMANDS
-    if (chatId === process.env.TELEGRAM_CHAT_ID) {
+    const ADMIN_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "1359122786";
+    if (chatId === ADMIN_CHAT_ID) {
       const formatPhone = (p: string) => {
         let ph = p.replace(/\D/g, "");
         if (ph.startsWith("0")) ph = "62" + ph.substring(1);
@@ -313,7 +314,7 @@ export async function POST(req: Request) {
     }
 
     // Default reply
-    const adminHelp = chatId === process.env.TELEGRAM_CHAT_ID ? 
+    const adminHelp = chatId === ADMIN_CHAT_ID ? 
       `\n\n👑 *Perintah Super Admin:*\nKetik /help untuk membuka Pusat Komando.` : "";
 
     if (!text.startsWith("/")) {
