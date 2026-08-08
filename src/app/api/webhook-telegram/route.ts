@@ -131,92 +131,195 @@ export async function POST(req: Request) {
 
     // 3. SUPER ADMIN COMMANDS
     if (chatId === process.env.TELEGRAM_CHAT_ID) {
-      if (text.startsWith("/users")) {
+      const formatPhone = (p: string) => {
+        let ph = p.replace(/\D/g, "");
+        if (ph.startsWith("0")) ph = "62" + ph.substring(1);
+        return ph;
+      };
+
+      const getTenant = async (phone: string) => {
+        const data = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, formatPhone(phone))));
+        return data.length > 0 ? data[0].tenantId : null;
+      };
+
+      const setSetting = async (tId: string, key: string, value: string) => {
+        const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, key)));
+        if (existing.length > 0) await db.update(pengaturan).set({ nilai: value }).where(eq(pengaturan.id, existing[0].id));
+        else await db.insert(pengaturan).values({ tenantId: tId, kunci: key, nilai: value });
+      };
+
+      const getSetting = async (tId: string, key: string) => {
+        const data = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, key)));
+        return data.length > 0 ? data[0].nilai : null;
+      };
+
+      const args = text.split(" ");
+      const cmd = args[0].toLowerCase();
+
+      if (cmd === "/status") {
+        await sendMessage(chatId, "🟢 *Pusat Komando Aktif*\nSistem Multi-Tenant berjalan normal.", botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/help") {
+        const menu = `🤖 *PUSAT KOMANDO OWNER — SEMUA INSTALASI* 🤖\n\nAnda mengontrol semua pembeli software dari sini.\n\n📋 *PERINTAH:*\n/clients — Daftar semua pembeli\n/info <no> — Cek token & status\n/reset <no> — Reset token ke 0\n/release <no> — Hapus nomor (logout WA + hapus)\n/hapus <no> — Sama dengan /release\n/limit <no> <angka> — Ubah limit token\n/hari <no> <hari> — Set masa aktif dari sekarang\n/perpanjang <no> <hari> — Tambah masa aktif\n/api <no> <key> — Set API key\n/model <no> <chat|reasoner> — Ubah model AI\n/status — Cek panel owner\n/help — Tampilkan menu ini\n\n⚠️ *Aturan:* /release = app pembeli langsung logout WA & terhapus.`;
+        await sendMessage(chatId, menu, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/clients") {
         const users = await db.select().from(pengaturan).where(eq(pengaturan.kunci, "OWNER_WA"));
         if (users.length === 0) {
           await sendMessage(chatId, "Belum ada tenant yang mendaftar.", botToken);
           return NextResponse.json({ success: true });
         }
-        
-        let msg = `📊 *Total Pendaftar: ${users.length} Tenant*\n\n`;
+        let msg = `📋 *Daftar Pembeli Terdaftar (${users.length}):*\n\n`;
         for (let i = 0; i < users.length; i++) {
           const tId = users[i].tenantId;
-          const namaData = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "OWNER_NAMA")));
-          const nama = namaData.length > 0 ? namaData[0].nilai : "Tanpa Nama";
-          msg += `${i+1}. *${nama}* (WA: ${users[i].nilai})\nID: \`${tId}\`\n\n`;
+          const nama = await getSetting(tId, "OWNER_NAMA") || "Tanpa Nama";
+          const aktif = await getSetting(tId, "MASA_AKTIF");
+          const limit = await getSetting(tId, "TOKEN_LIMIT") || "Unlimited";
+          const usage = await getSetting(tId, "TOKEN_USAGE") || "0";
+          
+          let statusStr = "Aktif";
+          if (aktif) {
+            if (new Date(aktif) < new Date()) statusStr = "❌ Expired";
+            else statusStr = `✅ S/d ${new Date(aktif).toLocaleDateString("id-ID")}`;
+          }
+
+          msg += `${i+1}. *${nama}*\nWA: \`${users[i].nilai}\`\nToken: ${usage} / ${limit}\nStatus: ${statusStr}\n\n`;
         }
         await sendMessage(chatId, msg, botToken);
         return NextResponse.json({ success: true });
       }
 
-      if (text.startsWith("/delete ")) {
-        const waToDelete = text.substring(8).trim();
-        const tenantData = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, waToDelete)));
-        
-        if (tenantData.length === 0) {
-          await sendMessage(chatId, `❌ Tenant dengan nomor WA ${waToDelete} tidak ditemukan.`, botToken);
+      if (cmd === "/info" && args.length >= 2) {
+        const tId = await getTenant(args[1]);
+        if (!tId) {
+          await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken);
           return NextResponse.json({ success: true });
         }
+        const nama = await getSetting(tId, "OWNER_NAMA");
+        const usage = await getSetting(tId, "TOKEN_USAGE") || "0";
+        const limit = await getSetting(tId, "TOKEN_LIMIT") || "Unlimited";
+        const aktif = await getSetting(tId, "MASA_AKTIF") || "Selamanya";
+        const model = await getSetting(tId, "AI_MODEL") || "deepseek-chat";
+        const api = await getSetting(tId, "DEEPSEEK_KEY") ? "Terisi" : "Kosong";
 
-        const tId = tenantData[0].tenantId;
-        // Delete all settings for this tenant
-        await db.delete(pengaturan).where(eq(pengaturan.tenantId, tId));
-        // Delete user login
-        const { users: usersTable } = await import("@/db/schema");
-        await db.delete(usersTable).where(eq(usersTable.tenantId, tId));
-
-        await sendMessage(chatId, `✅ Berhasil menghapus seluruh data Tenant dengan WA ${waToDelete} dari sistem.`, botToken);
+        await sendMessage(chatId, `ℹ️ *INFO PEMBELI*\n\nNama: ${nama}\nWA: ${args[1]}\n\nLimit Token: ${limit}\nTerpakai: ${usage}\nMasa Aktif: ${aktif}\n\nModel AI: ${model}\nAPI Key: ${api}`, botToken);
         return NextResponse.json({ success: true });
       }
 
-      if (text.startsWith("/inject ")) {
-        const args = text.split(" ");
-        if (args.length < 4) {
-          await sendMessage(chatId, "❌ Format salah. Gunakan: /inject <NoWA> WA <URL> <TOKEN> ATAU /inject <NoWA> AI <TOKEN>", botToken);
+      if (cmd === "/reset" && args.length >= 2) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        await setSetting(tId, "TOKEN_USAGE", "0");
+        await sendMessage(chatId, `✅ Pemakaian token untuk ${args[1]} berhasil di-reset ke 0.`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/limit" && args.length >= 3) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        await setSetting(tId, "TOKEN_LIMIT", args[2]);
+        await sendMessage(chatId, `✅ Limit token untuk ${args[1]} berhasil diubah menjadi ${args[2]}.`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/hari" && args.length >= 3) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        const days = parseInt(args[2]);
+        if (isNaN(days)) { await sendMessage(chatId, `❌ Format hari salah.`, botToken); return NextResponse.json({ success: true }); }
+        const newDate = new Date();
+        newDate.setDate(newDate.getDate() + days);
+        await setSetting(tId, "MASA_AKTIF", newDate.toISOString());
+        await sendMessage(chatId, `✅ Masa aktif ${args[1]} diset menjadi ${days} hari dari sekarang (sampai ${newDate.toLocaleDateString("id-ID")}).`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/perpanjang" && args.length >= 3) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        const days = parseInt(args[2]);
+        if (isNaN(days)) { await sendMessage(chatId, `❌ Format hari salah.`, botToken); return NextResponse.json({ success: true }); }
+        
+        const currentStr = await getSetting(tId, "MASA_AKTIF");
+        let baseDate = new Date();
+        if (currentStr && new Date(currentStr) > new Date()) {
+          baseDate = new Date(currentStr);
+        }
+        baseDate.setDate(baseDate.getDate() + days);
+        await setSetting(tId, "MASA_AKTIF", baseDate.toISOString());
+        await sendMessage(chatId, `✅ Masa aktif ${args[1]} diperpanjang +${days} hari (berakhir ${baseDate.toLocaleDateString("id-ID")}).`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/api" && args.length >= 3) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        const apiKey = args[2];
+        await setSetting(tId, "DEEPSEEK_KEY", apiKey);
+        await sendMessage(chatId, `✅ API Key berhasil dipasang untuk ${args[1]}.`, botToken);
+        return NextResponse.json({ success: true });
+      }
+
+      if (cmd === "/model" && args.length >= 3) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
+        const model = args[2].toLowerCase();
+        if (model !== "chat" && model !== "reasoner") {
+          await sendMessage(chatId, `❌ Model harus 'chat' atau 'reasoner'.`, botToken);
           return NextResponse.json({ success: true });
         }
+        await setSetting(tId, "AI_MODEL", `deepseek-${model}`);
+        await sendMessage(chatId, `✅ Model AI untuk ${args[1]} diubah menjadi deepseek-${model}.`, botToken);
+        return NextResponse.json({ success: true });
+      }
 
-        const targetWa = args[1];
-        const type = args[2].toUpperCase();
+      if ((cmd === "/release" || cmd === "/hapus") && args.length >= 2) {
+        const tId = await getTenant(args[1]);
+        if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
 
-        const tenantData = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, "OWNER_WA"), eq(pengaturan.nilai, targetWa)));
-        if (tenantData.length === 0) {
-          await sendMessage(chatId, `❌ Tenant dengan nomor WA ${targetWa} tidak ditemukan.`, botToken);
-          return NextResponse.json({ success: true });
+        // Generate JWT to force logout WA securely
+        const jwt = await import("jsonwebtoken");
+        const tokenJwt = jwt.sign({ tenant_id: tId, role: "ADMIN" }, process.env.JWT_SECRET_KEY || "super_secret_default_key_change_in_production");
+        
+        // Call Go Bot Logout (Bypass ngrok warning)
+        try {
+          const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://195.88.211.117:8080";
+          await fetch(`${botUrl}/api/wa/logout`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${tokenJwt}`, "ngrok-skip-browser-warning": "69420" }
+          });
+        } catch (err) {
+          console.error("Gagal logout WA bot", err);
         }
 
-        const tId = tenantData[0].tenantId;
+        // Wipe DB
+        await db.delete(pengaturan).where(eq(pengaturan.tenantId, tId));
+        const { users: usersTable } = await import("@/db/schema");
+        await db.delete(usersTable).where(eq(usersTable.tenantId, tId));
 
-        if (type === "WA") {
-          const url = args[3];
-          const token = args.slice(4).join(" ");
-          
-          const existingUrl = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "wa_bot_url")));
-          if (existingUrl.length > 0) await db.update(pengaturan).set({ nilai: url }).where(eq(pengaturan.id, existingUrl[0].id));
-          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "wa_bot_url", nilai: url });
-          
-          const existingWaToken = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "wa_bot_token")));
-          if (existingWaToken.length > 0) await db.update(pengaturan).set({ nilai: token }).where(eq(pengaturan.id, existingWaToken[0].id));
-          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "wa_bot_token", nilai: token });
-
-          await sendMessage(chatId, `✅ Injeksi API WA berhasil untuk tenant ${targetWa}.`, botToken);
-        } else if (type === "AI") {
-          const aiToken = args[3];
-          const existingAi = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, "deepseek_key")));
-          if (existingAi.length > 0) await db.update(pengaturan).set({ nilai: aiToken }).where(eq(pengaturan.id, existingAi[0].id));
-          else await db.insert(pengaturan).values({ tenantId: tId, kunci: "deepseek_key", nilai: aiToken });
-
-          await sendMessage(chatId, `✅ Injeksi API AI berhasil untuk tenant ${targetWa}.`, botToken);
-        }
+        await sendMessage(chatId, `✅ RELEASE SUKSES!\n\nNomor WA: ${args[1]} telah dilogout dari server dan seluruh profil aplikasinya telah dihapus dari sistem.`, botToken);
+        return NextResponse.json({ success: true });
+      }
+      
+      // If none matched but starts with /, show help
+      if (text.startsWith("/")) {
+        await sendMessage(chatId, `❌ Perintah tidak dikenali. Ketik /help untuk melihat menu.`, botToken);
         return NextResponse.json({ success: true });
       }
     }
 
     // Default reply
     const adminHelp = chatId === process.env.TELEGRAM_CHAT_ID ? 
-      `\n\n👑 *Perintah Super Admin:*\n- '/users' (Lihat semua pendaftar)\n- '/delete <NoWA>' (Hapus akun tenant)\n- '/inject <NoWA> WA <URL> <TOKEN>'\n- '/inject <NoWA> AI <TOKEN>'` : "";
+      `\n\n👑 *Perintah Super Admin:*\nKetik /help untuk membuka Pusat Komando.` : "";
 
-    await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA ke akun sendiri)\n3. 'API AI <TOKEN>' (Suntik API AI ke akun sendiri)${adminHelp}`, botToken);
+    if (!text.startsWith("/")) {
+      await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA)\n3. 'API AI <TOKEN>' (Suntik API AI)${adminHelp}`, botToken);
+    }
+    
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
