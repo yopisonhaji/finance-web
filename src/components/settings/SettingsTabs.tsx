@@ -560,7 +560,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
             <div className="space-y-6">
               {/* PENGINGAT AWAL */}
               <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
-                <CardHeader className="bg-orange-500 dark:bg-blue-500/5 pb-4">
+                <CardHeader className="bg-orange-500/5 dark:bg-blue-500/5 pb-4">
                   <CardTitle className="text-orange-500 dark:text-blue-400">{t('settings.early_reminder_title')}</CardTitle>
                   <CardDescription>{t('settings.early_reminder_desc')}</CardDescription>
                 </CardHeader>
