@@ -47,8 +47,8 @@ export async function saveSetupData(nama: string, noWa: string, email?: string, 
       });
 
       // 4. Kirim notifikasi ke Telegram
-      const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-      const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+      const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo";
+      const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "1359122786";
       
       if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
         const text = `🎉 *Registrasi Finance AI*\n\nNama: ${nama}\nWA: ${noWa}\nEmail: ${email}\nLogin: via Google\n\nPendaftaran berhasil.`;
