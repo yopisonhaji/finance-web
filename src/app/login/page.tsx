@@ -30,7 +30,7 @@ export default function LoginPage() {
           if (data.success) {
             localStorage.setItem("token", data.token!);
             document.cookie = `token=${data.token}; path=/; max-age=864000`;
-            router.push("/");
+            window.location.href = "/";
           } else {
             await signOut(auth!);
             setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
@@ -62,7 +62,7 @@ export default function LoginPage() {
       if (data.success) {
         localStorage.setItem("token", data.token!);
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
-        router.push("/");
+        window.location.href = "/";
       } else {
         await signOut(auth!);
         setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
@@ -101,7 +101,7 @@ export default function LoginPage() {
       if (data.success) {
         localStorage.setItem("token", data.token!);
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
-        router.push("/");
+        window.location.href = "/";
       } else {
         await signOut(auth!);
         setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
@@ -139,7 +139,7 @@ export default function LoginPage() {
       if (data.success) {
         localStorage.setItem("token", data.token!);
         document.cookie = `token=${data.token}; path=/; max-age=864000`;
-        router.push("/");
+        window.location.href = "/";
       } else {
         await signOut(auth!);
         setError("Akun belum terdaftar. Silakan mendaftar terlebih dahulu.");
