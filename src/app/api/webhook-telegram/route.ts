@@ -317,7 +317,9 @@ export async function POST(req: Request) {
     const adminHelp = chatId === ADMIN_CHAT_ID ? 
       `\n\n👑 *Perintah Super Admin:*\nKetik /help untuk membuka Pusat Komando.` : "";
 
-    if (!text.startsWith("/")) {
+    if (text.startsWith("/")) {
+      await sendMessage(chatId, `❌ Akses ditolak. ID Telegram Anda (${chatId}) tidak dikenali sebagai Pusat Komando.\n\nJika Anda adalah Owner, pastikan ID ini terdaftar di konfigurasi sistem.`, botToken);
+    } else {
       await sendMessage(chatId, `Halo! Ini adalah Bot Sistem.\n\nKirim perintah:\n1. 'LOGIN <No WA>' (Tautkan akun)\n2. 'API WA <URL> <TOKEN>' (Suntik API WA)\n3. 'API AI <TOKEN>' (Suntik API AI)${adminHelp}`, botToken);
     }
     
