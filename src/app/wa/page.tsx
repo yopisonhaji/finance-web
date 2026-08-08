@@ -13,7 +13,7 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
-  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
+  const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://195.88.211.117:8080";
 
   const fetchStatus = async () => {
     try {
