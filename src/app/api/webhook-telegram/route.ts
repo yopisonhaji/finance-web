@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { pengaturan } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo";
 
@@ -158,6 +159,12 @@ export async function POST(req: Request) {
         const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.tenantId, tId), eq(pengaturan.kunci, key)));
         if (existing.length > 0) await db.update(pengaturan).set({ nilai: value }).where(eq(pengaturan.id, existing[0].id));
         else await db.insert(pengaturan).values({ tenantId: tId, kunci: key, nilai: value });
+        
+        try {
+          revalidatePath('/', 'layout');
+        } catch(e) {
+          console.error("Gagal clear cache Next.js", e);
+        }
       };
 
       const getSetting = async (tId: string, key: string) => {
