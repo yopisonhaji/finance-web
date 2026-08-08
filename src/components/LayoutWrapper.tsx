@@ -99,7 +99,7 @@ export function LayoutWrapper({
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
-            <div className="hidden sm:block">
+            <div className="block">
               <AiTopIndicator active={hasAiKey} />
             </div>
             <div className="hidden sm:block">
