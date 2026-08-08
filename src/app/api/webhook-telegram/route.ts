@@ -189,9 +189,9 @@ export async function POST(req: Request) {
         for (let i = 0; i < users.length; i++) {
           const tId = users[i].tenantId;
           const nama = await getSetting(tId, "OWNER_NAMA") || "Tanpa Nama";
-          const aktif = await getSetting(tId, "MASA_AKTIF");
-          const limit = await getSetting(tId, "TOKEN_LIMIT") || "Unlimited";
-          const usage = await getSetting(tId, "TOKEN_USAGE") || "0";
+          const aktif = await getSetting(tId, "masa_aktif");
+          const limit = await getSetting(tId, "limit_token") || "Unlimited";
+          const usage = await getSetting(tId, "usage_token") || "0";
           
           let statusStr = "Aktif";
           if (aktif) {
@@ -212,11 +212,11 @@ export async function POST(req: Request) {
           return NextResponse.json({ success: true });
         }
         const nama = await getSetting(tId, "OWNER_NAMA");
-        const usage = await getSetting(tId, "TOKEN_USAGE") || "0";
-        const limit = await getSetting(tId, "TOKEN_LIMIT") || "Unlimited";
-        const aktif = await getSetting(tId, "MASA_AKTIF") || "Selamanya";
-        const model = await getSetting(tId, "AI_MODEL") || "deepseek-chat";
-        const api = await getSetting(tId, "DEEPSEEK_KEY") ? "Terisi" : "Kosong";
+        const usage = await getSetting(tId, "usage_token") || "0";
+        const limit = await getSetting(tId, "limit_token") || "Unlimited";
+        const aktif = await getSetting(tId, "masa_aktif") || "Selamanya";
+        const model = await getSetting(tId, "ai_model") || "deepseek-chat";
+        const api = await getSetting(tId, "deepseek_key") ? "Terisi" : "Kosong";
 
         await sendMessage(chatId, `ℹ️ *INFO PEMBELI*\n\nNama: ${nama}\nWA: ${args[1]}\n\nLimit Token: ${limit}\nTerpakai: ${usage}\nMasa Aktif: ${aktif}\n\nModel AI: ${model}\nAPI Key: ${api}`, botToken);
         return NextResponse.json({ success: true });
@@ -225,7 +225,7 @@ export async function POST(req: Request) {
       if (cmd === "/reset" && args.length >= 2) {
         const tId = await getTenant(args[1]);
         if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
-        await setSetting(tId, "TOKEN_USAGE", "0");
+        await setSetting(tId, "usage_token", "0");
         await sendMessage(chatId, `✅ Pemakaian token untuk ${args[1]} berhasil di-reset ke 0.`, botToken);
         return NextResponse.json({ success: true });
       }
@@ -233,7 +233,7 @@ export async function POST(req: Request) {
       if (cmd === "/limit" && args.length >= 3) {
         const tId = await getTenant(args[1]);
         if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
-        await setSetting(tId, "TOKEN_LIMIT", args[2]);
+        await setSetting(tId, "limit_token", args[2]);
         await sendMessage(chatId, `✅ Limit token untuk ${args[1]} berhasil diubah menjadi ${args[2]}.`, botToken);
         return NextResponse.json({ success: true });
       }
@@ -245,7 +245,7 @@ export async function POST(req: Request) {
         if (isNaN(days)) { await sendMessage(chatId, `❌ Format hari salah.`, botToken); return NextResponse.json({ success: true }); }
         const newDate = new Date();
         newDate.setDate(newDate.getDate() + days);
-        await setSetting(tId, "MASA_AKTIF", newDate.toISOString());
+        await setSetting(tId, "masa_aktif", newDate.toISOString());
         await sendMessage(chatId, `✅ Masa aktif ${args[1]} diset menjadi ${days} hari dari sekarang (sampai ${newDate.toLocaleDateString("id-ID")}).`, botToken);
         return NextResponse.json({ success: true });
       }
@@ -256,13 +256,13 @@ export async function POST(req: Request) {
         const days = parseInt(args[2]);
         if (isNaN(days)) { await sendMessage(chatId, `❌ Format hari salah.`, botToken); return NextResponse.json({ success: true }); }
         
-        const currentStr = await getSetting(tId, "MASA_AKTIF");
+        const currentStr = await getSetting(tId, "masa_aktif");
         let baseDate = new Date();
         if (currentStr && new Date(currentStr) > new Date()) {
           baseDate = new Date(currentStr);
         }
         baseDate.setDate(baseDate.getDate() + days);
-        await setSetting(tId, "MASA_AKTIF", baseDate.toISOString());
+        await setSetting(tId, "masa_aktif", baseDate.toISOString());
         await sendMessage(chatId, `✅ Masa aktif ${args[1]} diperpanjang +${days} hari (berakhir ${baseDate.toLocaleDateString("id-ID")}).`, botToken);
         return NextResponse.json({ success: true });
       }
@@ -271,7 +271,7 @@ export async function POST(req: Request) {
         const tId = await getTenant(args[1]);
         if (!tId) { await sendMessage(chatId, `❌ Tenant ${args[1]} tidak ditemukan.`, botToken); return NextResponse.json({ success: true }); }
         const apiKey = args[2];
-        await setSetting(tId, "DEEPSEEK_KEY", apiKey);
+        await setSetting(tId, "deepseek_key", apiKey);
         await sendMessage(chatId, `✅ API Key berhasil dipasang untuk ${args[1]}.`, botToken);
         return NextResponse.json({ success: true });
       }
@@ -284,7 +284,7 @@ export async function POST(req: Request) {
           await sendMessage(chatId, `❌ Model harus 'chat' atau 'reasoner'.`, botToken);
           return NextResponse.json({ success: true });
         }
-        await setSetting(tId, "AI_MODEL", `deepseek-${model}`);
+        await setSetting(tId, "ai_model", `deepseek-${model}`);
         await sendMessage(chatId, `✅ Model AI untuk ${args[1]} diubah menjadi deepseek-${model}.`, botToken);
         return NextResponse.json({ success: true });
       }
