@@ -7,7 +7,7 @@ import { pengaturan, santri, media_ai } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
-export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string): Promise<{text: string, broadcasts?: any[]}> {
+export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string): Promise<{text: string, broadcasts?: any[], media_url?: string, media_type?: string}> {
   if (!tenantId) return { text: "Error: Tenant ID is missing" };
   const settings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId));
   const getSetting = (key: string) => settings.find(s => s.kunci === key)?.nilai || "";
@@ -410,7 +410,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
                // Kita cukup merespon ke AI bahwa kita sedang menyiapkan pengiriman. 
                // Tapi nyatanya, kita inject URL ini ke dalam text atau mengirimkan instruksi terpisah.
                responseMediaUrl = m.urlFile;
-               responseMediaType = m.tipeMedia;
+               responseMediaType = m.tipeMedia || "image";
                toolResult = JSON.stringify({ success: true, message: `File ${m.namaFile} telah dimasukkan ke antrean pengiriman media.` });
             }
           } catch(err: any) {
@@ -450,10 +450,10 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         broadcasts,
         media_url: responseMediaUrl,
         media_type: responseMediaType
-      };
+      } as { text: string; broadcasts?: any[]; media_url?: string; media_type?: string };
     }
     
-    return { text: responseMessage.content, broadcasts, media_url: responseMediaUrl, media_type: responseMediaType };
+    return { text: responseMessage.content, broadcasts, media_url: responseMediaUrl, media_type: responseMediaType } as { text: string; broadcasts?: any[]; media_url?: string; media_type?: string };
   } catch (error) {
     console.error("[AI] Error calling DeepSeek:", error);
     return { text: "Maaf, terjadi kesalahan saat menghubungi mesin AI." };
