@@ -3,7 +3,7 @@
 
 
 import { db } from "@/db";
-import { pengaturan, santri } from "@/db/schema";
+import { pengaturan, santri, media_ai } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
@@ -48,6 +48,9 @@ export async function processAIResponse(message: string, sender: string, santriD
   const isAdmin = adminWa && normalizedSender === adminWa;
   const isPrivileged = isKepsek || isAdmin;
   
+  let responseMediaUrl = "";
+  let responseMediaType = "";
+
   try {
     const fs = require('fs');
     const path = require('path');
@@ -170,6 +173,28 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           metode: { type: "string", description: "Metode pembayaran yang dipilih. Contoh: 'qris', 'va', atau 'cstore'." }
         }, 
         required: [] 
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "cek_daftar_media",
+      description: `Melihat daftar media (brosur, gambar produk, file PDF) yang tersedia di database dan bisa dikirimkan ke pelanggan.`,
+      parameters: { type: "object", properties: {}, required: [] }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "kirim_media",
+      description: `Mengirimkan file media spesifik (brosur/gambar/dokumen) ke pelanggan berdasarkan ID Media atau nama file. Harus didahului dengan cek_daftar_media jika Anda tidak tahu ID-nya.`,
+      parameters: {
+        type: "object",
+        properties: {
+          media_id: { type: "number", description: "ID media yang ingin dikirim" }
+        },
+        required: ["media_id"]
       }
     }
   });
@@ -342,7 +367,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
               else if (m === '3' || m === 'cstore' || m.includes('indo')) paymentMethod = 'cstore';
             }
 
-            const linkRes = await generatePaymentLink(orderId, amount, customer, paymentMethod, tenantId);
+            const linkRes = await generatePaymentLink(santriData.id, amount, customer, paymentMethod, tenantId);
             if (linkRes.success) {
               if (linkRes.directData) {
                  const d = linkRes.directData;
@@ -359,6 +384,37 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
             } else {
               toolResult = JSON.stringify({ success: false, error: linkRes.message || "Sistem iPaymu sedang gangguan." });
             }
+          }
+        }
+        else if (toolCall.function.name === "cek_daftar_media") {
+          try {
+            const listMedia = await db.select().from(media_ai).where(eq(media_ai.tenantId, tenantId));
+            if (listMedia.length === 0) {
+              toolResult = JSON.stringify({ success: false, message: "Tidak ada media/brosur yang tersimpan di database saat ini." });
+            } else {
+              const ringkasan = listMedia.map(m => `ID: ${m.id} | Nama File: ${m.namaFile} | Tipe: ${m.tipeMedia} | Instruksi/Konteks: ${m.deskripsi}`).join("\n");
+              toolResult = JSON.stringify({ success: true, total: listMedia.length, daftar_media: ringkasan });
+            }
+          } catch(err: any) {
+            toolResult = JSON.stringify({ success: false, error: err.message });
+          }
+        }
+        else if (toolCall.function.name === "kirim_media") {
+          const { media_id } = args as any;
+          try {
+            const mediaData = await db.select().from(media_ai).where(and(eq(media_ai.id, media_id), eq(media_ai.tenantId, tenantId)));
+            if (mediaData.length === 0) {
+               toolResult = JSON.stringify({ success: false, error: `Media dengan ID ${media_id} tidak ditemukan.` });
+            } else {
+               const m = mediaData[0];
+               // Kita cukup merespon ke AI bahwa kita sedang menyiapkan pengiriman. 
+               // Tapi nyatanya, kita inject URL ini ke dalam text atau mengirimkan instruksi terpisah.
+               responseMediaUrl = m.urlFile;
+               responseMediaType = m.tipeMedia;
+               toolResult = JSON.stringify({ success: true, message: `File ${m.namaFile} telah dimasukkan ke antrean pengiriman media.` });
+            }
+          } catch(err: any) {
+            toolResult = JSON.stringify({ success: false, error: err.message });
           }
         }
 
@@ -389,10 +445,15 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         await updateUsage(secondData.usage.total_tokens);
       }
       
-      return { text: secondData.choices?.[0]?.message?.content || "Selesai memproses data.", broadcasts };
+      return { 
+        text: secondData.choices?.[0]?.message?.content || "Selesai memproses data.", 
+        broadcasts,
+        media_url: responseMediaUrl,
+        media_type: responseMediaType
+      };
     }
     
-    return { text: responseMessage.content, broadcasts };
+    return { text: responseMessage.content, broadcasts, media_url: responseMediaUrl, media_type: responseMediaType };
   } catch (error) {
     console.error("[AI] Error calling DeepSeek:", error);
     return { text: "Maaf, terjadi kesalahan saat menghubungi mesin AI." };

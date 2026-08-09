@@ -16,27 +16,7 @@ export default function StatusWAPage() {
   // States for sending message
   const [sendWa, setSendWa] = useState("")
   const [sendText, setSendText] = useState("")
-  const [sendFiles, setSendFiles] = useState<File[]>([])
   const [sendLoading, setSendLoading] = useState(false)
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files)
-      if (filesArray.length > 10) {
-        alert("Maksimal 10 file yang dapat diunggah.")
-        e.target.value = "" // reset
-        return
-      }
-      
-      const overSized = filesArray.some(f => f.size > 10 * 1024 * 1024)
-      if (overSized) {
-        alert("Setiap file maksimal 10MB.")
-        e.target.value = "" // reset
-        return
-      }
-      setSendFiles(filesArray)
-    }
-  }
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,60 +25,22 @@ export default function StatusWAPage() {
 
     try {
       const token = localStorage.getItem("token") || ""
-      
-      if (sendFiles.length > 0) {
-        const formData = new FormData();
-        formData.append("no_wa", sendWa);
-        formData.append("pesan", sendText);
-
-        const type = sendFiles[0].type;
-        if (type.startsWith("image/")) formData.append("tipe_media", "image");
-        else if (type.startsWith("video/")) formData.append("tipe_media", "video");
-        else if (type.startsWith("audio/")) formData.append("tipe_media", "audio");
-        else formData.append("tipe_media", "document");
-
-        sendFiles.forEach(file => {
-          formData.append("files", file);
-        });
-        
-        const res = await fetch(`${botUrl}/send-media`, {
-          method: "POST",
-          headers: { 
-            "Authorization": `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "69420"
-          },
-          body: formData
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert("Pesan media berhasil masuk antrean!");
-          setSendWa("");
-          setSendText("");
-          setSendFiles([]);
-          // reset file input
-          const fileInput = document.getElementById("file-upload") as HTMLInputElement;
-          if (fileInput) fileInput.value = "";
-        } else {
-          alert("Gagal: " + data.error);
-        }
+      const res = await fetch(`${botUrl}/send`, {
+        method: "POST",
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420"
+        },
+        body: JSON.stringify({ no_wa: sendWa, pesan: sendText })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Pesan berhasil masuk antrean!");
+        setSendWa("");
+        setSendText("");
       } else {
-        const res = await fetch(`${botUrl}/send`, {
-          method: "POST",
-          headers: { 
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "69420"
-          },
-          body: JSON.stringify({ no_wa: sendWa, pesan: sendText })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert("Pesan berhasil masuk antrean!");
-          setSendWa("");
-          setSendText("");
-        } else {
-          alert("Gagal: " + data.error);
-        }
+        alert("Gagal: " + data.error);
       }
     } catch (e: any) {
       alert("Error jaringan: " + e.message);
@@ -323,15 +265,15 @@ export default function StatusWAPage() {
         <CardHeader className="bg-slate-50 dark:bg-slate-900/50 pb-4 border-b border-slate-200 dark:border-slate-800">
           <CardTitle className="flex items-center text-slate-800 dark:text-slate-200">
             <Send className="mr-2 h-5 w-5 text-orange-500 dark:text-blue-500" />
-            Kirim Pesan & Media
+            Kirim Pesan Teks
           </CardTitle>
           <CardDescription>
-            Kirim pesan teks atau lampirkan dokumen, gambar, dan video (Maksimal 10 file @10MB).
+            Kirim pesan teks manual ke pelanggan. Untuk gambar/brosur, gunakan fitur Galeri Media AI.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <form onSubmit={handleSendMessage} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor Tujuan</label>
                 <Input 
@@ -341,23 +283,6 @@ export default function StatusWAPage() {
                   onChange={(e) => setSendWa(e.target.value)}
                   className="bg-white dark:bg-[#0f172a]"
                 />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Lampiran File (Opsional)</label>
-                <div className="flex items-center gap-2">
-                  <Input 
-                    id="file-upload"
-                    type="file" 
-                    multiple
-                    onChange={handleFileChange}
-                    className="cursor-pointer file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 bg-white dark:bg-[#0f172a]"
-                  />
-                </div>
-                {sendFiles.length > 0 && (
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
-                    {sendFiles.length} file dipilih.
-                  </p>
-                )}
               </div>
             </div>
             

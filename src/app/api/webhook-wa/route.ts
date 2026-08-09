@@ -92,7 +92,13 @@ export async function POST(req: Request) {
       }).catch(err => console.error("[Webhook WA] Gagal memanggil WA Engine:", err));
     }
 
-    return NextResponse.json({ success: true, reply: replyText, broadcasts: broadcasts });
+    return NextResponse.json({ 
+      success: true, 
+      reply: replyText, 
+      broadcasts: broadcasts,
+      media_url: aiResult.media_url,
+      media_type: aiResult.media_type
+    });
   } catch (error: any) {
     console.error("[Webhook WA] Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

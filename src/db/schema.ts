@@ -22,7 +22,8 @@ export const transaksi = sqliteTable('transaksi', {
   tipe: text('tipe').notNull(), // 'SPP', 'UANG_SAKU', dll
   jumlah: integer('jumlah').notNull(),
   status: text('status').default('PENDING'), // 'PENDING', 'LUNAS'
-  metode: text('metode'), // 'TUNAI', 'IPAYMU'
+  metode: text('metode'), // 'TUNAI', 'IPAYMU', 'IPAYMU_INSTAN', 'IPAYMU_PRIBADI'
+  biayaAdmin: integer('biaya_admin').default(0), // Biaya admin gateway
   createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
 });
 
@@ -42,4 +43,26 @@ export const users = sqliteTable("users", {
   namaSekolah: text("nama_sekolah"), // Bisa diisi nama owner/lembaga
   role: text("role").notNull().default("ADMIN"), // "SUPER_ADMIN" atau "ADMIN"
   createdAt: text("created_at").default("CURRENT_TIMESTAMP")
+});
+
+export const media_ai = sqliteTable('media_ai', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  namaFile: text('nama_file').notNull(),
+  urlFile: text('url_file').notNull(),
+  deskripsi: text('deskripsi').notNull(),
+  tipeMedia: text('tipe_media').default('image'),
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const pencairan = sqliteTable('pencairan', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  bank: text('bank').notNull(),
+  noRekening: text('no_rekening').notNull(),
+  atasNama: text('atas_nama').notNull(),
+  jumlah: integer('jumlah').notNull(),
+  status: text('status').default('PENDING'), // PENDING, PROCESSED, REJECTED
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
 });

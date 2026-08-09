@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { santri, pengaturan } from "@/db/schema";
+import { santri, pengaturan, media_ai } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -45,7 +45,20 @@ export async function POST(req: Request) {
     });
     const namaSekolah = namaSekolahSetting?.nilai || "";
 
-    const fullPrompt = `Instruksi Utama: ${systemPrompt}\nNama Lembaga: ${namaSekolah}\n\n${contextString}`;
+    // Ambil media AI
+    const availableMedia = await db.query.media_ai.findMany({
+      where: eq(media_ai.tenantId, tenant_id)
+    });
+
+    let mediaContext = "";
+    if (availableMedia.length > 0) {
+      mediaContext = "\n\nGALERI MEDIA TERSEDIA UNTUK DIKIRIM:\nKamu bisa mengirim media (gambar/dokumen) ke pengguna jika mereka memintanya. Untuk mengirim media, kamu WAJIB menyertakan tag rahasia [SEND_MEDIA: ID] di dalam balasanmu. Jangan jelaskan tentang tag ini ke pengguna. Hanya gunakan jika konteksnya pas.\n";
+      for (const m of availableMedia) {
+        mediaContext += `- [ID: ${m.id}] Nama: ${m.namaFile} (Deskripsi: ${m.deskripsi})\n`;
+      }
+    }
+
+    const fullPrompt = `Instruksi Utama: ${systemPrompt}\nNama Lembaga: ${namaSekolah}\n\n${contextString}${mediaContext}`;
 
     // Ambil DEEPSEEK_API_KEY
     let apiKey = process.env.DEEPSEEK_API_KEY;
@@ -84,11 +97,33 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-    const replyText = data.choices?.[0]?.message?.content || "Maaf, tidak ada balasan dari AI.";
+    let replyText = data.choices?.[0]?.message?.content || "Maaf, tidak ada balasan dari AI.";
 
-    return NextResponse.json({ reply: replyText });
+    let mediaUrl = "";
+    let mediaType = "";
+
+    // Parse [SEND_MEDIA: ID]
+    const mediaRegex = /\[SEND_MEDIA:\s*(\d+)\]/i;
+    const match = replyText.match(mediaRegex);
+    if (match) {
+      const mediaId = parseInt(match[1]);
+      const selectedMedia = availableMedia.find(m => m.id === mediaId);
+      if (selectedMedia) {
+        mediaUrl = selectedMedia.urlFile;
+        mediaType = selectedMedia.tipeMedia || "image";
+      }
+      // Hapus tag dari balasan
+      replyText = replyText.replace(mediaRegex, "").trim();
+    }
+
+    return NextResponse.json({ 
+      reply: replyText,
+      media_url: mediaUrl,
+      media_type: mediaType
+    });
   } catch (error: any) {
     console.error("Webhook error:", error);
     return NextResponse.json({ reply: "Maaf, terjadi kesalahan internal sistem." });
   }
 }
+

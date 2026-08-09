@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { MediaAIGallery } from "./MediaAIGallery"
 import {
   Form,
   FormControl,
@@ -35,6 +36,11 @@ const settingsSchema = z.object({
   PAYMENT_MODE: z.string().optional().or(z.literal("")),
   ipaymu_va: z.string().optional().or(z.literal("")),
   ipaymu_key: z.string().optional().or(z.literal("")),
+  pencairan_bank: z.string().optional().or(z.literal("")),
+  pencairan_rekening: z.string().optional().or(z.literal("")),
+  pencairan_nama: z.string().optional().or(z.literal("")),
+  ipaymu_fee_bearer: z.string().optional().or(z.literal("USER")),
+
   deepseek_key: z.string(),
   ai_prompt: z.string().optional().or(z.literal("")),
   usage_token: z.string().optional(),
@@ -51,6 +57,12 @@ const settingsSchema = z.object({
   spp_early_reminder_day: z.string().optional().or(z.literal("")),
   spp_early_reminder_time: z.string().optional().or(z.literal("")),
   spp_early_reminder_template: z.string().optional().or(z.literal("")),
+
+  // Gateway Instan Settings
+  BANK_NAME: z.string().optional(),
+  BANK_ACCOUNT: z.string().optional(),
+  BANK_ACCOUNT_NAME: z.string().optional(),
+  FEE_BEARER: z.string().optional().or(z.literal("CUSTOMER")),
 })
 
 export function SettingsTabs({ initialData }: { initialData: Record<string, string> }) {
@@ -80,6 +92,10 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       PAYMENT_MODE: initialData.PAYMENT_MODE || "DEFAULT",
       ipaymu_va: initialData.ipaymu_va || "",
       ipaymu_key: initialData.ipaymu_key || "",
+      pencairan_bank: initialData.pencairan_bank || "",
+      pencairan_rekening: initialData.pencairan_rekening || "",
+      pencairan_nama: initialData.pencairan_nama || "",
+      ipaymu_fee_bearer: initialData.ipaymu_fee_bearer || "USER",
       deepseek_key: initialData.deepseek_key || "",
       ai_prompt: initialData.ai_prompt || "",
       usage_token: initialData.usage_token || "0",
@@ -96,6 +112,11 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       spp_early_reminder_day: initialData.spp_early_reminder_day || "7",
       spp_early_reminder_time: initialData.spp_early_reminder_time || "07:00",
       spp_early_reminder_template: initialData.spp_early_reminder_template || "Assalamu'alaikum Bapak/Ibu {{nama_wali}},\n\nKami dari {{nama_pesantren}} mengingatkan bahwa SPP bulanan ananda *{{nama_santri}}* akan segera jatuh tempo dalam waktu dekat.\n\nMohon persiapkan pembayarannya. Abaikan pesan ini jika sudah lunas.\n\nWassalamu'alaikum Wr. Wb.",
+      
+      BANK_NAME: initialData.BANK_NAME || "",
+      BANK_ACCOUNT: initialData.BANK_ACCOUNT || "",
+      BANK_ACCOUNT_NAME: initialData.BANK_ACCOUNT_NAME || "",
+      FEE_BEARER: initialData.FEE_BEARER || "CUSTOMER",
     },
   })
 
@@ -282,8 +303,86 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                           <span className="text-[10px] uppercase tracking-wider font-bold bg-orange-100 dark:bg-blue-900/30 text-orange-600 dark:text-blue-400 px-2 py-0.5 rounded">Direkomendasikan</span>
                         </h3>
                       </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 ml-8 leading-relaxed">Terima pembayaran langsung tanpa ribet daftar bank. Dana akan masuk ke Saldo Virtual Anda di aplikasi ini dan dapat dicairkan kapan saja. Biaya admin ditanggung pembayar.</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 ml-8 leading-relaxed">Terima pembayaran langsung tanpa ribet daftar bank. Dana akan masuk ke Saldo Virtual Anda di aplikasi ini dan dapat dicairkan kapan saja.</p>
                     </div>
+                    
+                    {paymentModeValue === 'DEFAULT' && (
+                      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-4 space-y-5">
+                        <div className="bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-900/30 rounded-xl p-4 mb-4">
+                          <h4 className="font-bold text-sm text-orange-900 dark:text-orange-300 mb-1 flex items-center gap-1.5"><Wallet className="w-4 h-4" /> Informasi Rekening Pencairan</h4>
+                          <p className="text-xs text-orange-700 dark:text-orange-400/80 mb-4">Dana yang masuk ke Saldo Virtual dapat dicairkan ke rekening di bawah ini.</p>
+                          
+                          <div className="space-y-4">
+                            <FormField
+                              control={form.control}
+                              name="BANK_NAME"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-orange-900 dark:text-orange-300">Nama Bank</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Contoh: BCA, BNI, BRI, Mandiri" {...field} className="bg-white dark:bg-slate-900 border-orange-200 dark:border-orange-800/50 text-slate-900 dark:text-white h-11" />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FormField
+                                control={form.control}
+                                name="BANK_ACCOUNT"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-orange-900 dark:text-orange-300">Nomor Rekening</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="Contoh: 1234567890" {...field} className="bg-white dark:bg-slate-900 border-orange-200 dark:border-orange-800/50 text-slate-900 dark:text-white h-11" />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="BANK_ACCOUNT_NAME"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-orange-900 dark:text-orange-300">Atas Nama</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="Sesuai buku tabungan" {...field} className="bg-white dark:bg-slate-900 border-orange-200 dark:border-orange-800/50 text-slate-900 dark:text-white h-11" />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            
+                            <div className="mt-4 pt-4 border-t border-orange-200 dark:border-orange-800/50">
+                              <FormField
+                                control={form.control}
+                                name="FEE_BEARER"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-orange-900 dark:text-orange-300">Siapa yang menanggung Biaya Admin Gateway (Rp 5.000/transaksi)?</FormLabel>
+                                    <FormControl>
+                                      <select
+                                        {...field}
+                                        className="flex h-11 w-full items-center justify-between rounded-md border border-orange-200 dark:border-orange-800/50 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
+                                      >
+                                        <option value="CUSTOMER">Dibebankan Pelanggan (Pelanggan bayar Tagihan + Rp 5.000)</option>
+                                        <option value="MERCHANT">Ditanggung Pesantren (Saldo dipotong Rp 5.000)</option>
+                                      </select>
+                                    </FormControl>
+                                    <FormDescription className="text-xs text-orange-700/70 dark:text-orange-400/60 mt-1">
+                                      Jika memilih Dibebankan Pelanggan, maka tagihan Rp 1.000.000 akan menjadi Rp 1.005.000. Anda tetap menerima saldo bersih Rp 1.000.000.
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Mode Pribadi */}
                     <div 
@@ -605,6 +704,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
 
               </CardContent>
             </Card>
+            <MediaAIGallery />
           </TabsContent>
 
           <TabsContent value="penagihan">

@@ -69,8 +69,7 @@ export function PaymentPanel({ santri }: PaymentPanelProps) {
         alert("Gagal: " + res.message)
       }
     } else {
-      const orderId = `IPAY-${santri!.id}-${Math.random().toString(36).substr(2,6).toUpperCase()}`
-      const res = await generatePaymentLink(orderId, values.amount, {
+      const res = await generatePaymentLink(santri!.id, values.amount, {
         name: santri!.nama_wali || santri!.nama,
         phone: santri!.no_wa || "08000000000"
       })

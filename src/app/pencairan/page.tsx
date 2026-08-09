@@ -1,29 +1,61 @@
-import { Banknote, HandCoins } from "lucide-react";
+import { getServerTenantId } from "@/server/auth"
+import { db } from "@/db"
+import { transaksi, pencairan, pengaturan } from "@/db/schema"
+import { eq, and, desc } from "drizzle-orm"
+import PencairanClient from "./PencairanClient"
+import { redirect } from "next/navigation"
 
-export default function PencairanPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function PencairanPage() {
+  const tenantId = await getServerTenantId()
+  if (!tenantId) {
+    redirect("/login")
+  }
+
+  // Get Settings
+  const allSettings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId))
+  const getSet = (k: string) => allSettings.find(x => x.kunci === k)?.nilai || ""
+  
+  const bankInfo = {
+    bank: getSet("BANK_NAME"),
+    noRek: getSet("BANK_ACCOUNT"),
+    atasNama: getSet("BANK_ACCOUNT_NAME")
+  }
+
+  // Uang Masuk
+  const riwayatMasuk = await db.select({
+    id: transaksi.id,
+    tipe: transaksi.tipe,
+    jumlah: transaksi.jumlah,
+    biayaAdmin: transaksi.biayaAdmin,
+    createdAt: transaksi.createdAt,
+    status: transaksi.status
+  }).from(transaksi)
+  .where(and(eq(transaksi.tenantId, tenantId), eq(transaksi.metode, 'IPAYMU_INSTAN'), eq(transaksi.status, 'LUNAS')))
+  .orderBy(desc(transaksi.createdAt))
+
+  const totalMasuk = riwayatMasuk.reduce((acc, curr) => acc + curr.jumlah, 0)
+
+  // Riwayat Pencairan
+  const riwayatTarik = await db.select().from(pencairan)
+    .where(eq(pencairan.tenantId, tenantId))
+    .orderBy(desc(pencairan.createdAt))
+
+  // Menghitung Saldo
+  // Yang dikurangi adalah yang PENDING dan PROCESSED. REJECTED kembali ke saldo.
+  const totalKeluar = riwayatTarik
+    .filter(t => t.status !== 'REJECTED')
+    .reduce((acc, curr) => acc + curr.jumlah, 0)
+
+  const saldo = totalMasuk - totalKeluar
+
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto h-full p-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-          <Banknote className="w-8 h-8 text-blue-500" />
-          Pencairan Dana
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Tarik saldo virtual yang Anda terima dari pembayaran pelanggan ke rekening instansi Anda.
-        </p>
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
-        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-          <HandCoins className="w-10 h-10 text-blue-500 dark:text-blue-400" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">
-          Segera Hadir
-        </h2>
-        <p className="text-slate-500 dark:text-slate-400 max-w-md">
-          Halaman pencairan dana sedang dalam tahap pengembangan. Saat ini saldo Anda tetap aman tersimpan di sistem kami.
-        </p>
-      </div>
-    </div>
-  );
+    <PencairanClient 
+      saldo={saldo} 
+      riwayatMasuk={riwayatMasuk} 
+      riwayatTarik={riwayatTarik}
+      bankInfo={bankInfo}
+    />
+  )
 }

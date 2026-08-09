@@ -3,7 +3,7 @@
 
 
 import { db } from "@/db";
-import { pengaturan } from "@/db/schema";
+import { pengaturan, transaksi } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -13,15 +13,32 @@ function getTimestamp() {
   return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 }
 
-export async function generatePaymentLink(orderId: string, amount: number, customer: { name: string, phone: string }, method?: string, tenantId?: string) {
+export async function generatePaymentLink(santriId: number, originalAmount: number, customer: { name: string, phone: string }, method?: string, tenantId?: string) {
   try {
-    if (!tenantId) return { success: false, message: "Error: Tenant ID is missing" };
+    let activeTenantId = tenantId;
+    if (!activeTenantId) {
+       const { getServerTenantId } = await import('@/server/auth');
+       activeTenantId = (await getServerTenantId()) || undefined;
+    }
+    if (!activeTenantId) return { success: false, message: "Error: Tenant ID is missing" };
 
-    const vaConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_va'), eq(pengaturan.tenantId, tenantId)));
-    const apiKeyConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_key'), eq(pengaturan.tenantId, tenantId)));
-    const paymentModeConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'PAYMENT_MODE'), eq(pengaturan.tenantId, tenantId)));
+    const vaConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_va'), eq(pengaturan.tenantId, activeTenantId)));
+    const apiKeyConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_key'), eq(pengaturan.tenantId, activeTenantId)));
+    const paymentModeConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'PAYMENT_MODE'), eq(pengaturan.tenantId, activeTenantId)));
+    const feeBearerConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'FEE_BEARER'), eq(pengaturan.tenantId, activeTenantId)));
     
     const paymentMode = paymentModeConfig[0]?.nilai || 'DEFAULT';
+    const feeBearer = feeBearerConfig[0]?.nilai || 'CUSTOMER';
+    
+    let amount = originalAmount;
+    let biayaAdmin = 0;
+    
+    if (paymentMode === 'DEFAULT') {
+       biayaAdmin = 5000;
+       if (feeBearer === 'CUSTOMER') {
+           amount = originalAmount + biayaAdmin;
+       }
+    }
     
     let va = "";
     let apiKey = "";
@@ -40,6 +57,18 @@ export async function generatePaymentLink(orderId: string, amount: number, custo
       }
     }
     
+    const [newTrx] = await db.insert(transaksi).values({
+      tenantId: activeTenantId,
+      santriId: santriId,
+      tipe: "SPP",
+      jumlah: originalAmount, // The actual SPP amount
+      biayaAdmin: biayaAdmin,
+      status: "PENDING",
+      metode: paymentMode === 'DEFAULT' ? 'IPAYMU_INSTAN' : 'IPAYMU_PRIBADI'
+    }).returning({ id: transaksi.id });
+    
+    const orderId = newTrx.id.toString();
+
     let url = "https://my.ipaymu.com/api/v2/payment";
     
     const payload: any = {
