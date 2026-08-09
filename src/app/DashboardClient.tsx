@@ -15,7 +15,7 @@ interface DashboardClientProps {
 
 export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: DashboardClientProps) {
   const { t } = useLanguage()
-  const { clientTerm } = useAppConfig()
+  const { clientTerm, paymentMode } = useAppConfig()
   const [stats, setStats] = useState({
     totalSantri: 0,
     totalKekurangan: 0,
@@ -70,16 +70,26 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
           </CardContent>
         </Card>
 
-        {/* Masuk Hari Ini */}
+        {/* Total Saldo Virtual / Status Keuangan */}
         <Card className="bg-[var(--color-dash-panel)] border-slate-300 dark:border-slate-700/50 hover:border-orange-500 dark:border-blue-400/20 hover:-translate-y-1 transition-all duration-200 overflow-hidden group">
           <CardContent className="p-5 flex items-center gap-4">
-            <div className="relative flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-              <Wallet className="w-5 h-5 text-emerald-400" />
+            <div className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full border transition-colors ${paymentMode === 'PRIVATE' ? 'bg-blue-500/10 border-blue-500/20 group-hover:bg-blue-500/20' : 'bg-emerald-500/10 border-emerald-500/20 group-hover:bg-emerald-500/20'}`}>
+              {paymentMode === 'PRIVATE' ? (
+                <KeyRound className="w-5 h-5 text-blue-400" />
+              ) : (
+                <Wallet className="w-5 h-5 text-emerald-400" />
+              )}
             </div>
             <div>
-              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium font-medium">{t("dashboard.today_income") || "Masuk Hari Ini"}</p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                {paymentMode === 'PRIVATE' ? "Status Keuangan" : "Total Saldo Virtual"}
+              </p>
               <div className="flex items-baseline gap-1 mt-1">
-                <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Rp {stats.pemasukanHariIni.toLocaleString('id-ID')}</span>
+                {paymentMode === 'PRIVATE' ? (
+                  <span className="text-sm font-bold text-slate-900 dark:text-white leading-tight">Terhubung ke iPaymu Pribadi</span>
+                ) : (
+                  <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Rp {stats.pemasukanHariIni.toLocaleString('id-ID')}</span>
+                )}
               </div>
             </div>
           </CardContent>

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Save, Eye, EyeOff, Lock, Unlock } from "lucide-react"
+import { Save, Eye, EyeOff, Lock, Unlock, Wallet, Link as LinkIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,8 +32,9 @@ const settingsSchema = z.object({
   OWNER_WA: z.string().optional().or(z.literal("")),
   KEPSEK_WA: z.string().optional().or(z.literal("")),
   ADMIN_WA: z.string().optional().or(z.literal("")),
-  ipaymu_va: z.string(),
-  ipaymu_key: z.string(),
+  PAYMENT_MODE: z.string().optional().or(z.literal("")),
+  ipaymu_va: z.string().optional().or(z.literal("")),
+  ipaymu_key: z.string().optional().or(z.literal("")),
   deepseek_key: z.string(),
   ai_prompt: z.string().optional().or(z.literal("")),
   usage_token: z.string().optional(),
@@ -76,6 +77,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       OWNER_WA: initialData.OWNER_WA || "",
       KEPSEK_WA: initialData.KEPSEK_WA || "",
       ADMIN_WA: initialData.ADMIN_WA || "",
+      PAYMENT_MODE: initialData.PAYMENT_MODE || "DEFAULT",
       ipaymu_va: initialData.ipaymu_va || "",
       ipaymu_key: initialData.ipaymu_key || "",
       deepseek_key: initialData.deepseek_key || "",
@@ -96,6 +98,8 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       spp_early_reminder_template: initialData.spp_early_reminder_template || "Assalamu'alaikum Bapak/Ibu {{nama_wali}},\n\nKami dari {{nama_pesantren}} mengingatkan bahwa SPP bulanan ananda *{{nama_santri}}* akan segera jatuh tempo dalam waktu dekat.\n\nMohon persiapkan pembayarannya. Abaikan pesan ini jika sudah lunas.\n\nWassalamu'alaikum Wr. Wb.",
     },
   })
+
+  const paymentModeValue = form.watch("PAYMENT_MODE")
 
   async function onSubmit(values: z.infer<typeof settingsSchema>) {
     setLoading(true)
@@ -251,94 +255,141 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
           </TabsContent>
 
           <TabsContent value="keuangan">
-            <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
-              <CardHeader>
-                <CardTitle>{t('settings.ipaymu_title')}</CardTitle>
-                <CardDescription>
-                  {t('settings.ipaymu_desc')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="ipaymu_va"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('settings.ipaymu_va')}</FormLabel>
-                      <FormControl>
-                        <div className="relative flex items-center">
-                          <Input 
-                            type={showIpaymuVa ? "text" : "password"} 
-                            placeholder="0000000000000000" 
-                            {...field} 
-                            readOnly={lockIpaymuVa}
-                            className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockIpaymuVa ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
-                          />
-                          <div className="absolute right-2 flex items-center space-x-1">
-                            <button
-                              type="button"
-                              onClick={() => setShowIpaymuVa(!showIpaymuVa)}
-                              className="p-1.5 text-muted-foreground hover:text-foreground"
-                            >
-                              {showIpaymuVa ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setLockIpaymuVa(!lockIpaymuVa)}
-                              className={`p-1.5 ${lockIpaymuVa ? 'text-red-400' : 'text-green-400'} hover:opacity-80`}
-                              title={lockIpaymuVa ? "Buka Kunci untuk Mengedit" : "Kunci Kembali"}
-                            >
-                              {lockIpaymuVa ? <Lock size={16} /> : <Unlock size={16} />}
-                            </button>
-                          </div>
+            <div className="space-y-6">
+              <Card className="bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 shadow-2xl">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2">
+                    <Wallet className="w-5 h-5 text-orange-500 dark:text-blue-400" />
+                    Integrasi Pembayaran
+                  </CardTitle>
+                  <CardDescription>
+                    Pilih metode penerimaan dana untuk aplikasi Anda.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-2">
+                  <div className="space-y-4">
+                    {/* Mode Bawaan */}
+                    <div 
+                      className={`p-5 border-2 rounded-xl cursor-pointer transition-all duration-200 ${paymentModeValue === 'DEFAULT' ? 'border-orange-500 bg-orange-50/50 dark:border-blue-500 dark:bg-blue-900/10 shadow-sm' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'}`}
+                      onClick={() => form.setValue("PAYMENT_MODE", "DEFAULT")}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${paymentModeValue === 'DEFAULT' ? 'border-orange-500 dark:border-blue-500' : 'border-slate-400 dark:border-slate-600'}`}>
+                          {paymentModeValue === 'DEFAULT' && <div className="w-2.5 h-2.5 rounded-full bg-orange-500 dark:bg-blue-500 animate-in zoom-in" />}
                         </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="ipaymu_key"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('settings.ipaymu_key')}</FormLabel>
-                      <FormControl>
-                        <div className="relative flex items-center">
-                          <Input 
-                            type={showIpaymuKey ? "text" : "password"} 
-                            {...field} 
-                            readOnly={lockIpaymu}
-                            className={`h-11 pr-20 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 ${lockIpaymu ? 'opacity-70 bg-slate-100 dark:bg-slate-800/80' : 'bg-white dark:bg-slate-900'}`} 
-                          />
-                          <div className="absolute right-2 flex items-center space-x-1">
-                            <button
-                              type="button"
-                              onClick={() => setShowIpaymuKey(!showIpaymuKey)}
-                              className="p-1.5 text-muted-foreground hover:text-foreground"
-                            >
-                              {showIpaymuKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setLockIpaymu(!lockIpaymu)}
-                              className={`p-1.5 ${lockIpaymu ? 'text-red-400' : 'text-green-400'} hover:opacity-80`}
-                              title={lockIpaymu ? "Buka Kunci untuk Mengedit" : "Kunci Kembali"}
-                            >
-                              {lockIpaymu ? <Lock size={16} /> : <Unlock size={16} />}
-                            </button>
-                          </div>
+                        <h3 className="font-bold text-[15px] sm:text-base text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                          Gateway Instan (Bawaan Sistem) 
+                          <span className="text-[10px] uppercase tracking-wider font-bold bg-orange-100 dark:bg-blue-900/30 text-orange-600 dark:text-blue-400 px-2 py-0.5 rounded">Direkomendasikan</span>
+                        </h3>
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 ml-8 leading-relaxed">Terima pembayaran langsung tanpa ribet daftar bank. Dana akan masuk ke Saldo Virtual Anda di aplikasi ini dan dapat dicairkan kapan saja. Biaya admin ditanggung pembayar.</p>
+                    </div>
+
+                    {/* Mode Pribadi */}
+                    <div 
+                      className={`p-5 border-2 rounded-xl cursor-pointer transition-all duration-200 ${paymentModeValue === 'PRIVATE' ? 'border-orange-500 bg-orange-50/50 dark:border-blue-500 dark:bg-blue-900/10 shadow-sm' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'}`}
+                      onClick={() => form.setValue("PAYMENT_MODE", "PRIVATE")}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${paymentModeValue === 'PRIVATE' ? 'border-orange-500 dark:border-blue-500' : 'border-slate-400 dark:border-slate-600'}`}>
+                          {paymentModeValue === 'PRIVATE' && <div className="w-2.5 h-2.5 rounded-full bg-orange-500 dark:bg-blue-500 animate-in zoom-in" />}
                         </div>
-                      </FormControl>
-                      <FormDescription>{t('settings.ipaymu_secret')}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
+                        <h3 className="font-bold text-[15px] sm:text-base text-slate-900 dark:text-white">Gateway Pribadi (Gunakan Akun iPaymu Sendiri)</h3>
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 ml-8 leading-relaxed">Hubungkan akun iPaymu milik perusahaan Anda. Dana dari pelanggan akan masuk 100% langsung ke dasbor iPaymu Anda. Tidak ada uang yang mengendap di sistem kami.</p>
+                    </div>
+                  </div>
+
+                  {paymentModeValue === 'PRIVATE' && (
+                    <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-4 space-y-5">
+                      <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-900/30 rounded-xl p-4 mb-4">
+                        <h4 className="font-bold text-sm text-blue-900 dark:text-blue-300 mb-1 flex items-center gap-1.5"><Lock className="w-4 h-4" /> Kredensial API iPaymu Anda</h4>
+                        <p className="text-xs text-blue-700 dark:text-blue-400/80 mb-4">Cara mendapatkan API Key: Login ke iPaymu &gt; Pengaturan &gt; Integrasi.</p>
+                        
+                        <div className="space-y-4">
+                          <FormField
+                            control={form.control}
+                            name="ipaymu_va"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-blue-900 dark:text-blue-300">Virtual Account (VA)</FormLabel>
+                                <FormControl>
+                                  <div className="relative flex items-center">
+                                    <Input 
+                                      type={showIpaymuVa ? "text" : "password"} 
+                                      placeholder="Contoh: 1179000xxxx" 
+                                      {...field} 
+                                      readOnly={lockIpaymuVa}
+                                      className={`h-11 pr-20 text-slate-900 dark:text-white border-blue-200 dark:border-blue-800/50 ${lockIpaymuVa ? 'opacity-70 bg-white/50 dark:bg-slate-900/50' : 'bg-white dark:bg-slate-900'}`} 
+                                    />
+                                    <div className="absolute right-2 flex items-center space-x-1">
+                                      <button type="button" onClick={() => setShowIpaymuVa(!showIpaymuVa)} className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                        {showIpaymuVa ? <EyeOff size={16} /> : <Eye size={16} />}
+                                      </button>
+                                      <button type="button" onClick={() => setLockIpaymuVa(!lockIpaymuVa)} className={`p-1.5 ${lockIpaymuVa ? 'text-red-400' : 'text-green-500'} hover:opacity-80`}>
+                                        {lockIpaymuVa ? <Lock size={16} /> : <Unlock size={16} />}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="ipaymu_key"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-blue-900 dark:text-blue-300">API Key</FormLabel>
+                                <FormControl>
+                                  <div className="relative flex items-center">
+                                    <Input 
+                                      type={showIpaymuKey ? "text" : "password"} 
+                                      placeholder="Contoh: sandbox_xxx atau secret_xxx"
+                                      {...field} 
+                                      readOnly={lockIpaymu}
+                                      className={`h-11 pr-20 text-slate-900 dark:text-white border-blue-200 dark:border-blue-800/50 ${lockIpaymu ? 'opacity-70 bg-white/50 dark:bg-slate-900/50' : 'bg-white dark:bg-slate-900'}`} 
+                                    />
+                                    <div className="absolute right-2 flex items-center space-x-1">
+                                      <button type="button" onClick={() => setShowIpaymuKey(!showIpaymuKey)} className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                        {showIpaymuKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                                      </button>
+                                      <button type="button" onClick={() => setLockIpaymu(!lockIpaymu)} className={`p-1.5 ${lockIpaymu ? 'text-red-400' : 'text-green-500'} hover:opacity-80`}>
+                                        {lockIpaymu ? <Lock size={16} /> : <Unlock size={16} />}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4">
+                        <h4 className="font-bold text-sm text-slate-900 dark:text-white mb-1 flex items-center gap-1.5"><LinkIcon className="w-4 h-4 text-orange-500 dark:text-blue-400" /> Webhook URL (Sangat Penting!)</h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">Copy tautan di bawah ini dan paste ke kolom Webhook di dashboard iPaymu Anda agar sistem kami tahu jika ada pelanggan yang sudah bayar.</p>
+                        <div className="flex items-center gap-2">
+                          <Input 
+                            readOnly 
+                            value="https://api.satujalan.id/webhook/ipaymu" 
+                            className="bg-slate-100 dark:bg-slate-900 font-mono text-xs text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 h-9" 
+                          />
+                          <Button type="button" variant="outline" size="sm" className="h-9 shrink-0" onClick={() => {
+                            navigator.clipboard.writeText("https://api.satujalan.id/webhook/ipaymu");
+                            alert("Webhook URL disalin!");
+                          }}>
+                            Copy
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   )}
-                />
-              </CardContent>
-            </Card>
-
-
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="ai">

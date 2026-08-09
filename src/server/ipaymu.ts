@@ -19,12 +19,25 @@ export async function generatePaymentLink(orderId: string, amount: number, custo
 
     const vaConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_va'), eq(pengaturan.tenantId, tenantId)));
     const apiKeyConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'ipaymu_key'), eq(pengaturan.tenantId, tenantId)));
+    const paymentModeConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'PAYMENT_MODE'), eq(pengaturan.tenantId, tenantId)));
     
-    const va = vaConfig[0]?.nilai;
-    const apiKey = apiKeyConfig[0]?.nilai;
+    const paymentMode = paymentModeConfig[0]?.nilai || 'DEFAULT';
     
-    if (!va || !apiKey) {
-      return { success: false, message: "Konfigurasi iPaymu VA atau API Key belum diatur." };
+    let va = "";
+    let apiKey = "";
+
+    if (paymentMode === 'DEFAULT') {
+      va = process.env.MASTER_IPAYMU_VA || "";
+      apiKey = process.env.MASTER_IPAYMU_KEY || "";
+      if (!va || !apiKey) {
+        return { success: false, message: "Konfigurasi Master iPaymu belum diatur di server (.env)." };
+      }
+    } else {
+      va = vaConfig[0]?.nilai;
+      apiKey = apiKeyConfig[0]?.nilai;
+      if (!va || !apiKey) {
+        return { success: false, message: "Konfigurasi iPaymu VA atau API Key Pribadi belum diatur di Pengaturan." };
+      }
     }
     
     let url = "https://my.ipaymu.com/api/v2/payment";

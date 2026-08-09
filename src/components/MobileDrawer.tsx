@@ -3,8 +3,9 @@
 import { useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { MessageSquareShare, FileBox, FileText, Settings, X, LogOut } from "lucide-react"
+import { MessageSquareShare, FileBox, FileText, Settings, X, LogOut, Wallet } from "lucide-react"
 import { auth, signOut } from "@/lib/firebase"
+import { useAppConfig } from "@/contexts/AppConfigContext"
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface MobileDrawerProps {
 export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const { paymentMode } = useAppConfig()
 
   // Prevent background scrolling when drawer is open
   useEffect(() => {
@@ -33,6 +35,7 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     { title: "Terminal WhatsApp AI", url: "/wa", icon: MessageSquareShare, color: "text-teal-400" },
     { title: "Template Pesan WA", url: "/template", icon: FileBox, color: "text-orange-400" },
     { title: "Laporan Keuangan", url: "/laporan", icon: FileText, color: "text-rose-400" },
+    ...(paymentMode === 'DEFAULT' ? [{ title: "Pencairan Dana", url: "/pencairan", icon: Wallet, color: "text-blue-400" }] : []),
     { title: "Pengaturan", url: "/settings", icon: Settings, color: "text-slate-700 dark:text-slate-300 font-medium" },
   ]
 

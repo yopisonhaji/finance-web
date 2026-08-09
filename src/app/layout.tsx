@@ -64,7 +64,7 @@ export default async function RootLayout({
     settingsData = await db
       .select()
       .from(pengaturan)
-      .where(and(inArray(pengaturan.kunci, ["nama_pesantren", "alamat", "deepseek_key", "OWNER_NAMA", "OWNER_WA", "TIPE_BISNIS"]), eq(pengaturan.tenantId, tenantId)));
+      .where(and(inArray(pengaturan.kunci, ["nama_pesantren", "alamat", "deepseek_key", "OWNER_NAMA", "OWNER_WA", "TIPE_BISNIS", "PAYMENT_MODE"]), eq(pengaturan.tenantId, tenantId)));
   }
     
   let namaLembaga = "Finance";
@@ -74,6 +74,7 @@ export default async function RootLayout({
   let isWaSet = false;
   let ownerName = "Admin";
   let tipeBisnis = "";
+  let paymentMode = "DEFAULT";
   
   if (settingsData && settingsData.length > 0) {
     settingsData.forEach(setting => {
@@ -83,6 +84,7 @@ export default async function RootLayout({
       if (setting.kunci === "OWNER_NAMA") ownerName = setting.nilai;
       if (setting.kunci === "OWNER_WA") isWaSet = !!setting.nilai;
       if (setting.kunci === "TIPE_BISNIS") tipeBisnis = setting.nilai;
+      if (setting.kunci === "PAYMENT_MODE") paymentMode = setting.nilai;
     });
   }
   
@@ -117,7 +119,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <AppConfigProvider initialTipeBisnis={tipeBisnis}>
+            <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
               <LanguageProvider>
                 <SetupScreen />
                 <div style={{ display: 'none' }}>{children}</div>
@@ -138,7 +140,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AppConfigProvider initialTipeBisnis={tipeBisnis}>
+          <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
             <LanguageProvider>
               <LayoutWrapper 
                 namaLembaga={namaLembaga} 

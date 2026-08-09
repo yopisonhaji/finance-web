@@ -31,7 +31,7 @@ import Link from "next/link"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAppConfig } from "@/contexts/AppConfigContext"
 
-const getNavGroups = (t: (key: string) => string, clientTerm: string) => [
+const getNavGroups = (t: (key: string) => string, clientTerm: string, paymentMode: string) => [
   {
     title: "UTAMA",
     items: [
@@ -79,7 +79,14 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string) => [
         icon: FileBox,
         color: "text-orange-400",
         hoverColor: "group-hover:text-orange-300",
-      }
+      },
+      ...(paymentMode === 'DEFAULT' ? [{
+        title: "Pencairan Dana",
+        url: "/pencairan",
+        icon: Wallet,
+        color: "text-blue-400",
+        hoverColor: "group-hover:text-blue-300",
+      }] : [])
     ]
   },
   {
@@ -118,8 +125,8 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string) => [
 export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ownerName = "Admin" }: { namaPesantren?: string, alamatPesantren?: string, ownerName?: string }) {
   const pathname = usePathname();
   const { t, language } = useLanguage();
-  const { clientTerm } = useAppConfig();
-  const groups = getNavGroups(t, clientTerm);
+  const { clientTerm, paymentMode } = useAppConfig();
+  const groups = getNavGroups(t, clientTerm, paymentMode);
 
   return (
     <Sidebar side={language === 'ar' ? 'right' : 'left'} variant="sidebar" collapsible="icon" className="border-r border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)] hidden md:flex">
