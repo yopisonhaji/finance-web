@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2, Send, Paperclip } from "lucide-react"
+import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -13,40 +13,6 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
-  // States for sending message
-  const [sendWa, setSendWa] = useState("")
-  const [sendText, setSendText] = useState("")
-  const [sendLoading, setSendLoading] = useState(false)
-
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!sendWa) return;
-    setSendLoading(true);
-
-    try {
-      const token = localStorage.getItem("token") || ""
-      const res = await fetch(`${botUrl}/send`, {
-        method: "POST",
-        headers: { 
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "69420"
-        },
-        body: JSON.stringify({ no_wa: sendWa, pesan: sendText })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert("Pesan berhasil masuk antrean!");
-        setSendWa("");
-        setSendText("");
-      } else {
-        alert("Gagal: " + data.error);
-      }
-    } catch (e: any) {
-      alert("Error jaringan: " + e.message);
-    }
-    setSendLoading(false);
-  }
 
   const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
 
@@ -260,64 +226,6 @@ export default function StatusWAPage() {
         </Card>
       </div>
 
-      {/* Panel Bawah: Form Kirim Pesan & Media */}
-      <Card className="border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-[#0f172a] mt-6">
-        <CardHeader className="bg-slate-50 dark:bg-slate-900/50 pb-4 border-b border-slate-200 dark:border-slate-800">
-          <CardTitle className="flex items-center text-slate-800 dark:text-slate-200">
-            <Send className="mr-2 h-5 w-5 text-orange-500 dark:text-blue-500" />
-            Kirim Pesan Teks
-          </CardTitle>
-          <CardDescription>
-            Kirim pesan teks manual ke pelanggan. Untuk gambar/brosur, gunakan fitur Galeri Media AI.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <form onSubmit={handleSendMessage} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nomor Tujuan</label>
-                <Input 
-                  type="text" 
-                  placeholder="Contoh: 628123456789 (Gunakan 62)" 
-                  value={sendWa}
-                  onChange={(e) => setSendWa(e.target.value)}
-                  className="bg-white dark:bg-[#0f172a]"
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Pesan teks (atau caption)</label>
-              <textarea 
-                placeholder="Tulis pesan Anda di sini..." 
-                value={sendText}
-                onChange={(e) => setSendText(e.target.value)}
-                rows={3}
-                className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-[#0f172a] dark:text-white dark:focus:ring-blue-500"
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              disabled={sendLoading || !sendWa || (status !== "connected")}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-blue-600 dark:hover:bg-blue-700"
-            >
-              {sendLoading ? "Sedang Mengirim..." : (
-                <div className="flex items-center">
-                  <Send className="mr-2 h-4 w-4" /> Kirim Sekarang
-                </div>
-              )}
-            </Button>
-            {status !== "connected" && (
-              <p className="text-xs text-rose-500 text-center mt-2">Anda harus terhubung dengan WhatsApp terlebih dahulu untuk mengirim pesan.</p>
-            )}
-          </form>
-        </CardContent>
-      </Card>
     </div>
   )
 }
-
-
-
-
