@@ -42,8 +42,7 @@ export function MediaAIGallery() {
     fetchMedia()
   }, [])
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleUpload = async () => {
     if (!file || !nama || !deskripsi) return alert("Semua kolom wajib diisi")
 
     if (file.size > 10 * 1024 * 1024) {
@@ -114,7 +113,7 @@ export function MediaAIGallery() {
         <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
           <Upload className="w-4 h-4 text-emerald-500" /> Tambah Media Baru
         </h3>
-        <form onSubmit={handleUpload} className="space-y-4">
+        <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label>Nama File Singkat</Label>
@@ -148,12 +147,12 @@ export function MediaAIGallery() {
             />
           </div>
           <div className="flex justify-end">
-            <Button type="submit" disabled={uploading} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button type="button" onClick={handleUpload} disabled={uploading} className="bg-emerald-600 hover:bg-emerald-700 text-white">
               {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
               {uploading ? "Mengunggah..." : "Unggah & Simpan"}
             </Button>
           </div>
-        </form>
+        </div>
       </div>
 
       <div>

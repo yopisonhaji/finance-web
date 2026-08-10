@@ -139,7 +139,7 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
     const res = await saveSettings(safeValues)
     if (res.success) {
       alert(t('settings.save_success') || "Pengaturan berhasil disimpan!")
-      window.location.reload()
+      // Jangan reload halaman agar tab tetap di posisi saat ini
     } else {
       alert((t('settings.save_error') || "Gagal menyimpan: ") + res.message)
     }
