@@ -293,13 +293,14 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     // ---- PARSER DSML: DeepSeek kadang output tool call dalam format text DSML, bukan proper tool_calls ----
     function parseDSMLToolCalls(text: string): { name: string; args: Record<string, any> }[] {
       const results: { name: string; args: Record<string, any> }[] = [];
-      const invokeRegex = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke\s+name="([^"]+)"\s*>([\s\S]*?)<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke\s*>/g;
+      // Support both single-pipe < | DSML | > and double-pipe < | | DSML | | > formats
+      const invokeRegex = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke\s+name="([^"]+)"\s*>([\s\S]*?)<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke\s*>/g;
       let match;
       while ((match = invokeRegex.exec(text)) !== null) {
         const name = match[1];
         const innerContent = match[2];
         const args: Record<string, any> = {};
-        const paramRegex = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*parameter\s+name="([^"]+)"[^>]*>\s*([\s\S]*?)\s*<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*parameter\s*>/g;
+        const paramRegex = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?parameter\s+name="([^"]+)"[^>]*>\s*([\s\S]*?)\s*<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?parameter\s*>/g;
         let paramMatch;
         while ((paramMatch = paramRegex.exec(innerContent)) !== null) {
           const paramName = paramMatch[1];
@@ -316,15 +317,16 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     }
 
     function stripDSML(text: string): string {
-      return text.replace(/<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*>[\s\S]*?<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*>/g, '')
-                 .replace(/<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*\s*\/?\s*>/g, '')
+      // Support both single-pipe and double-pipe DSML formats
+      return text.replace(/<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*>[\s\S]*?<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*>/g, '')
+                 .replace(/<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*\s*\/?\s*>/g, '')
                  .replace(/\n{3,}/g, '\n\n')
                  .trim();
     }
 
     // Deteksi DSML di content (fallback jika tool_calls kosong)
     const contentText = responseMessage.content || "";
-    const hasDSML = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke/.test(contentText);
+    const hasDSML = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke/.test(contentText);
     let rawToolCalls = responseMessage.tool_calls;
     let contentCleaned = false;
     
@@ -508,7 +510,9 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           }
         }
         else if (toolCall.function.name === "kirim_media") {
-          let { media_id } = args as any;
+          // Support both 'media_id' and 'id' parameter names (AI kadang pakai 'id')
+          let { media_id, id } = args as any;
+          if (!media_id && id) media_id = id; // alias
           try {
             // SMART MATCHING: jika media_id kosong/invalid, coba cocokkan keyword dari pesan user
             if (!media_id || isNaN(Number(media_id))) {
