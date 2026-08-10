@@ -132,9 +132,13 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   systemPrompt += `\nATURAN UMUM:\n`;
   systemPrompt += `- Jawablah TEPAT SESUAI APA YANG DITANYAKAN. Jangan bertele-tele.\n`;
   systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
-  systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- Jika ${parentTerm} membalas dengan angka (1=QRIS, 2=Virtual Account, 3=Indomaret/Alfamart), WAJIB panggil tool 'buat_link_pembayaran_ipaymu'.\n`;
   systemPrompt += `- Jika pengguna mengirim [Sticker]/[Gambar]/[Video] dll, responlah dengan ramah dan tawarkan bantuan.\n`;
+  systemPrompt += `\n[ATURAN KRITIS - FORMAT TOOL CALL]:\n`;
+  systemPrompt += `- ANDA WAJIB menggunakan mekanisme FUNCTION CALLING bawaan sistem. JANGAN PERNAH menulis tool call dalam format teks apapun (XML/DSML/JSON/text).\n`;
+  systemPrompt += `- Tool call HARUS melalui API function calling, BUKAN ditulis manual di dalam konten pesan.\n`;
+  systemPrompt += `- Jika user meminta brosur/gambar/file, LANGSUNG panggil tool 'kirim_media' dengan ID yang sesuai dari daftar di atas.\n`;
+  systemPrompt += `- DILARANG KERAS menampilkan kode/XML/DSML/tag apapun ke pengguna.\n`;
   if (messageType) {
     systemPrompt += `\n[INFO: Pengguna baru saja mengirim ${messageType}. Responlah dengan natural sesuai konteks.]\n`;
   }
