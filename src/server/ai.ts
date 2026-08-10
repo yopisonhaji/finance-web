@@ -34,6 +34,15 @@ export async function processAIResponse(message: string, sender: string, santriD
     return { text: "" };
   }
 
+  // Pre-load daftar media yang tersedia untuk tenant ini
+  let availableMediaList: { id: number; nama: string; tipe: string }[] = [];
+  try {
+    const mediaItems = await db.select().from(media_ai).where(eq(media_ai.tenantId, tenantId));
+    availableMediaList = mediaItems.map(m => ({ id: m.id, nama: m.namaFile, tipe: m.tipeMedia }));
+  } catch (e) {
+    console.error("[AI] Gagal memuat daftar media:", e);
+  }
+
   const normalizeWA = (num: string) => {
     if (!num) return "";
     let n = num.replace(/\D/g, "");
@@ -111,9 +120,18 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     systemPrompt += `3. Boleh menyebut nama "${pushName && pushName !== sender ? pushName : ''}" sesekali jika natural, tapi jangan berlebihan.\n`;
   }
   
+  // Inject daftar media yang tersedia langsung ke prompt (AI tidak perlu cek_daftar_media)
+  if (availableMediaList.length > 0) {
+    systemPrompt += `\n[DAFTAR MEDIA TERSEDIA - WAJIB DIKIRIM JIKA DIMINTA]:\n`;
+    for (const m of availableMediaList) {
+      systemPrompt += `- ID:${m.id} | Nama: "${m.nama}" | Tipe: ${m.tipe}\n`;
+    }
+    systemPrompt += `\nATURAN PENTING: Jika pengguna menyebut nama file di atas (misal: "${availableMediaList[0]?.nama || 'file'}"), ANDA WAJIB LANGSUNG panggil tool 'kirim_media' dengan ID yang sesuai. JANGAN bertanya balik. JANGAN hanya deskripsikan. KIRIMKAN FILENYA!\n`;
+  }
+  
   systemPrompt += `\nATURAN UMUM:\n`;
   systemPrompt += `- Jawablah TEPAT SESUAI APA YANG DITANYAKAN. Jangan bertele-tele.\n`;
-  systemPrompt += `- [PENTING - MEDIA] Jika pengguna menyebut kata "gambar", "foto", "logo", "brosur", "file", "kirim", "minta", "mana", "liat", "coba" yang merujuk ke media, ANDA WAJIB: (1) panggil 'cek_daftar_media', lalu (2) panggil 'kirim_media' dengan ID yang sesuai dari daftar. JANGAN PERNAH hanya membalas teks — KIRIMKAN FILENYA!\n`;
+  systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- Jika ${parentTerm} membalas dengan angka (1=QRIS, 2=Virtual Account, 3=Indomaret/Alfamart), WAJIB panggil tool 'buat_link_pembayaran_ipaymu'.\n`;
   systemPrompt += `- Jika pengguna mengirim [Sticker]/[Gambar]/[Video] dll, responlah dengan ramah dan tawarkan bantuan.\n`;
