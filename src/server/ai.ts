@@ -155,12 +155,6 @@ export async function processAIResponse(message: string, sender: string, santriD
   let responseMediaUrl = "";
   let responseMediaType = "";
 
-  try {
-    const fs = require('fs');
-    const path = require('path');
-    fs.appendFileSync(path.join(process.cwd(), 'debug-ai.txt'), `Sender: ${sender} | normSender: ${normalizedSender} | kepsek: ${kepsekWa} | isPrivileged: ${isPrivileged}\n`);
-  } catch(e) {}
-
   let systemPrompt = "";
 
   if (isPrivileged) {

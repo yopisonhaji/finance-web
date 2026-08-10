@@ -31,8 +31,8 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#1e293b] border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_20px_rgba(0,0,0,0.3)] pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-center justify-between h-16 relative px-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#1e293b] border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_20px_rgba(0,0,0,0.3)] pb-[env(safe-area-inset-bottom)] overflow-visible">
+        <div className="flex items-center justify-between h-16 relative px-2 overflow-visible">
           
           {/* Nav Items Left */}
           <div className="flex w-2/5 justify-around">
@@ -46,12 +46,12 @@ export function MobileBottomNav() {
             </Link>
           </div>
 
-          {/* Floating Action Button (Center) */}
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[40%] flex flex-col items-center z-50">
-            <Link href="/kasir" className="w-14 h-14 rounded-full bg-orange-600 dark:bg-blue-600 border-[6px] border-[#0f172a] shadow-lg flex items-center justify-center text-white hover:bg-orange-500 dark:bg-blue-500 active:scale-95 transition-transform">
-              <Wallet className="w-6 h-6" />
+          {/* Floating Action Button (Center) - Kasir */}
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/3 flex flex-col items-center z-50">
+            <Link href="/kasir" className="w-14 h-14 rounded-full bg-orange-600 dark:bg-blue-600 border-[6px] border-white dark:border-[#0f172a] shadow-lg flex items-center justify-center text-white hover:bg-orange-500 dark:hover:bg-blue-500 active:scale-95 transition-transform">
+              <Wallet className="w-6 h-6 shrink-0" />
             </Link>
-            <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300 font-medium mt-1">Kasir</span>
+            <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300 mt-1 whitespace-nowrap">Kasir</span>
           </div>
 
           {/* Nav Items Right */}
