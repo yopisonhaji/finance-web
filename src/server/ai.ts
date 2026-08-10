@@ -113,6 +113,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   
   systemPrompt += `\nATURAN UMUM:\n`;
   systemPrompt += `- Jawablah TEPAT SESUAI APA YANG DITANYAKAN. Jangan bertele-tele.\n`;
+  systemPrompt += `- Jika pengguna MEMINTA dikirimkan gambar/brosur/file tertentu (misal: "kirim gambar brosur", "bisa kirim qwqwqw?", "minta fotonya"), ANDA WAJIB memanggil tool 'cek_daftar_media' lalu 'kirim_media' dengan ID yang sesuai. JANGAN hanya bilang "saya sudah lihat" — KIRIMKAN FILENYA!\n`;
   systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- Jika ${parentTerm} membalas dengan angka (1=QRIS, 2=Virtual Account, 3=Indomaret/Alfamart), WAJIB panggil tool 'buat_link_pembayaran_ipaymu'.\n`;
   systemPrompt += `- Jika pengguna mengirim [Sticker]/[Gambar]/[Video] dll, responlah dengan ramah dan tawarkan bantuan.\n`;
@@ -201,7 +202,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     type: "function",
     function: {
       name: "cek_daftar_media",
-      description: `Melihat daftar media (brosur, gambar produk, file PDF) yang tersedia di database dan bisa dikirimkan ke pelanggan.`,
+      description: `Melihat daftar media (brosur, gambar produk, file PDF) yang tersedia di database dan bisa dikirimkan ke pelanggan. WAJIB dipanggil jika user meminta gambar/brosur/file tapi Anda tidak tahu ID-nya.`,
       parameters: { type: "object", properties: {}, required: [] }
     }
   },
@@ -209,11 +210,11 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     type: "function",
     function: {
       name: "kirim_media",
-      description: `Mengirimkan file media spesifik (brosur/gambar/dokumen) ke pelanggan berdasarkan ID Media atau nama file. Harus didahului dengan cek_daftar_media jika Anda tidak tahu ID-nya.`,
+      description: `MENGIRIMKAN file media (brosur/gambar/dokumen) ke pelanggan saat ini. WAJIB DIPANGGIL jika user meminta dikirimkan gambar/file/brosur tertentu yang ADA di daftar media. Gunakan ID dari hasil cek_daftar_media.`,
       parameters: {
         type: "object",
         properties: {
-          media_id: { type: "number", description: "ID media yang ingin dikirim" }
+          media_id: { type: "number", description: "ID media yang ingin dikirim (dari hasil cek_daftar_media)" }
         },
         required: ["media_id"]
       }

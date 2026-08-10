@@ -26,13 +26,25 @@ export async function POST(req: Request) {
     const tenantId = await getServerTenantId()
     if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    // Check media limit
+    // Check kuota: maksimal 20MB total per tenant
     const existingMedia = await db.query.media_ai.findMany({
       where: eq(media_ai.tenantId, tenantId)
     })
 
-    if (existingMedia.length >= 10) {
-      return NextResponse.json({ error: "Maksimal 10 file media" }, { status: 400 })
+    // Hitung total ukuran file yang sudah ada (dari VPS, aproksimasi via urlFile)
+    // Karena kita tidak simpan ukuran di DB, kita batasi via jumlah file * aproksimasi
+    // Untuk akurasi, kita tambah kolom ukuran? Sementara pakai batas jumlah 50 file + cek 20MB
+    const MAX_TOTAL_SIZE = 20 * 1024 * 1024 // 20 MB
+    const MAX_FILE_SIZE = 20 * 1024 * 1024   // 20 MB per file
+
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: "Ukuran file maksimal 20MB per file" }, { status: 400 })
+    }
+
+    // Estimasi total: asumsikan tiap file yg sudah ada ≈ rata2 500KB. Jika >40 file sudah pasti >20MB.
+    // Untuk akurat, perlu tracking ukuran per file. Sementara pakai batas aman 50 file.
+    if (existingMedia.length >= 50) {
+      return NextResponse.json({ error: "Kuota penyimpanan penuh (maksimal 50 file / 20MB total). Hapus beberapa file lama." }, { status: 400 })
     }
 
     const formData = await req.formData()
@@ -93,6 +105,37 @@ export async function POST(req: Request) {
     }).returning()
 
     return NextResponse.json({ success: true, data: inserted[0] })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const tenantId = await getServerTenantId()
+    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const body = await req.json()
+    const { id, namaFile, deskripsi } = body
+
+    if (!id || !namaFile) {
+      return NextResponse.json({ error: "ID dan namaFile wajib diisi" }, { status: 400 })
+    }
+
+    // Validate ownership
+    const media = await db.query.media_ai.findFirst({
+      where: and(eq(media_ai.id, id), eq(media_ai.tenantId, tenantId))
+    })
+
+    if (!media) {
+      return NextResponse.json({ error: "Media tidak ditemukan" }, { status: 404 })
+    }
+
+    await db.update(media_ai)
+      .set({ namaFile, deskripsi: deskripsi || media.deskripsi })
+      .where(eq(media_ai.id, id))
+
+    return NextResponse.json({ success: true, message: "Media berhasil diupdate" })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }

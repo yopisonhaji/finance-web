@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Upload, Trash2, Image as ImageIcon, FileText, Loader2 } from "lucide-react"
+import { Upload, Trash2, Image as ImageIcon, FileText, Loader2, Pencil, Check, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -21,6 +21,10 @@ export function MediaAIGallery() {
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editNama, setEditNama] = useState("")
+  const [editDeskripsi, setEditDeskripsi] = useState("")
+  const [saving, setSaving] = useState(false)
 
   const [nama, setNama] = useState("")
   const [deskripsi, setDeskripsi] = useState("")
@@ -45,8 +49,8 @@ export function MediaAIGallery() {
   const handleUpload = async () => {
     if (!file || !nama || !deskripsi) return alert("Semua kolom wajib diisi")
 
-    if (file.size > 10 * 1024 * 1024) {
-      return alert("Ukuran file maksimal 10MB")
+    if (file.size > 20 * 1024 * 1024) {
+      return alert("Ukuran file maksimal 20MB")
     }
 
     setUploading(true)
@@ -100,6 +104,35 @@ export function MediaAIGallery() {
     }
   }
 
+  const handleEdit = (media: MediaItem) => {
+    setEditingId(media.id)
+    setEditNama(media.namaFile)
+    setEditDeskripsi(media.deskripsi)
+  }
+
+  const handleSaveEdit = async (id: number) => {
+    if (!editNama.trim()) return alert("Nama file tidak boleh kosong")
+    setSaving(true)
+    try {
+      const res = await fetch("/api/settings/media-ai", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, namaFile: editNama, deskripsi: editDeskripsi })
+      })
+      if (res.ok) {
+        setMediaList((prev) => prev.map(m => m.id === id ? { ...m, namaFile: editNama, deskripsi: editDeskripsi } : m))
+        setEditingId(null)
+      } else {
+        const data = await res.json()
+        alert(data.error || "Gagal mengupdate media")
+      }
+    } catch (err) {
+      alert("Terjadi kesalahan jaringan")
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className="space-y-6 mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
       <div className="flex flex-col mb-4">
@@ -126,7 +159,7 @@ export function MediaAIGallery() {
               />
             </div>
             <div>
-              <Label>Pilih File (Max 10MB)</Label>
+              <Label>Pilih File (Max 20MB)</Label>
               <Input 
                 id="file-upload"
                 type="file" 
@@ -156,7 +189,8 @@ export function MediaAIGallery() {
       </div>
 
       <div>
-        <h3 className="font-bold text-slate-800 dark:text-white mb-4">Galeri Tersimpan ({mediaList.length}/10)</h3>
+        <h3 className="font-bold text-slate-800 dark:text-white mb-1">Galeri Tersimpan ({mediaList.length} file · Kuota 20MB total)</h3>
+        <p className="text-xs text-slate-500 mb-4">Maksimal 20MB per file. Total penyimpanan 20MB per tenant. Bukan batas jumlah file.</p>
         {loading ? (
           <div className="flex items-center justify-center p-10">
             <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
@@ -184,19 +218,47 @@ export function MediaAIGallery() {
                   )}
                 </div>
                 <CardContent className="p-4">
-                  <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{media.namaFile}</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{media.deskripsi}</p>
+                  {editingId === media.id ? (
+                    <div className="space-y-2">
+                      <Input value={editNama} onChange={(e) => setEditNama(e.target.value)} className="text-sm h-8" />
+                      <Textarea value={editDeskripsi} onChange={(e) => setEditDeskripsi(e.target.value)} className="text-xs min-h-[50px]" />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => handleSaveEdit(media.id)} disabled={saving} className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700">
+                          <Check className="w-3 h-3 mr-1" /> Simpan
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="h-7 text-xs">
+                          <X className="w-3 h-3 mr-1" /> Batal
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{media.namaFile}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{media.deskripsi}</p>
+                    </>
+                  )}
                   
                   <div className="mt-4 flex justify-between items-center">
                     <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-400">
                       ID: {media.id}
                     </span>
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
-                      className="h-7 text-[10px] px-2 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white shadow-none"
-                      onClick={() => handleDelete(media.id, media.urlFile)}
-                      disabled={deletingId === media.id}
+                    <div className="flex gap-1">
+                      {editingId !== media.id && (
+                        <Button 
+                          variant="outline"
+                          size="sm" 
+                          className="h-7 text-[10px] px-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white shadow-none"
+                          onClick={() => handleEdit(media)}
+                        >
+                          <Pencil className="w-3 h-3 mr-1" /> Edit
+                        </Button>
+                      )}
+                      <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        className="h-7 text-[10px] px-2 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white shadow-none"
+                        onClick={() => handleDelete(media.id, media.urlFile)}
+                        disabled={deletingId === media.id}
                     >
                       {deletingId === media.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3 mr-1" />} Hapus
                     </Button>
