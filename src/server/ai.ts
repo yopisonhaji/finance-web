@@ -19,20 +19,11 @@ export async function processAIResponse(message: string, sender: string, santriD
   const isPendidikan = tipeBisnis === "PENDIDIKAN";
   const clientTerm = isPendidikan ? "siswa/santri" : "karyawan/pelanggan";
   const parentTerm = isPendidikan ? "wali santri" : "pelanggan/klien";
-  
-  if (!aiKey) {
-    return { text: "Mohon maaf, sistem AI saat ini belum diaktifkan oleh admin." };
-  }
 
   const tokenLimitStr = getSetting("limit_token");
   const tokenUsageStr = getSetting("usage_token");
   const tokenLimit = parseInt(tokenLimitStr) || 0;
   let tokenUsage = parseInt(tokenUsageStr) || 0;
-
-  if (tokenLimit > 0 && tokenUsage >= tokenLimit) {
-    console.log(`[AI] Token habis (${tokenUsage}/${tokenLimit}). Mengabaikan pesan dari ${sender}.`);
-    return { text: "" };
-  }
 
   // Pre-load daftar media yang tersedia untuk tenant ini
   let availableMediaList: { id: number; nama: string; tipe: string; deskripsi: string; url: string }[] = [];
@@ -43,13 +34,12 @@ export async function processAIResponse(message: string, sender: string, santriD
     console.error("[AI] Gagal memuat daftar media:", e);
   }
 
-  // ===== PRE-PROCESSOR: Deteksi permintaan media sebelum panggil AI =====
+  // ===== PRE-PROCESSOR: Deteksi permintaan media (JALAN SEBELUM cek token/AI key) =====
   const msgLower = message.toLowerCase();
-  const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "ada", "minta", "pdf", "dokumen", "file", "browser"];
+  const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "minta", "pdf", "dokumen", "file", "browser"];
   const isMediaRequest = mediaKeywords.some(kw => msgLower.includes(kw));
   
   if (isMediaRequest && availableMediaList.length > 0) {
-    // Smart-match: cari media yang paling cocok dengan kata kunci user
     let bestMatch = availableMediaList[0];
     let bestScore = 0;
     
@@ -62,12 +52,10 @@ export async function processAIResponse(message: string, sender: string, santriD
         if (msgLower.includes(kw)) {
           if (namaLower.includes(kw)) score += 5;
           if (deskLower.includes(kw)) score += 3;
-          // Keyword brosur/foto/gambar spesial
           if ((kw === "brosur" || kw === "browsur") && (namaLower.includes("brosur") || namaLower.includes("browsur"))) score += 10;
           if ((kw === "gambar" || kw === "foto") && (namaLower.includes("gambar") || namaLower.includes("foto") || namaLower.includes("brosur"))) score += 5;
         }
       }
-      // Word-by-word matching
       const userWords = msgLower.split(/\s+/).filter(w => w.length > 2);
       for (const word of userWords) {
         if (namaLower.includes(word)) score += 2;
@@ -81,57 +69,48 @@ export async function processAIResponse(message: string, sender: string, santriD
     }
     
     if (bestScore > 0 || availableMediaList.length === 1) {
-      console.log(`[AI] PRE-PROCESSOR: Permintaan media terdeteksi. Langsung kirim "${bestMatch.nama}" (ID:${bestMatch.id}, score:${bestScore})`);
+      console.log(`[AI] PRE-PROCESSOR: Langsung kirim "${bestMatch.nama}" (ID:${bestMatch.id}, score:${bestScore})`);
       const displayName = pushName && pushName !== sender ? pushName : "Bapak/Ibu";
-      let caption = `Baik, ${displayName}! Berikut ${bestMatch.nama} yang dimaksud ya 😊`;
-      // Tetap panggil AI untuk generate caption yang lebih natural, tapi kirim media langsung
-      // AI akan dipanggil dengan instruksi khusus
-      const mediaUrl = bestMatch.url;
-      const mediaType = bestMatch.tipe;
+      let caption = `Baik, ${displayName}! Berikut ${bestMatch.nama} yang dimaksud ya \uD83D\uDE0A`;
       
-      // Panggil AI untuk caption aja (lightweight), sambil langsung kirim media
-      try {
-        const captionResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${aiKey}`
-          },
-          body: JSON.stringify({
-            model: getSetting("ai_model") || getSetting("deepseek_model") || "deepseek-chat",
-            messages: [
-              { role: "system", content: `Anda adalah asisten yang sangat singkat. User meminta ${bestMatch.nama}. Buat caption SINGKAT (max 1 kalimat pendek) untuk mengirimkan file ${bestMatch.nama} ke ${displayName}. JANGAN gunakan format apapun selain teks biasa. JANGAN pakai XML/DSML/tag.` },
-              { role: "user", content: message }
-            ],
-            temperature: 0.3,
-            max_tokens: 100
-          })
-        });
-        const captionData = await captionResponse.json();
-        if (captionData.choices?.[0]?.message?.content) {
-          caption = captionData.choices[0].message.content;
-          // Bersihkan dari kemungkinan DSML/XML
-          caption = caption.replace(/<[^>]+>/g, '').trim();
-        }
-        if (captionData.usage?.total_tokens) {
-          await (async (used: number) => {
-            const tUsage = parseInt(getSetting("usage_token")) || 0;
-            const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
-            if (existing.length > 0) {
-              await db.update(pengaturan).set({ nilai: String(tUsage + used) }).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
-            } else {
-              await db.insert(pengaturan).values({ tenantId: tenantId, kunci: 'usage_token', nilai: String(tUsage + used) });
-            }
-          })(captionData.usage.total_tokens);
-        }
-      } catch(e) {
-        console.log("[AI] Gagal generate caption AI, pakai default:", e);
+      // Coba AI caption hanya jika ada API key dan token cukup
+      if (aiKey && (tokenLimit === 0 || tokenUsage < tokenLimit)) {
+        try {
+          const captionResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${aiKey}` },
+            body: JSON.stringify({
+              model: getSetting("ai_model") || getSetting("deepseek_model") || "deepseek-chat",
+              messages: [
+                { role: "system", content: `Buat caption SINGKAT (max 1 kalimat) untuk mengirim file "${bestMatch.nama}" ke ${displayName}. HANYA teks biasa, TANPA format/tag/XML/DSML.` },
+                { role: "user", content: message }
+              ],
+              temperature: 0.3, max_tokens: 80
+            })
+          });
+          const cData = await captionResponse.json();
+          if (cData.choices?.[0]?.message?.content) {
+            caption = cData.choices[0].message.content.replace(/<[^>]+>/g, '').trim();
+          }
+        } catch(e) { /* fallback ke default caption */ }
       }
       
-      return { text: caption, media_url: mediaUrl, media_type: mediaType };
+      return { text: caption, media_url: bestMatch.url, media_type: bestMatch.tipe };
     }
   }
   // ===== END PRE-PROCESSOR =====
+  
+  if (!aiKey) {
+    return { text: "Mohon maaf, sistem AI saat ini belum diaktifkan oleh admin." };
+  }
+
+  if (tokenLimit > 0 && tokenUsage >= tokenLimit) {
+    console.log(`[AI] Token habis (${tokenUsage}/${tokenLimit}). Mengabaikan pesan dari ${sender}.`);
+    return { text: "" };
+  }
+
+  // Pre-load daftar media yang tersedia untuk tenant ini (SUDAH di-load di atas)
+  // availableMediaList sudah ada dari pre-processor
 
   const normalizeWA = (num: string) => {
     if (!num) return "";
