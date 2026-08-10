@@ -155,9 +155,9 @@ export default function StatusWAPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Terminal WhatsApp</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Terminal WhatsApp AI</h1>
         <p className="text-slate-700 dark:text-slate-300 font-medium mt-2">
-          Hubungkan sistem dengan WhatsApp menggunakan metode modern (Pairing Code).
+          Hubungkan sistem dengan WhatsApp. Pause, Resume, atau Logout kapan saja.
         </p>
       </div>
 

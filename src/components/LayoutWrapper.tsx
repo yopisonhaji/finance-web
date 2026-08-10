@@ -120,7 +120,7 @@ export function LayoutWrapper({
           {children}
         </main>
         
-        {/* Footer - Quote & Info (muncul di desktop) */}
+        {/* Footer v08.10 - Quote & Info */}
         <footer className="hidden md:block border-t border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/95 backdrop-blur-[10px] px-6 py-3">
           <div className="flex items-center justify-between max-w-screen-2xl mx-auto">
             <div className="flex items-center gap-3">
@@ -132,9 +132,10 @@ export function LayoutWrapper({
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] text-slate-500 font-medium">{namaLembaga}{alamatLembaga ? ` — ${alamatLembaga}` : ''}</p>
+              <p className="text-[10px] text-slate-500 font-medium">{namaLembaga}{alamatLembaga ? ` \u2014 ${alamatLembaga}` : ''}</p>
               <p className="text-[10px] text-slate-400 mt-0.5">
                 Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:underline">satujalan.id</a>
+                <span className="text-slate-500 ml-2">v2026.08.10</span>
               </p>
             </div>
           </div>
