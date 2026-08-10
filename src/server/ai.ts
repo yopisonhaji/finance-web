@@ -263,7 +263,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         "Authorization": `Bearer ${aiKey}`
       },
       body: JSON.stringify({
-          model: getSetting("deepseek_model") || "deepseek-chat",
+          model: getSetting("ai_model") || getSetting("deepseek_model") || "deepseek-chat",
         messages,
         temperature: 0.3,
         ...(tools ? { tools, tool_choice: "auto" } : {})
@@ -286,11 +286,64 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
 
     const responseMessage = data.choices[0].message;
 
-    if (responseMessage.tool_calls) {
+    // ---- PARSER DSML: DeepSeek kadang output tool call dalam format text DSML, bukan proper tool_calls ----
+    function parseDSMLToolCalls(text: string): { name: string; args: Record<string, any> }[] {
+      const results: { name: string; args: Record<string, any> }[] = [];
+      const invokeRegex = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke\s+name="([^"]+)"\s*>([\s\S]*?)<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke\s*>/g;
+      let match;
+      while ((match = invokeRegex.exec(text)) !== null) {
+        const name = match[1];
+        const innerContent = match[2];
+        const args: Record<string, any> = {};
+        const paramRegex = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*parameter\s+name="([^"]+)"[^>]*>\s*([\s\S]*?)\s*<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*parameter\s*>/g;
+        let paramMatch;
+        while ((paramMatch = paramRegex.exec(innerContent)) !== null) {
+          const paramName = paramMatch[1];
+          let paramValue = paramMatch[2].trim();
+          if (/^\d+$/.test(paramValue)) {
+            args[paramName] = parseInt(paramValue);
+          } else {
+            args[paramName] = paramValue;
+          }
+        }
+        results.push({ name, args });
+      }
+      return results;
+    }
+
+    function stripDSML(text: string): string {
+      return text.replace(/<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*>[\s\S]*?<\/\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*>/g, '')
+                 .replace(/<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*[^>]*\s*\/?\s*>/g, '')
+                 .replace(/\n{3,}/g, '\n\n')
+                 .trim();
+    }
+
+    // Deteksi DSML di content (fallback jika tool_calls kosong)
+    const contentText = responseMessage.content || "";
+    const hasDSML = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke/.test(contentText);
+    let rawToolCalls = responseMessage.tool_calls;
+    
+    // Jika tidak ada proper tool_calls tapi ada DSML di content, parse DSML
+    if ((!rawToolCalls || rawToolCalls.length === 0) && hasDSML) {
+      console.log("[AI] Mendeteksi DSML tool calls di content, melakukan parsing manual...");
+      const parsedCalls = parseDSMLToolCalls(contentText);
+      if (parsedCalls.length > 0) {
+        // Konversi ke format yang kompatibel dengan loop di bawah
+        rawToolCalls = parsedCalls.map((c, i) => ({
+          id: `dsml_${i}_${Date.now()}`,
+          function: {
+            name: c.name,
+            arguments: JSON.stringify(c.args)
+          }
+        }));
+      }
+    }
+
+    if (rawToolCalls && rawToolCalls.length > 0) {
       messages.push(responseMessage);
       
-      for (const toolCall of responseMessage.tool_calls) {
-        let args = {};
+      for (const toolCall of rawToolCalls) {
+        let args: any = {};
         try {
           args = JSON.parse(toolCall.function.arguments);
         } catch(e) {}
@@ -444,18 +497,67 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           }
         }
         else if (toolCall.function.name === "kirim_media") {
-          const { media_id } = args as any;
+          let { media_id } = args as any;
           try {
-            const mediaData = await db.select().from(media_ai).where(and(eq(media_ai.id, media_id), eq(media_ai.tenantId, tenantId)));
+            // SMART MATCHING: jika media_id kosong/invalid, coba cocokkan keyword dari pesan user
+            if (!media_id || isNaN(Number(media_id))) {
+              console.log(`[AI] kirim_media dipanggil dengan media_id invalid: "${media_id}", mencoba smart matching...`);
+              const allMedia = await db.select().from(media_ai).where(eq(media_ai.tenantId, tenantId));
+              if (allMedia.length > 0) {
+                // Cari keyword di pesan user: "brosur", "gambar", "foto", "contoh", dll
+                const userQuery = message.toLowerCase();
+                let bestMatch = allMedia[0];
+                let bestScore = 0;
+                
+                for (const m of allMedia) {
+                  let score = 0;
+                  const namaLower = m.namaFile.toLowerCase();
+                  const deskLower = (m.deskripsi || "").toLowerCase();
+                  
+                  // Cek keyword umum di pesan user
+                  const keywords = ["brosur", "browser", "gambar", "foto", "contoh", "daftar", "harga", "katalog", "produk"];
+                  for (const kw of keywords) {
+                    if (userQuery.includes(kw)) {
+                      // Jika nama file mengandung keyword yang sama, beri skor tinggi
+                      if (namaLower.includes(kw)) score += 5;
+                      if (deskLower.includes(kw)) score += 3;
+                      // Jika user minta "brosur" dan file bernama "brosur", perfect match
+                      if (kw === "brosur" && namaLower.includes("brosur")) score += 10;
+                      if (kw === "browser" && namaLower.includes("brosur")) score += 10;
+                    }
+                  }
+                  // Cek apakah kata-kata dari user query muncul di nama file
+                  const userWords = userQuery.split(/\s+/).filter(w => w.length > 2);
+                  for (const word of userWords) {
+                    if (namaLower.includes(word)) score += 2;
+                    if (deskLower.includes(word)) score += 1;
+                  }
+                  
+                  if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = m;
+                  }
+                }
+                
+                if (bestScore > 0) {
+                  console.log(`[AI] Smart match: mengirim "${bestMatch.namaFile}" (ID:${bestMatch.id}, score:${bestScore})`);
+                  media_id = bestMatch.id;
+                } else {
+                  // Kirim media pertama sebagai fallback
+                  console.log(`[AI] No keyword match, mengirim media pertama: "${bestMatch.namaFile}" (ID:${bestMatch.id})`);
+                  media_id = bestMatch.id;
+                }
+              }
+            }
+            
+            const mediaData = await db.select().from(media_ai).where(and(eq(media_ai.id, Number(media_id)), eq(media_ai.tenantId, tenantId)));
             if (mediaData.length === 0) {
                toolResult = JSON.stringify({ success: false, error: `Media dengan ID ${media_id} tidak ditemukan.` });
             } else {
                const m = mediaData[0];
-               // Kita cukup merespon ke AI bahwa kita sedang menyiapkan pengiriman. 
-               // Tapi nyatanya, kita inject URL ini ke dalam text atau mengirimkan instruksi terpisah.
                responseMediaUrl = m.urlFile;
                responseMediaType = m.tipeMedia || "image";
-               toolResult = JSON.stringify({ success: true, message: `File ${m.namaFile} telah dimasukkan ke antrean pengiriman media.` });
+               toolResult = JSON.stringify({ success: true, message: `File ${m.namaFile} telah dikirimkan ke pengguna.` });
             }
           } catch(err: any) {
             toolResult = JSON.stringify({ success: false, error: err.message });
@@ -478,7 +580,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
           "Authorization": `Bearer ${aiKey}`
         },
         body: JSON.stringify({
-          model: getSetting("deepseek_model") || "deepseek-chat",
+          model: getSetting("ai_model") || getSetting("deepseek_model") || "deepseek-chat",
           messages,
           temperature: 0.3
         })
@@ -489,15 +591,19 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
         await updateUsage(secondData.usage.total_tokens);
       }
       
+      let finalText = secondData.choices?.[0]?.message?.content || "Selesai memproses data.";
+      finalText = stripDSML(finalText);
+      
       return { 
-        text: secondData.choices?.[0]?.message?.content || "Selesai memproses data.", 
+        text: finalText, 
         broadcasts,
         media_url: responseMediaUrl,
         media_type: responseMediaType
       } as { text: string; broadcasts?: any[]; media_url?: string; media_type?: string };
     }
     
-    return { text: responseMessage.content, broadcasts, media_url: responseMediaUrl, media_type: responseMediaType } as { text: string; broadcasts?: any[]; media_url?: string; media_type?: string };
+    let finalContent = stripDSML(responseMessage.content || "");
+    return { text: finalContent, broadcasts, media_url: responseMediaUrl, media_type: responseMediaType } as { text: string; broadcasts?: any[]; media_url?: string; media_type?: string };
   } catch (error) {
     console.error("[AI] Error calling DeepSeek:", error);
     return { text: "Maaf, terjadi kesalahan saat menghubungi mesin AI." };
