@@ -35,13 +35,103 @@ export async function processAIResponse(message: string, sender: string, santriD
   }
 
   // Pre-load daftar media yang tersedia untuk tenant ini
-  let availableMediaList: { id: number; nama: string; tipe: string }[] = [];
+  let availableMediaList: { id: number; nama: string; tipe: string; deskripsi: string; url: string }[] = [];
   try {
     const mediaItems = await db.select().from(media_ai).where(eq(media_ai.tenantId, tenantId));
-    availableMediaList = mediaItems.map(m => ({ id: m.id, nama: m.namaFile, tipe: m.tipeMedia || "image" }));
+    availableMediaList = mediaItems.map(m => ({ id: m.id, nama: m.namaFile, tipe: m.tipeMedia || "image", deskripsi: m.deskripsi || "", url: m.urlFile }));
   } catch (e) {
     console.error("[AI] Gagal memuat daftar media:", e);
   }
+
+  // ===== PRE-PROCESSOR: Deteksi permintaan media sebelum panggil AI =====
+  const msgLower = message.toLowerCase();
+  const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "ada", "minta", "pdf", "dokumen", "file", "browser"];
+  const isMediaRequest = mediaKeywords.some(kw => msgLower.includes(kw));
+  
+  if (isMediaRequest && availableMediaList.length > 0) {
+    // Smart-match: cari media yang paling cocok dengan kata kunci user
+    let bestMatch = availableMediaList[0];
+    let bestScore = 0;
+    
+    for (const m of availableMediaList) {
+      let score = 0;
+      const namaLower = m.nama.toLowerCase();
+      const deskLower = m.deskripsi.toLowerCase();
+      
+      for (const kw of mediaKeywords) {
+        if (msgLower.includes(kw)) {
+          if (namaLower.includes(kw)) score += 5;
+          if (deskLower.includes(kw)) score += 3;
+          // Keyword brosur/foto/gambar spesial
+          if ((kw === "brosur" || kw === "browsur") && (namaLower.includes("brosur") || namaLower.includes("browsur"))) score += 10;
+          if ((kw === "gambar" || kw === "foto") && (namaLower.includes("gambar") || namaLower.includes("foto") || namaLower.includes("brosur"))) score += 5;
+        }
+      }
+      // Word-by-word matching
+      const userWords = msgLower.split(/\s+/).filter(w => w.length > 2);
+      for (const word of userWords) {
+        if (namaLower.includes(word)) score += 2;
+        if (deskLower.includes(word)) score += 1;
+      }
+      
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = m;
+      }
+    }
+    
+    if (bestScore > 0 || availableMediaList.length === 1) {
+      console.log(`[AI] PRE-PROCESSOR: Permintaan media terdeteksi. Langsung kirim "${bestMatch.nama}" (ID:${bestMatch.id}, score:${bestScore})`);
+      const displayName = pushName && pushName !== sender ? pushName : "Bapak/Ibu";
+      let caption = `Baik, ${displayName}! Berikut ${bestMatch.nama} yang dimaksud ya 😊`;
+      // Tetap panggil AI untuk generate caption yang lebih natural, tapi kirim media langsung
+      // AI akan dipanggil dengan instruksi khusus
+      const mediaUrl = bestMatch.url;
+      const mediaType = bestMatch.tipe;
+      
+      // Panggil AI untuk caption aja (lightweight), sambil langsung kirim media
+      try {
+        const captionResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${aiKey}`
+          },
+          body: JSON.stringify({
+            model: getSetting("ai_model") || getSetting("deepseek_model") || "deepseek-chat",
+            messages: [
+              { role: "system", content: `Anda adalah asisten yang sangat singkat. User meminta ${bestMatch.nama}. Buat caption SINGKAT (max 1 kalimat pendek) untuk mengirimkan file ${bestMatch.nama} ke ${displayName}. JANGAN gunakan format apapun selain teks biasa. JANGAN pakai XML/DSML/tag.` },
+              { role: "user", content: message }
+            ],
+            temperature: 0.3,
+            max_tokens: 100
+          })
+        });
+        const captionData = await captionResponse.json();
+        if (captionData.choices?.[0]?.message?.content) {
+          caption = captionData.choices[0].message.content;
+          // Bersihkan dari kemungkinan DSML/XML
+          caption = caption.replace(/<[^>]+>/g, '').trim();
+        }
+        if (captionData.usage?.total_tokens) {
+          await (async (used: number) => {
+            const tUsage = parseInt(getSetting("usage_token")) || 0;
+            const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
+            if (existing.length > 0) {
+              await db.update(pengaturan).set({ nilai: String(tUsage + used) }).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
+            } else {
+              await db.insert(pengaturan).values({ tenantId: tenantId, kunci: 'usage_token', nilai: String(tUsage + used) });
+            }
+          })(captionData.usage.total_tokens);
+        }
+      } catch(e) {
+        console.log("[AI] Gagal generate caption AI, pakai default:", e);
+      }
+      
+      return { text: caption, media_url: mediaUrl, media_type: mediaType };
+    }
+  }
+  // ===== END PRE-PROCESSOR =====
 
   const normalizeWA = (num: string) => {
     if (!num) return "";
@@ -134,11 +224,12 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- Jika ${parentTerm} membalas dengan angka (1=QRIS, 2=Virtual Account, 3=Indomaret/Alfamart), WAJIB panggil tool 'buat_link_pembayaran_ipaymu'.\n`;
   systemPrompt += `- Jika pengguna mengirim [Sticker]/[Gambar]/[Video] dll, responlah dengan ramah dan tawarkan bantuan.\n`;
-  systemPrompt += `\n[ATURAN KRITIS - FORMAT TOOL CALL]:\n`;
-  systemPrompt += `- ANDA WAJIB menggunakan mekanisme FUNCTION CALLING bawaan sistem. JANGAN PERNAH menulis tool call dalam format teks apapun (XML/DSML/JSON/text).\n`;
+  systemPrompt += `\n[ATURAN KRITIS - FORMAT DAN TOOL]:\n`;
+  systemPrompt += `- ANDA WAJIB menggunakan mekanisme FUNCTION CALLING bawaan sistem. JANGAN PERNAH menulis tool call dalam format teks (XML/DSML/JSON/HTML/code block).\n`;
   systemPrompt += `- Tool call HARUS melalui API function calling, BUKAN ditulis manual di dalam konten pesan.\n`;
-  systemPrompt += `- Jika user meminta brosur/gambar/file, LANGSUNG panggil tool 'kirim_media' dengan ID yang sesuai dari daftar di atas.\n`;
   systemPrompt += `- DILARANG KERAS menampilkan kode/XML/DSML/tag apapun ke pengguna.\n`;
+  systemPrompt += `- Jika user meminta brosur/gambar/file, sistem SUDAH otomatis mengirimkannya. Anda TIDAK PERLU memanggil tool kirim_media lagi. Cukup beri tahu user bahwa file sudah dikirim.\n`;
+  systemPrompt += `- Fokuslah menjawab pertanyaan user dengan natural, tanpa menyebutkan teknis apapun.\n`;
   if (messageType) {
     systemPrompt += `\n[INFO: Pengguna baru saja mengirim ${messageType}. Responlah dengan natural sesuai konteks.]\n`;
   }
