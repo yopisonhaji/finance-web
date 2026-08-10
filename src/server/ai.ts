@@ -344,6 +344,9 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     }
 
     if (rawToolCalls && rawToolCalls.length > 0) {
+      // Selalu bersihkan DSML dari content sebelum push ke history
+      const cleanedContent = stripDSML(responseMessage.content || "");
+      responseMessage.content = cleanedContent;
       messages.push(responseMessage);
       
       for (const toolCall of rawToolCalls) {
@@ -519,15 +522,14 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
                   const deskLower = (m.deskripsi || "").toLowerCase();
                   
                   // Cek keyword umum di pesan user
-                  const keywords = ["brosur", "browser", "gambar", "foto", "contoh", "daftar", "harga", "katalog", "produk"];
+                  const keywords = ["brosur", "browsur", "browser", "gambar", "foto", "contoh", "daftar", "harga", "katalog", "produk", "pdf", "dokumen", "file"];
                   for (const kw of keywords) {
                     if (userQuery.includes(kw)) {
-                      // Jika nama file mengandung keyword yang sama, beri skor tinggi
                       if (namaLower.includes(kw)) score += 5;
                       if (deskLower.includes(kw)) score += 3;
-                      // Jika user minta "brosur" dan file bernama "brosur", perfect match
-                      if (kw === "brosur" && namaLower.includes("brosur")) score += 10;
-                      if (kw === "browser" && namaLower.includes("brosur")) score += 10;
+                      // Brochure-related keywords
+                      if ((kw === "brosur" || kw === "browsur" || kw === "browser") && (namaLower.includes("brosur") || namaLower.includes("browsur"))) score += 10;
+                      if ((kw === "gambar" || kw === "foto") && (namaLower.includes("gambar") || namaLower.includes("foto") || namaLower.includes("brosur"))) score += 5;
                     }
                   }
                   // Cek apakah kata-kata dari user query muncul di nama file

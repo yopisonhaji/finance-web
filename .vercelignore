@@ -1,0 +1,11 @@
+node_modules
+.git
+dist-client
+.next
+*.md
+USAGE
+bot-go
+Data_Keuangan_Pesantren
+logo
+deploy_bot.ps1
+keygen.ps1
