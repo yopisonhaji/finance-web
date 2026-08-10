@@ -47,17 +47,21 @@ export function MediaAIGallery() {
   }, [])
 
   const handleUpload = async () => {
-    if (!file || !nama || !deskripsi) return alert("Semua kolom wajib diisi")
+    if (!file) return alert("Silakan pilih file terlebih dahulu")
 
     if (file.size > 20 * 1024 * 1024) {
       return alert("Ukuran file maksimal 20MB")
     }
 
+    // Auto-generate nama dan deskripsi jika kosong
+    const finalNama = nama.trim() || file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ").substring(0, 50)
+    const finalDeskripsi = deskripsi.trim() || `File: ${finalNama}`
+
     setUploading(true)
     const formData = new FormData()
     formData.append("file", file)
-    formData.append("namaFile", nama)
-    formData.append("deskripsi", deskripsi)
+    formData.append("namaFile", finalNama)
+    formData.append("deskripsi", finalDeskripsi)
     formData.append("tipeMedia", file.type.startsWith("image/") ? "image" : "document")
 
     try {
@@ -149,13 +153,12 @@ export function MediaAIGallery() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label>Nama File Singkat</Label>
+              <Label>Nama File Singkat <span className="text-slate-400 text-xs font-normal">(opsional, otomatis dari nama file)</span></Label>
               <Input 
                 value={nama} 
                 onChange={(e) => setNama(e.target.value)} 
                 placeholder="Contoh: Brosur Perumahan, Daftar Harga" 
                 className="mt-1"
-                required
               />
             </div>
             <div>
@@ -165,18 +168,16 @@ export function MediaAIGallery() {
                 type="file" 
                 onChange={(e) => setFile(e.target.files?.[0] || null)} 
                 className="mt-1 bg-white dark:bg-slate-800"
-                required
               />
             </div>
           </div>
           <div>
-            <Label>Konteks / Instruksi untuk AI</Label>
+            <Label>Konteks / Instruksi untuk AI <span className="text-slate-400 text-xs font-normal">(opsional)</span></Label>
             <Textarea 
               value={deskripsi} 
               onChange={(e) => setDeskripsi(e.target.value)} 
               placeholder="Beritahu AI kapan harus mengirimkan gambar ini. Contoh: 'Gunakan gambar ini jika pengguna menanyakan daftar harga perumahan.'" 
               className="mt-1 min-h-[80px]"
-              required
             />
           </div>
           <div className="flex justify-end">
