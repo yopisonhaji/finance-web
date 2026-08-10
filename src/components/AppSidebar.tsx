@@ -198,31 +198,8 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
       </SidebarContent>
 
       <SidebarFooter className="p-4 bg-[var(--color-dash-bg)]">
-        <div className="relative overflow-hidden rounded-xl bg-[var(--color-dash-panel)] border border-slate-200 dark:border-slate-800/40 p-5 mt-auto">
-          {/* Mosque Silhouette Illustration */}
-          <div className="absolute bottom-0 inset-x-0 h-20 opacity-15 pointer-events-none">
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-full fill-blue-400">
-               <path d="M0 40 L0 35 L5 35 L5 30 L10 30 L10 20 C10 15 15 10 20 10 L25 10 C30 10 35 15 35 20 L35 35 L40 35 L40 30 C40 25 45 20 50 20 C55 20 60 25 60 30 L60 35 L65 35 L65 20 C65 15 70 10 75 10 L80 10 C85 10 90 15 90 20 L90 30 L95 30 L95 35 L100 35 L100 40 Z" />
-               <circle cx="22.5" cy="18" r="2" fill="currentColor"/>
-               <circle cx="77.5" cy="18" r="2" fill="currentColor"/>
-               <path d="M50 8 C48 15 52 15 50 8 Z" fill="currentColor" />
-            </svg>
-          </div>
-          <div className="relative z-10 text-center space-y-3">
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 dark:bg-blue-500/10 text-orange-500 dark:text-blue-400 mb-1 border border-orange-500 dark:border-blue-500/20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
-            </div>
-            <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
-              "Kelola keuangan pesantren dengan amanah, transparan, dan penuh keberkahan."
-            </p>
-            <div className="pt-3 mt-3 border-t border-slate-300 dark:border-slate-700/50">
-              <p className="text-[10px] text-slate-700 font-medium">{namaPesantren}</p>
-              {alamatPesantren && <p className="text-[9px] text-slate-600 mt-0.5">{alamatPesantren}</p>}
-              <p className="text-[10px] text-slate-700 dark:text-slate-300 font-medium font-semibold mt-2 tracking-wide uppercase">
-                Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:text-blue-300 transition-colors">satujalan.id</a>
-              </p>
-            </div>
-          </div>
+        <div className="text-center text-[10px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800/40">
+          <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:underline">satujalan.id</a>
         </div>
       </SidebarFooter>
     </Sidebar>

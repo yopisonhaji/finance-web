@@ -120,6 +120,26 @@ export function LayoutWrapper({
           {children}
         </main>
         
+        {/* Footer - Quote & Info */}
+        <footer className="hidden md:block border-t border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/90 backdrop-blur-[10px] px-6 py-4">
+          <div className="flex items-center justify-between max-w-screen-2xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 dark:bg-blue-500/10 text-orange-500 dark:text-blue-400 border border-orange-500/20 dark:border-blue-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 italic">
+                "Kelola keuangan pesantren dengan amanah, transparan, dan penuh keberkahan."
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] text-slate-500 font-medium">{namaLembaga}{alamatLembaga ? ` — ${alamatLembaga}` : ''}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                Powered by <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:underline">satujalan.id</a>
+              </p>
+            </div>
+          </div>
+        </footer>
+        
         {/* Mobile Navigation */}
         <MobileBottomNav />
       </SidebarInset>
