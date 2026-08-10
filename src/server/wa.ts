@@ -16,12 +16,12 @@ export async function sendWaMessage(noWa: string, messageText: string) {
     const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
     const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
     
-    let url = urlConfig[0]?.nilai || "http://127.0.0.1:8080/api/wa/send";
+    let url = urlConfig[0]?.nilai || "http://195.88.211.117:8080/send";
     url = url.replace("localhost", "127.0.0.1");
-    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
+    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c";
     
-    // Generate JWT token
-    const jwtToken = jwt.sign({ sender: "nextjs-client" }, token, { expiresIn: '1h' });
+    // Generate JWT token (WAJIB menyertakan tenant_id!)
+    const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' });
     
     const response = await fetch(url, {
       method: 'POST',
@@ -54,16 +54,16 @@ export async function requestWaPairing(phone: string) {
     const urlConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId)));
     const tokenConfig = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId)));
     // Asumsi URL pairing adalah base_url diganti /send jadi /api/wa/pairing
-    let rawUrl = urlConfig[0]?.nilai || "http://127.0.0.1:8081/api/wa/send";
+    let rawUrl = urlConfig[0]?.nilai || "http://195.88.211.117:8080/send";
     rawUrl = rawUrl.replace("localhost", "127.0.0.1");
-    let pairingUrl = "http://127.0.0.1:8081/api/wa/pairing";
+    let pairingUrl = "http://195.88.211.117:8080/api/wa/pairing";
     try {
       const parsed = new URL(rawUrl);
       pairingUrl = `${parsed.protocol}//${parsed.host}/api/wa/pairing`;
     } catch(e) {}
-    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "default_secret";
+    const token = tokenConfig[0]?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c";
     
-    const jwtToken = jwt.sign({ sender: "nextjs-client" }, token, { expiresIn: '1h' });
+    const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' });
 
     const response = await fetch(pairingUrl, {
       method: 'POST',

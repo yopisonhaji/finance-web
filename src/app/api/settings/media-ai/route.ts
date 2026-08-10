@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       botUploadUrl = `${parsed.protocol}//${parsed.host}/upload-media`
     } catch (e) {}
 
-    const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "default_secret"
+    const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c"
     const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' })
 
     const botFormData = new FormData()
@@ -136,7 +136,7 @@ export async function DELETE(req: Request) {
       botDeleteUrl = `${parsed.protocol}//${parsed.host}/delete-media`
     } catch (e) {}
 
-    const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "default_secret"
+    const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c"
     const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' })
 
     const botRes = await fetch(botDeleteUrl, {
