@@ -36,8 +36,16 @@ export async function processAIResponse(message: string, sender: string, santriD
 
   // ===== PRE-PROCESSOR: Deteksi permintaan media (JALAN SEBELUM cek token/AI key) =====
   const msgLower = message.toLowerCase();
-  const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "minta", "pdf", "dokumen", "file", "browser"];
-  const isMediaRequest = mediaKeywords.some(kw => msgLower.includes(kw));
+  const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "minta", "pdf", "dokumen", "file", "browser", "ada", "coba", "cba", "bisa", "bsa", "tolong", "mohon", "butuh", "perlu", "pengen", "mau", "kasih", "berikan", "tunjukan", "share", "bagi"];
+  
+  // Cek apakah user minta media: keyword umum ATAU menyebut nama file yang ada di galeri
+  const userWords = msgLower.split(/\s+/).filter(w => w.length > 1);
+  const hasMediaKeyword = mediaKeywords.some(kw => msgLower.includes(kw));
+  const mentionsMediaName = availableMediaList.some(m => {
+    const namaWords = m.nama.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+    return namaWords.some(nw => msgLower.includes(nw));
+  });
+  const isMediaRequest = hasMediaKeyword || mentionsMediaName;
   
   if (isMediaRequest && availableMediaList.length > 0) {
     let bestMatch = availableMediaList[0];
@@ -48,6 +56,7 @@ export async function processAIResponse(message: string, sender: string, santriD
       const namaLower = m.nama.toLowerCase();
       const deskLower = m.deskripsi.toLowerCase();
       
+      // Cek keyword umum
       for (const kw of mediaKeywords) {
         if (msgLower.includes(kw)) {
           if (namaLower.includes(kw)) score += 5;
@@ -56,7 +65,14 @@ export async function processAIResponse(message: string, sender: string, santriD
           if ((kw === "gambar" || kw === "foto") && (namaLower.includes("gambar") || namaLower.includes("foto") || namaLower.includes("brosur"))) score += 5;
         }
       }
-      const userWords = msgLower.split(/\s+/).filter(w => w.length > 2);
+      
+      // Cek apakah user menyebut nama file secara langsung (prioritas tertinggi!)
+      const namaWords = namaLower.split(/\s+/).filter(w => w.length > 1);
+      for (const nw of namaWords) {
+        if (msgLower.includes(nw)) score += 20;  // direct name mention = very high priority
+      }
+      
+      // Word-by-word matching: apakah kata dari user muncul di nama/deskripsi media?
       for (const word of userWords) {
         if (namaLower.includes(word)) score += 2;
         if (deskLower.includes(word)) score += 1;
