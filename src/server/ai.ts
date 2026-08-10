@@ -24,8 +24,8 @@ export async function processAIResponse(message: string, sender: string, santriD
     return { text: "Mohon maaf, sistem AI saat ini belum diaktifkan oleh admin." };
   }
 
-  const tokenLimitStr = getSetting("token_limit");
-  const tokenUsageStr = getSetting("token_usage");
+  const tokenLimitStr = getSetting("limit_token");
+  const tokenUsageStr = getSetting("usage_token");
   const tokenLimit = parseInt(tokenLimitStr) || 0;
   let tokenUsage = parseInt(tokenUsageStr) || 0;
 
@@ -201,11 +201,11 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
 
   async function updateUsage(usedTokens: number) {
     tokenUsage += usedTokens;
-    const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'token_usage'), eq(pengaturan.tenantId, tenantId)));
+    const existing = await db.select().from(pengaturan).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
     if (existing.length > 0) {
-      await db.update(pengaturan).set({ nilai: String(tokenUsage) }).where(and(eq(pengaturan.kunci, 'token_usage'), eq(pengaturan.tenantId, tenantId)));
+      await db.update(pengaturan).set({ nilai: String(tokenUsage) }).where(and(eq(pengaturan.kunci, 'usage_token'), eq(pengaturan.tenantId, tenantId)));
     } else {
-      await db.insert(pengaturan).values({ tenantId: tenantId, kunci: 'token_usage', nilai: String(tokenUsage) });
+      await db.insert(pengaturan).values({ tenantId: tenantId, kunci: 'usage_token', nilai: String(tokenUsage) });
     }
   }
 
