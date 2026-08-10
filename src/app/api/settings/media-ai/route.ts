@@ -53,9 +53,9 @@ export async function POST(req: Request) {
       where: and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId))
     })
 
-    let rawUrl = urlConfig?.nilai || "http://127.0.0.1:8080/api/wa/send"
+    let rawUrl = urlConfig?.nilai || "http://195.88.211.117:8080/api/wa/send"
     rawUrl = rawUrl.replace("localhost", "127.0.0.1")
-    let botUploadUrl = "http://127.0.0.1:8080/upload-media"
+    let botUploadUrl = "http://195.88.211.117:8080/upload-media"
     try {
       const parsed = new URL(rawUrl)
       botUploadUrl = `${parsed.protocol}//${parsed.host}/upload-media`
@@ -128,9 +128,9 @@ export async function DELETE(req: Request) {
       where: and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId))
     })
 
-    let rawUrl = urlConfig?.nilai || "http://127.0.0.1:8080/api/wa/send"
+    let rawUrl = urlConfig?.nilai || "http://195.88.211.117:8080/api/wa/send"
     rawUrl = rawUrl.replace("localhost", "127.0.0.1")
-    let botDeleteUrl = "http://127.0.0.1:8080/delete-media"
+    let botDeleteUrl = "http://195.88.211.117:8080/delete-media"
     try {
       const parsed = new URL(rawUrl)
       botDeleteUrl = `${parsed.protocol}//${parsed.host}/delete-media`

@@ -7,7 +7,7 @@ import { pengaturan, santri, media_ai } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
-export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string, messageType: string = "", isNewConversation: string = "true"): Promise<{text: string, broadcasts?: any[], media_url?: string, media_type?: string}> {
+export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string, messageType: string = "", isNewConversation: string = "true", pushName: string = ""): Promise<{text: string, broadcasts?: any[], media_url?: string, media_type?: string}> {
   if (!tenantId) return { text: "Error: Tenant ID is missing" };
   const settings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId));
   const getSetting = (key: string) => settings.find(s => s.kunci === key)?.nilai || "";
@@ -96,15 +96,19 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   systemPrompt += `\n\nATURAN MUTLAK TAMBAHAN (WAJIB DIPATUHI):\n`;
   
   // Aturan sapaan berdasarkan konteks percakapan
+  const displayName = pushName && pushName !== sender ? pushName : (santriData?.nama_wali || santriData?.nama || "Bapak/Ibu");
+  
   if (isNewConversation === "true") {
     systemPrompt += `[KONTEKS: Ini adalah AWAL percakapan baru (sudah >1 jam sejak chat terakhir).]\n`;
-    systemPrompt += `1. Jika pengguna mengucapkan salam Islam (assalamualaikum/salam), balas dengan "Wa'alaikumussalam" lalu tawarkan bantuan.\n`;
-    systemPrompt += `2. Jika pengguna langsung bertanya (tanpa salam), sapa singkat dengan "Halo Bapak/Ibu" lalu LANGSUNG jawab pertanyaannya.\n`;
+    systemPrompt += `[INFO: Nama kontak pengirim adalah "${pushName}". Gunakan nama ini untuk menyapa jika tersedia dan bukan angka.]\n`;
+    systemPrompt += `1. Jika pengguna mengucapkan salam Islam, balas dengan "Wa'alaikumussalam" lalu tawarkan bantuan.\n`;
+    systemPrompt += `2. Jika pengguna langsung bertanya, sapa singkat dengan "Halo ${pushName && pushName !== sender ? pushName : 'Bapak/Ibu'}" lalu LANGSUNG jawab.\n`;
   } else {
     systemPrompt += `[KONTEKS: Ini adalah LANJUTAN percakapan (masih dalam 1 jam terakhir).]\n`;
-    systemPrompt += `1. DILARANG KERAS menyapa ulang! JANGAN ucapkan "Halo", "Halo Bapak/Ibu", "Wa'alaikumussalam", atau salam pembuka apapun.\n`;
-    systemPrompt += `2. LANGSUNG JAWAB pertanyaan/user. Singkat, padat, to-the-point. Tidak perlu basa-basi.\n`;
-    systemPrompt += `3. Anggap saja kalian sedang dalam satu percakapan yang mengalir. Tidak perlu memperkenalkan diri lagi.\n`;
+    systemPrompt += `[INFO: Nama kontak pengirim adalah "${pushName}".]\n`;
+    systemPrompt += `1. DILARANG KERAS menyapa ulang! JANGAN ucapkan "Halo", "Wa'alaikumussalam", atau salam pembuka apapun.\n`;
+    systemPrompt += `2. LANGSUNG JAWAB pertanyaan. Singkat, padat, to-the-point.\n`;
+    systemPrompt += `3. Boleh menyebut nama "${pushName && pushName !== sender ? pushName : ''}" sesekali jika natural, tapi jangan berlebihan.\n`;
   }
   
   systemPrompt += `\nATURAN UMUM:\n`;
@@ -253,8 +257,12 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
       return { text: "Maaf, mesin AI sedang sibuk. Silakan coba lagi nanti." };
     }
 
-    if (data.usage?.total_tokens) {
+    // Update token usage (gunakan >= 0 check, bukan falsy check)
+    if (data.usage && typeof data.usage.total_tokens === 'number') {
       await updateUsage(data.usage.total_tokens);
+      console.log(`[AI] Token usage updated: +${data.usage.total_tokens} (total sekarang: ${tokenUsage + data.usage.total_tokens})`);
+    } else {
+      console.log("[AI] WARNING: Tidak ada data usage.token dari DeepSeek. Response keys:", Object.keys(data));
     }
 
     const responseMessage = data.choices[0].message;
@@ -458,7 +466,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
       });
 
       const secondData = await secondResponse.json();
-      if (secondData.usage?.total_tokens) {
+      if (secondData.usage && typeof secondData.usage.total_tokens === 'number') {
         await updateUsage(secondData.usage.total_tokens);
       }
       
