@@ -120,8 +120,8 @@ export function LayoutWrapper({
           {children}
         </main>
         
-        {/* Footer - Quote & Info */}
-        <footer className="hidden md:block border-t border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/90 backdrop-blur-[10px] px-6 py-4">
+        {/* Footer - Quote & Info (muncul di desktop) */}
+        <footer className="hidden md:block border-t border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/95 backdrop-blur-[10px] px-6 py-3">
           <div className="flex items-center justify-between max-w-screen-2xl mx-auto">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 dark:bg-blue-500/10 text-orange-500 dark:text-blue-400 border border-orange-500/20 dark:border-blue-500/20">
