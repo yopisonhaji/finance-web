@@ -6,7 +6,7 @@ import { processAIResponse } from "@/server/ai";
 
 export async function POST(req: Request) {
   try {
-    const { tenant_id, no_wa, pesan } = await req.json();
+    const { tenant_id, no_wa, pesan, message_type } = await req.json();
 
     if (!tenant_id || !no_wa || !pesan) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       where: and(eq(santri.tenantId, tenant_id), eq(santri.no_wa, no_wa))
     });
 
-    const aiResult = await processAIResponse(pesan, no_wa, studentData || null, tenant_id);
+    const aiResult = await processAIResponse(pesan, no_wa, studentData || null, tenant_id, message_type || "");
 
     return NextResponse.json({ 
       reply: aiResult.text,

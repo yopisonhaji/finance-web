@@ -7,7 +7,7 @@ import { pengaturan, santri, media_ai } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
-export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string): Promise<{text: string, broadcasts?: any[], media_url?: string, media_type?: string}> {
+export async function processAIResponse(message: string, sender: string, santriData: any, tenantId: string, messageType: string = ""): Promise<{text: string, broadcasts?: any[], media_url?: string, media_type?: string}> {
   if (!tenantId) return { text: "Error: Tenant ID is missing" };
   const settings = await db.select().from(pengaturan).where(eq(pengaturan.tenantId, tenantId));
   const getSetting = (key: string) => settings.find(s => s.kunci === key)?.nilai || "";
@@ -97,7 +97,11 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   systemPrompt += `1. JIKA pengguna mengetik ucapan salam Islam (hanya jika ada kata "assalamualaikum", "assalam", "salam"), MAKA balaslah dengan "Wa'alaikumussalam".\n`;
   systemPrompt += `2. PENTING: JIKA pengguna TIDAK mengucapkan salam Islam (misal hanya mengirim "Halo", "Alamatnya dimana?", "Harga?", atau bertanya langsung), DILARANG KERAS membalas dengan "Wa'alaikumussalam". Langsung saja sapa dengan "Halo Bapak/Ibu" atau langsung jawab pertanyaannya sesuai apa yang ditanyakan.\n`;
   systemPrompt += `3. Jawablah TEPAT SESUAI APA YANG DITANYAKAN. Jangan bertele-tele atau menebak-nebak jika tidak relevan. GAYA BAHASA (TONE): Jawablah dengan SINGKAT, PADAT, JELAS, dan to-the-point.\n`;
-  systemPrompt += `4. Jika ${parentTerm} membalas dengan angka (1 untuk QRIS, 2 untuk Virtual Account, 3 untuk Indomaret/Alfamart) atau meminta link pembayaran, WAJIB panggil tool 'buat_link_pembayaran_ipaymu' dengan parameter 'metode' sesuai pilihannya.`;
+  systemPrompt += `4. Jika ${parentTerm} membalas dengan angka (1 untuk QRIS, 2 untuk Virtual Account, 3 untuk Indomaret/Alfamart) atau meminta link pembayaran, WAJIB panggil tool 'buat_link_pembayaran_ipaymu' dengan parameter 'metode' sesuai pilihannya.\n`;
+  systemPrompt += `5. RESPON TERHADAP STICKER & MEDIA: Jika pengguna mengirim [Sticker], [Gambar], [Video], [Audio/Voice Note], atau [Dokumen/File], balaslah dengan ramah. Tanyakan "Ada yang bisa kami bantu?" atau berikan informasi tentang layanan kami. JANGAN diam saja.\n`;
+  if (messageType) {
+    systemPrompt += `\n[INFO: Pengguna baru saja mengirim ${messageType}. Responlah dengan natural sesuai konteks.]\n`;
+  }
 
   const tools = [];
 
