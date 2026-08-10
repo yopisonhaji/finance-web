@@ -1,18 +1,23 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { HeaderProfile } from "@/components/HeaderProfile";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { CurrentDate } from "@/components/CurrentDate";
-import { UpdateButton } from "@/components/UpdateButton";
-import { AboutApp } from "@/components/AboutApp";
-import { AiTopIndicator } from "@/components/AiTopIndicator";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Search, ChevronRight } from "lucide-react";
+
+// Dynamic imports untuk komponen berat — hanya load saat dibutuhkan
+const HeaderProfile = lazy(() => import("@/components/HeaderProfile").then(m => ({ default: m.HeaderProfile })));
+const LanguageSwitcher = lazy(() => import("@/components/LanguageSwitcher").then(m => ({ default: m.LanguageSwitcher })));
+const CurrentDate = lazy(() => import("@/components/CurrentDate").then(m => ({ default: m.CurrentDate })));
+const UpdateButton = lazy(() => import("@/components/UpdateButton").then(m => ({ default: m.UpdateButton })));
+const AboutApp = lazy(() => import("@/components/AboutApp").then(m => ({ default: m.AboutApp })));
+const AiTopIndicator = lazy(() => import("@/components/AiTopIndicator").then(m => ({ default: m.AiTopIndicator })));
+const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m => ({ default: m.MobileBottomNav })));
+const ThemeToggle = lazy(() => import("@/components/ThemeToggle").then(m => ({ default: m.ThemeToggle })));
+
+// Placeholder statis untuk menghindari layout shift
+const LazyFallback = () => <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />;
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -49,7 +54,7 @@ export function LayoutWrapper({
       } catch (e) {
         // Ignore network errors
       }
-    }, 5000);
+    }, 30000);  // Poll tiap 30 detik (sebelumnya 5s, dikurangi utk performa)
     return () => clearInterval(interval);
   }, [isAuthPage]);
 
@@ -100,20 +105,20 @@ export function LayoutWrapper({
           
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
             <div className="block">
-              <AiTopIndicator active={hasAiKey} />
+              <Suspense fallback={null}><AiTopIndicator active={hasAiKey} /></Suspense>
             </div>
             <div className="hidden sm:block">
-              <UpdateButton />
+              <Suspense fallback={null}><UpdateButton /></Suspense>
             </div>
             <div className="hidden md:block">
-              <CurrentDate />
+              <Suspense fallback={null}><CurrentDate /></Suspense>
             </div>
-            <LanguageSwitcher />
+            <Suspense fallback={null}><LanguageSwitcher /></Suspense>
             <div className="hidden sm:block">
-              <AboutApp />
+              <Suspense fallback={null}><AboutApp /></Suspense>
             </div>
-            <ThemeToggle />
-            <HeaderProfile ownerName={ownerName} />
+            <Suspense fallback={<LazyFallback />}><ThemeToggle /></Suspense>
+            <Suspense fallback={<LazyFallback />}><HeaderProfile ownerName={ownerName} /></Suspense>
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 animate-page-enter relative">
@@ -142,7 +147,7 @@ export function LayoutWrapper({
         </footer>
         
         {/* Mobile Navigation */}
-        <MobileBottomNav />
+        <Suspense fallback={null}><MobileBottomNav /></Suspense>
       </SidebarInset>
     </SidebarProvider>
   );

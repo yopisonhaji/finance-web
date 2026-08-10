@@ -44,6 +44,15 @@ body {
   color: var(--foreground);
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* Perf: hint browser to skip rendering off-screen elements */
+main > * {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 
 @keyframes pageEnter {
