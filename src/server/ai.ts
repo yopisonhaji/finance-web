@@ -113,7 +113,7 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
   
   systemPrompt += `\nATURAN UMUM:\n`;
   systemPrompt += `- Jawablah TEPAT SESUAI APA YANG DITANYAKAN. Jangan bertele-tele.\n`;
-  systemPrompt += `- Jika pengguna MEMINTA dikirimkan gambar/brosur/file tertentu (misal: "kirim gambar brosur", "bisa kirim qwqwqw?", "minta fotonya"), ANDA WAJIB memanggil tool 'cek_daftar_media' lalu 'kirim_media' dengan ID yang sesuai. JANGAN hanya bilang "saya sudah lihat" — KIRIMKAN FILENYA!\n`;
+  systemPrompt += `- [PENTING - MEDIA] Jika pengguna menyebut kata "gambar", "foto", "logo", "brosur", "file", "kirim", "minta", "mana", "liat", "coba" yang merujuk ke media, ANDA WAJIB: (1) panggil 'cek_daftar_media', lalu (2) panggil 'kirim_media' dengan ID yang sesuai dari daftar. JANGAN PERNAH hanya membalas teks — KIRIMKAN FILENYA!\n`;
   systemPrompt += `- GAYA BAHASA: Singkat, padat, jelas, to-the-point.\n`;
   systemPrompt += `- Jika ${parentTerm} membalas dengan angka (1=QRIS, 2=Virtual Account, 3=Indomaret/Alfamart), WAJIB panggil tool 'buat_link_pembayaran_ipaymu'.\n`;
   systemPrompt += `- Jika pengguna mengirim [Sticker]/[Gambar]/[Video] dll, responlah dengan ramah dan tawarkan bantuan.\n`;
