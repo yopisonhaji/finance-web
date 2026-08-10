@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2 } from "lucide-react"
+import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -12,6 +12,7 @@ export default function StatusWAPage() {
   const [inputPhone, setInputPhone] = useState<string>("")
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
 
 
   const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
@@ -37,6 +38,7 @@ export default function StatusWAPage() {
       
       setStatus(data.status || "disconnected")
       setPhone(data.phone || "")
+      setIsPaused(data.paused || false)
     } catch (e) {
       setStatus("disconnected")
     }
@@ -100,8 +102,41 @@ export default function StatusWAPage() {
       });
       setStatus("disconnected");
       setPhone("");
+      setIsPaused(false);
     } catch (e) {
       alert("Gagal logout. Pastikan server Go berjalan.");
+    }
+  }
+
+  const handlePause = async () => {
+    try {
+      const token = localStorage.getItem("token") || ""
+      const res = await fetch(`${botUrl}/api/wa/pause`, { 
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420"
+        }
+      });
+      if (res.ok) setIsPaused(true);
+    } catch (e) {
+      alert("Gagal pause. Pastikan server Go berjalan.");
+    }
+  }
+
+  const handleResume = async () => {
+    try {
+      const token = localStorage.getItem("token") || ""
+      const res = await fetch(`${botUrl}/api/wa/resume`, { 
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420"
+        }
+      });
+      if (res.ok) setIsPaused(false);
+    } catch (e) {
+      alert("Gagal resume. Pastikan server Go berjalan.");
     }
   }
 
@@ -140,17 +175,30 @@ export default function StatusWAPage() {
           </CardHeader>
           <CardContent className="pt-6">
             {status === "connected" ? (
-              <div className="flex flex-col items-center text-emerald-600 dark:text-emerald-400 py-8">
-                <div className="h-24 w-24 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center mb-4">
-                  <CheckCircle2 className="h-12 w-12" />
+              <div className="flex flex-col items-center py-8">
+                <div className={`h-24 w-24 rounded-full flex items-center justify-center mb-4 ${isPaused ? 'bg-amber-100 dark:bg-amber-500/10' : 'bg-emerald-100 dark:bg-emerald-500/10'}`}>
+                  {isPaused ? <Pause className="h-12 w-12 text-amber-500" /> : <CheckCircle2 className="h-12 w-12 text-emerald-600 dark:text-emerald-400" />}
                 </div>
-                <h3 className="text-xl font-bold">Terhubung Secara Aman</h3>
-                <p className="text-sm mt-2 font-medium">
-                  {phone ? `Koneksi berhasil ke nomor: ${phone}` : 'WhatsApp siap membalas otomatis 24/7'}
+                <h3 className={`text-xl font-bold ${isPaused ? 'text-amber-500' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                  {isPaused ? 'Di-Pause Sementara' : 'Terhubung Secara Aman'}
+                </h3>
+                <p className="text-sm mt-2 font-medium text-slate-500">
+                  {isPaused ? 'Bot tidak akan membalas pesan sampai di-resume.' : phone ? `Koneksi berhasil ke nomor: ${phone}` : 'WhatsApp siap membalas otomatis 24/7'}
                 </p>
-                <Button variant="destructive" className="mt-6" onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" /> Keluar (Log Out)
-                </Button>
+                <div className="flex gap-3 mt-6">
+                  {isPaused ? (
+                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleResume}>
+                      <Play className="mr-2 h-4 w-4" /> Lanjutkan (Resume)
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white" onClick={handlePause}>
+                      <Pause className="mr-2 h-4 w-4" /> Pause Sebentar
+                    </Button>
+                  )}
+                  <Button variant="destructive" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" /> Keluar (Log Out)
+                  </Button>
+                </div>
               </div>
             ) : pairingCode ? (
               <div className="flex flex-col items-center py-6">
