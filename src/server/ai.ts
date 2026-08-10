@@ -322,12 +322,16 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
     const contentText = responseMessage.content || "";
     const hasDSML = /<\s*\|\s*\|\s*DSML\s*\|\s*\|\s*invoke/.test(contentText);
     let rawToolCalls = responseMessage.tool_calls;
+    let contentCleaned = false;
     
     // Jika tidak ada proper tool_calls tapi ada DSML di content, parse DSML
     if ((!rawToolCalls || rawToolCalls.length === 0) && hasDSML) {
       console.log("[AI] Mendeteksi DSML tool calls di content, melakukan parsing manual...");
       const parsedCalls = parseDSMLToolCalls(contentText);
       if (parsedCalls.length > 0) {
+        // Bersihkan content dari DSML sebelum dipush ke history
+        responseMessage.content = stripDSML(contentText);
+        contentCleaned = true;
         // Konversi ke format yang kompatibel dengan loop di bawah
         rawToolCalls = parsedCalls.map((c, i) => ({
           id: `dsml_${i}_${Date.now()}`,
