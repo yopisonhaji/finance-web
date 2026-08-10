@@ -263,6 +263,7 @@ export function MediaAIGallery() {
                       {deletingId === media.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3 mr-1" />} Hapus
                     </Button>
                   </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}

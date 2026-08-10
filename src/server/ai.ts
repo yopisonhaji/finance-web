@@ -38,7 +38,7 @@ export async function processAIResponse(message: string, sender: string, santriD
   let availableMediaList: { id: number; nama: string; tipe: string }[] = [];
   try {
     const mediaItems = await db.select().from(media_ai).where(eq(media_ai.tenantId, tenantId));
-    availableMediaList = mediaItems.map(m => ({ id: m.id, nama: m.namaFile, tipe: m.tipeMedia }));
+    availableMediaList = mediaItems.map(m => ({ id: m.id, nama: m.namaFile, tipe: m.tipeMedia || "image" }));
   } catch (e) {
     console.error("[AI] Gagal memuat daftar media:", e);
   }

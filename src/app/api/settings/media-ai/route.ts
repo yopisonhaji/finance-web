@@ -31,18 +31,7 @@ export async function POST(req: Request) {
       where: eq(media_ai.tenantId, tenantId)
     })
 
-    // Hitung total ukuran file yang sudah ada (dari VPS, aproksimasi via urlFile)
-    // Karena kita tidak simpan ukuran di DB, kita batasi via jumlah file * aproksimasi
-    // Untuk akurasi, kita tambah kolom ukuran? Sementara pakai batas jumlah 50 file + cek 20MB
-    const MAX_TOTAL_SIZE = 20 * 1024 * 1024 // 20 MB
-    const MAX_FILE_SIZE = 20 * 1024 * 1024   // 20 MB per file
-
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: "Ukuran file maksimal 20MB per file" }, { status: 400 })
-    }
-
-    // Estimasi total: asumsikan tiap file yg sudah ada ≈ rata2 500KB. Jika >40 file sudah pasti >20MB.
-    // Untuk akurat, perlu tracking ukuran per file. Sementara pakai batas aman 50 file.
+    // Estimasi total: maksimal 50 file
     if (existingMedia.length >= 50) {
       return NextResponse.json({ error: "Kuota penyimpanan penuh (maksimal 50 file / 20MB total). Hapus beberapa file lama." }, { status: 400 })
     }
@@ -55,6 +44,11 @@ export async function POST(req: Request) {
 
     if (!file || !namaFile || !deskripsi) {
       return NextResponse.json({ error: "Data tidak lengkap" }, { status: 400 })
+    }
+
+    const MAX_FILE_SIZE = 20 * 1024 * 1024   // 20 MB per file
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: "Ukuran file maksimal 20MB per file" }, { status: 400 })
     }
 
     // Proxy the upload to Bot-Go
