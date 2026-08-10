@@ -39,11 +39,14 @@ export async function processAIResponse(message: string, sender: string, santriD
   const mediaKeywords = ["brosur", "browsur", "gambar", "foto", "contoh", "katalog", "produk", "kirim", "tampilkan", "liat", "lihat", "minta", "pdf", "dokumen", "file", "browser", "ada", "coba", "cba", "bisa", "bsa", "tolong", "mohon", "butuh", "perlu", "pengen", "mau", "kasih", "berikan", "tunjukan", "share", "bagi"];
   
   // Cek apakah user minta media: keyword umum ATAU menyebut nama file yang ada di galeri
-  const userWords = msgLower.split(/\s+/).filter(w => w.length > 1);
+  const userWords = msgLower.split(/[\s,.\-?]+/).filter(w => w.length > 1);
   const hasMediaKeyword = mediaKeywords.some(kw => msgLower.includes(kw));
   const mentionsMediaName = availableMediaList.some(m => {
-    const namaWords = m.nama.toLowerCase().split(/\s+/).filter(w => w.length > 1);
-    return namaWords.some(nw => msgLower.includes(nw));
+    // Split nama file by spasi, underscore, hyphen, dan titik
+    const namaWords = m.nama.toLowerCase().split(/[\s_\-\.]+/).filter(w => w.length > 1);
+    // Juga cek apakah sebagian signifikan dari nama file muncul di pesan user
+    return namaWords.some(nw => msgLower.includes(nw)) ||
+           (m.nama.length > 3 && msgLower.includes(m.nama.toLowerCase().substring(0, Math.min(m.nama.length, 8))));
   });
   const isMediaRequest = hasMediaKeyword || mentionsMediaName;
   
@@ -67,9 +70,16 @@ export async function processAIResponse(message: string, sender: string, santriD
       }
       
       // Cek apakah user menyebut nama file secara langsung (prioritas tertinggi!)
-      const namaWords = namaLower.split(/\s+/).filter(w => w.length > 1);
+      const namaWords = namaLower.split(/[\s_\-\.]+/).filter(w => w.length > 1);
       for (const nw of namaWords) {
         if (msgLower.includes(nw)) score += 20;  // direct name mention = very high priority
+      }
+      // Juga cek substring signifikan (6+ chars) dari nama file
+      if (namaLower.length >= 6) {
+        for (let i = 0; i <= namaLower.length - 6; i++) {
+          const sub = namaLower.substring(i, i + 6);
+          if (msgLower.includes(sub) && sub.replace(/[0-9_\-]/g, '').length >= 3) score += 15;
+        }
       }
       
       // Word-by-word matching: apakah kata dari user muncul di nama/deskripsi media?
@@ -376,43 +386,44 @@ Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUN
 
     const responseMessage = data.choices[0].message;
 
-    // ---- PARSER DSML: DeepSeek kadang output tool call dalam format text DSML, bukan proper tool_calls ----
+    // ---- PARSER DSML: DeepSeek kadang output tool call dalam format text, bukan proper tool_calls ----
     function parseDSMLToolCalls(text: string): { name: string; args: Record<string, any> }[] {
       const results: { name: string; args: Record<string, any> }[] = [];
-      // Support both single-pipe < | DSML | > and double-pipe < | | DSML | | > formats
-      const invokeRegex = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke\s+name="([^"]+)"\s*>([\s\S]*?)<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke\s*>/g;
+      // Strip ALL angle-bracket tags first to normalize
+      const cleaned = text.replace(/<[^>]+>/g, ' ');
+      // Cari pola: kirim_media dengan ID (berbagai format)
+      const kirimRegex = /kirim_media.*?(\d+)/gi;
       let match;
-      while ((match = invokeRegex.exec(text)) !== null) {
-        const name = match[1];
-        const innerContent = match[2];
-        const args: Record<string, any> = {};
-        const paramRegex = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?parameter\s+name="([^"]+)"[^>]*>\s*([\s\S]*?)\s*<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?parameter\s*>/g;
-        let paramMatch;
-        while ((paramMatch = paramRegex.exec(innerContent)) !== null) {
-          const paramName = paramMatch[1];
-          let paramValue = paramMatch[2].trim();
-          if (/^\d+$/.test(paramValue)) {
-            args[paramName] = parseInt(paramValue);
-          } else {
-            args[paramName] = paramValue;
-          }
+      while ((match = kirimRegex.exec(text)) !== null) {
+        const mediaId = parseInt(match[1]);
+        if (mediaId > 0) {
+          results.push({ name: "kirim_media", args: { media_id: mediaId, id: mediaId } });
         }
-        results.push({ name, args });
+      }
+      // Juga cari di cleaned text
+      const cleanedMatch = cleaned.match(/kirim_media.*?(\d+)/i);
+      if (cleanedMatch && results.length === 0) {
+        const mediaId = parseInt(cleanedMatch[1]);
+        if (mediaId > 0) {
+          results.push({ name: "kirim_media", args: { media_id: mediaId, id: mediaId } });
+        }
       }
       return results;
     }
 
     function stripDSML(text: string): string {
-      // Support both single-pipe and double-pipe DSML formats
-      return text.replace(/<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*>[\s\S]*?<\/\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*>/g, '')
-                 .replace(/<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?[^>]*\s*\/?\s*>/g, '')
+      // Aggressive: remove ALL angle-bracket tags and their content
+      return text.replace(/<[^>]*>[\s\S]*?<\/[^>]*>/g, '')
+                 .replace(/<[^>]*\/?>/g, '')
+                 .replace(/[ï½]+/g, '')  // Remove garbled Unicode from malformed DSML
                  .replace(/\n{3,}/g, '\n\n')
                  .trim();
     }
 
     // Deteksi DSML di content (fallback jika tool_calls kosong)
     const contentText = responseMessage.content || "";
-    const hasDSML = /<\s*\|\s*(?:\|\s*)?DSML\s*\|\s*(?:\|\s*)?invoke/.test(contentText);
+    // Cek berbagai format DSML: single pipe, double pipe, no pipe, or just "DSML" keyword
+    const hasDSML = /DSML|kirim_media|tool_calls/.test(contentText) && /<[^>]+>/.test(contentText);
     let rawToolCalls = responseMessage.tool_calls;
     let contentCleaned = false;
     
