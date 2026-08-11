@@ -21,7 +21,6 @@ import {
   Bot,
   FileBox,
   KeyRound,
-  MessageSquare,
   RefreshCw,
   UserCircle
 } from "lucide-react"
