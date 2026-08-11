@@ -98,13 +98,6 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string, paymentMod
         icon: MessageSquareShare,
         color: "text-teal-400",
         hoverColor: "group-hover:text-teal-300",
-      },
-      {
-        title: "Template Pesan WA",
-        url: "/template",
-        icon: MessageSquare,
-        color: "text-orange-400",
-        hoverColor: "group-hover:text-orange-300",
       }
     ]
   },

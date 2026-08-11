@@ -49,8 +49,8 @@ body {
   text-rendering: optimizeSpeed;
 }
 
-/* Perf: hint browser to skip rendering off-screen elements */
-main > * {
+/* Perf: hint browser to skip rendering off-screen elements (kecuali bottom nav yg ada FAB) */
+main > :not([data-bottom-nav]) {
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
 }
