@@ -1,7 +1,9 @@
 var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/santri/batch/route.js")
-R.c("server/chunks/[root-of-the-server]__2136qfh._.js")
-R.c("server/chunks/[root-of-the-server]__163d_ha._.js")
-R.c("server/chunks/web-desktop_0-gsk4a._.js")
-R.c("server/chunks/web-desktop__next-internal_server_app_api_santri_batch_route_actions_1y5m_ze.js")
-R.m(39760)
-module.exports=R.m(39760).exports
+R.c("server/chunks/[root-of-the-server]__0xj3ajo._.js")
+R.c("server/chunks/_0yjy5zs._.js")
+R.c("server/chunks/node_modules_next_dist_1_lpwll._.js")
+R.c("server/chunks/[root-of-the-server]__1qf-nfy._.js")
+R.c("server/chunks/node_modules_0krlbd6._.js")
+R.c("server/chunks/_next-internal_server_app_api_santri_batch_route_actions_0u3g2e6.js")
+R.m(2647)
+module.exports=R.m(2647).exports

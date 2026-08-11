@@ -1,52 +1,52 @@
 {
   "node": {
-    "7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf": {
+    "7c7a4145198e71554fc8bb170cae738d03e4401aac": {
       "workers": {
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         }
       },
       "exportedName": "saveSetupData",
-      "filename": "web-desktop/src/app/actions/setup.ts"
+      "filename": "src/app/actions/setup.ts"
     },
-    "00ac0612999931a5d4b231fa8ce6d18d08165cfad2": {
+    "007179ab9c472fa7820f3300a22bb46d8fb46828a0": {
       "workers": {
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         }
       },
       "exportedName": "getServerTenantId",
-      "filename": "web-desktop/src/server/auth.ts"
+      "filename": "src/server/auth.ts"
     },
-    "40fa80ccb561940f6709ff5056db716b8785a667c1": {
+    "404f584bd6d4c52b81fb5cb5c19ae99f6731033625": {
       "workers": {
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "saveSettings",
-          "filename": "web-desktop/src/server/settings.ts"
+          "filename": "src/server/settings.ts"
         }
       },
       "exportedName": "saveSettings",
-      "filename": "web-desktop/src/server/settings.ts"
+      "filename": "src/server/settings.ts"
     },
-    "00347f597d848fdfe023d3af2ffcff5ac91daa3eeb": {
+    "00558f9bccae1c8acd34f8360c7f00ce7d06441d07": {
       "workers": {
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "getSettings",
-          "filename": "web-desktop/src/server/settings.ts"
+          "filename": "src/server/settings.ts"
         }
       },
       "exportedName": "getSettings",
-      "filename": "web-desktop/src/server/settings.ts"
+      "filename": "src/server/settings.ts"
     }
   },
   "edge": {}

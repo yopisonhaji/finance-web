@@ -204,17 +204,23 @@ export function MediaAIGallery() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {mediaList.map((media) => (
               <Card key={media.id} className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 overflow-hidden group hover:border-emerald-500/50 transition-colors">
-                <div className="h-32 bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-b border-slate-200 dark:border-slate-800 relative">
+                <div className="h-48 bg-slate-100/50 dark:bg-slate-800/50 flex items-center justify-center border-b border-slate-200 dark:border-slate-800 relative overflow-hidden group">
                   {media.tipeMedia === "image" ? (
-                    <ImageIcon className="w-10 h-10 text-slate-300" />
+                    <ImageIcon className="w-10 h-10 text-slate-300 dark:text-slate-600" />
                   ) : (
-                    <FileText className="w-10 h-10 text-slate-300" />
+                    <FileText className="w-10 h-10 text-slate-300 dark:text-slate-600" />
                   )}
                   {media.tipeMedia === "image" && (
                      <img 
-                       src={`http://195.88.211.117:8080${media.urlFile}`} 
+                       src={media.urlFile.startsWith('http') ? media.urlFile : `http://195.88.211.117:8080${media.urlFile.startsWith('/') ? '' : '/'}${media.urlFile}`} 
                        alt={media.namaFile}
-                       className="absolute inset-0 w-full h-full object-cover opacity-90"
+                       className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-110 shadow-sm"
+                       onError={(e) => {
+                         (e.target as HTMLImageElement).style.display = 'none';
+                       }}
+                       onLoad={(e) => {
+                         (e.target as HTMLImageElement).style.display = 'block';
+                       }}
                      />
                   )}
                 </div>

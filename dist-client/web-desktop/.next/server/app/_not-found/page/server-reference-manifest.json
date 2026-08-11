@@ -1,28 +1,28 @@
 {
   "node": {
-    "7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf": {
+    "7c7a4145198e71554fc8bb170cae738d03e4401aac": {
       "workers": {
         "app/_not-found/page": {
-          "moduleId": 76569,
+          "moduleId": 33105,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         }
       },
       "exportedName": "saveSetupData",
-      "filename": "web-desktop/src/app/actions/setup.ts"
+      "filename": "src/app/actions/setup.ts"
     },
-    "00ac0612999931a5d4b231fa8ce6d18d08165cfad2": {
+    "007179ab9c472fa7820f3300a22bb46d8fb46828a0": {
       "workers": {
         "app/_not-found/page": {
-          "moduleId": 76569,
+          "moduleId": 33105,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         }
       },
       "exportedName": "getServerTenantId",
-      "filename": "web-desktop/src/server/auth.ts"
+      "filename": "src/server/auth.ts"
     }
   },
   "edge": {}

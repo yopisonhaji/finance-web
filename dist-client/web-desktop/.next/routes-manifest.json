@@ -21,7 +21,16 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api-bot/[...path]",
+      "regex": "^/api\\-bot/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPpath": "nxtPpath"
+      },
+      "namedRegex": "^/api\\-bot/(?<nxtPpath>.+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -48,6 +57,18 @@
       "namedRegex": "^/api/admin\\-delete(?:/)?$"
     },
     {
+      "page": "/api/bot/status",
+      "regex": "^/api/bot/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bot/status(?:/)?$"
+    },
+    {
+      "page": "/api/bot/webhook",
+      "regex": "^/api/bot/webhook(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bot/webhook(?:/)?$"
+    },
+    {
       "page": "/api/debug-db",
       "regex": "^/api/debug\\-db(?:/)?$",
       "routeKeys": {},
@@ -60,6 +81,12 @@
       "namedRegex": "^/api/debug\\-users(?:/)?$"
     },
     {
+      "page": "/api/pencairan",
+      "regex": "^/api/pencairan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/pencairan(?:/)?$"
+    },
+    {
       "page": "/api/santri/batch",
       "regex": "^/api/santri/batch(?:/)?$",
       "routeKeys": {},
@@ -70,6 +97,12 @@
       "regex": "^/api/search(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/search(?:/)?$"
+    },
+    {
+      "page": "/api/settings/media-ai",
+      "regex": "^/api/settings/media\\-ai(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/settings/media\\-ai(?:/)?$"
     },
     {
       "page": "/api/status",
@@ -94,6 +127,24 @@
       "regex": "^/api/wa/status(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/wa/status(?:/)?$"
+    },
+    {
+      "page": "/api/wa/tenants",
+      "regex": "^/api/wa/tenants(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/wa/tenants(?:/)?$"
+    },
+    {
+      "page": "/api/webhook-ipaymu",
+      "regex": "^/api/webhook\\-ipaymu(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhook\\-ipaymu(?:/)?$"
+    },
+    {
+      "page": "/api/webhook-telegram",
+      "regex": "^/api/webhook\\-telegram(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhook\\-telegram(?:/)?$"
     },
     {
       "page": "/api/webhook-wa",
@@ -130,6 +181,18 @@
       "regex": "^/login(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/pencairan",
+      "regex": "^/pencairan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pencairan(?:/)?$"
+    },
+    {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
     },
     {
       "page": "/register",

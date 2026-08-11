@@ -107,7 +107,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "D:\\finance",
+    "outputFileTracingRoot": "D:\\finance\\web-desktop",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -310,12 +310,12 @@
       "@libsql/client"
     ],
     "turbopack": {
-      "root": "D:\\finance"
+      "root": "D:\\finance\\web-desktop"
     },
     "distDirRoot": ".next"
   },
   "appDir": "D:\\finance\\web-desktop",
-  "relativeAppDir": "web-desktop",
+  "relativeAppDir": "",
   "files": [
     ".next\\package.json",
     ".next\\routes-manifest.json",

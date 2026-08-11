@@ -1,348 +1,384 @@
 {
   "node": {
-    "7c4ac0f27dd6d7e91fbfd029c6b8f9603197b4a3cf": {
+    "7c7a4145198e71554fc8bb170cae738d03e4401aac": {
       "workers": {
         "app/_not-found/page": {
-          "moduleId": 76569,
+          "moduleId": 33105,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/kasir/page": {
-          "moduleId": 29219,
+          "moduleId": 39076,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/laporan/page": {
-          "moduleId": 58863,
+          "moduleId": 76136,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/lisensi/page": {
-          "moduleId": 37633,
+          "moduleId": 82525,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/login/page": {
-          "moduleId": 39019,
+          "moduleId": 74553,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/page": {
-          "moduleId": 31912,
+          "moduleId": 78730,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
+        },
+        "app/pencairan/page": {
+          "moduleId": 15318,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "src/app/actions/setup.ts"
+        },
+        "app/privacy/page": {
+          "moduleId": 74883,
+          "async": true,
+          "exportedName": "saveSetupData",
+          "filename": "src/app/actions/setup.ts"
         },
         "app/register/page": {
-          "moduleId": 73199,
+          "moduleId": 48445,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/santri/page": {
-          "moduleId": 30039,
+          "moduleId": 80798,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/template/page": {
-          "moduleId": 49379,
+          "moduleId": 12841,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/tunggakan/page": {
-          "moduleId": 69994,
+          "moduleId": 39590,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/update/page": {
-          "moduleId": 75709,
+          "moduleId": 2705,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         },
         "app/wa/page": {
-          "moduleId": 62333,
+          "moduleId": 87554,
           "async": true,
           "exportedName": "saveSetupData",
-          "filename": "web-desktop/src/app/actions/setup.ts"
+          "filename": "src/app/actions/setup.ts"
         }
       },
-      "filename": "web-desktop/src/app/actions/setup.ts",
+      "filename": "src/app/actions/setup.ts",
       "exportedName": "saveSetupData"
     },
-    "00ac0612999931a5d4b231fa8ce6d18d08165cfad2": {
+    "007179ab9c472fa7820f3300a22bb46d8fb46828a0": {
       "workers": {
         "app/_not-found/page": {
-          "moduleId": 76569,
+          "moduleId": 33105,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/kasir/page": {
-          "moduleId": 29219,
+          "moduleId": 39076,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/laporan/page": {
-          "moduleId": 58863,
+          "moduleId": 76136,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/lisensi/page": {
-          "moduleId": 37633,
+          "moduleId": 82525,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/login/page": {
-          "moduleId": 39019,
+          "moduleId": 74553,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/page": {
-          "moduleId": 31912,
+          "moduleId": 78730,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
+        },
+        "app/pencairan/page": {
+          "moduleId": 15318,
+          "async": true,
+          "exportedName": "getServerTenantId",
+          "filename": "src/server/auth.ts"
+        },
+        "app/privacy/page": {
+          "moduleId": 74883,
+          "async": true,
+          "exportedName": "getServerTenantId",
+          "filename": "src/server/auth.ts"
         },
         "app/register/page": {
-          "moduleId": 73199,
+          "moduleId": 48445,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/santri/page": {
-          "moduleId": 30039,
+          "moduleId": 80798,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/template/page": {
-          "moduleId": 49379,
+          "moduleId": 12841,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/tunggakan/page": {
-          "moduleId": 69994,
+          "moduleId": 39590,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/update/page": {
-          "moduleId": 75709,
+          "moduleId": 2705,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         },
         "app/wa/page": {
-          "moduleId": 62333,
+          "moduleId": 87554,
           "async": true,
           "exportedName": "getServerTenantId",
-          "filename": "web-desktop/src/server/auth.ts"
+          "filename": "src/server/auth.ts"
         }
       },
-      "filename": "web-desktop/src/server/auth.ts",
+      "filename": "src/server/auth.ts",
       "exportedName": "getServerTenantId"
     },
-    "00cce14126d99ea8aa0eef6a22a706157cd102d881": {
+    "009b349e19775d3349eda65a970c9a58954b949f30": {
       "workers": {
         "app/page": {
-          "moduleId": 31912,
+          "moduleId": 78730,
           "async": true,
           "exportedName": "getDashboardStats",
-          "filename": "web-desktop/src/app/actions/dashboard.ts"
+          "filename": "src/app/actions/dashboard.ts"
         }
       },
-      "filename": "web-desktop/src/app/actions/dashboard.ts",
+      "filename": "src/app/actions/dashboard.ts",
       "exportedName": "getDashboardStats"
     },
-    "605e57bfe958ca5aa1db8e64c85c230059b11fe81a": {
+    "6065b81fd8daa95984498c29e2f2dc957ae7bf7af4": {
       "workers": {
         "app/kasir/page": {
-          "moduleId": 29219,
+          "moduleId": 39076,
           "async": true,
           "exportedName": "processBayarTunai",
-          "filename": "web-desktop/src/server/kasir.ts"
+          "filename": "src/server/kasir.ts"
         }
       },
-      "filename": "web-desktop/src/server/kasir.ts",
+      "filename": "src/server/kasir.ts",
       "exportedName": "processBayarTunai"
     },
-    "7cf25be83ba0b1605416ebec2e22471710635d673b": {
+    "7c6889060e5158b37b14a21be2eb5acf9f5f7634c7": {
       "workers": {
         "app/kasir/page": {
-          "moduleId": 29219,
+          "moduleId": 39076,
           "async": true,
           "exportedName": "generatePaymentLink",
-          "filename": "web-desktop/src/server/ipaymu.ts"
+          "filename": "src/server/ipaymu.ts"
         }
       },
-      "filename": "web-desktop/src/server/ipaymu.ts",
+      "filename": "src/server/ipaymu.ts",
       "exportedName": "generatePaymentLink"
     },
-    "0054868bb0b4699069b7c3023d49c40baefb77c050": {
+    "0012a5aa34e8caaefde66e29272a22ddb041c04a6c": {
       "workers": {
         "app/kasir/page": {
-          "moduleId": 29219,
+          "moduleId": 39076,
           "async": true,
           "exportedName": "getSantri",
-          "filename": "web-desktop/src/app/santri/actions.ts"
+          "filename": "src/app/santri/actions.ts"
         },
         "app/santri/page": {
-          "moduleId": 30039,
+          "moduleId": 80798,
           "async": true,
           "exportedName": "getSantri",
-          "filename": "web-desktop/src/app/santri/actions.ts"
+          "filename": "src/app/santri/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/santri/actions.ts",
+      "filename": "src/app/santri/actions.ts",
       "exportedName": "getSantri"
     },
-    "00a30f9499e3bcce262a463ea6f7d01eb3012857c8": {
+    "00ead56e42c8b9edf012908fd71e86e01a463e99e2": {
       "workers": {
         "app/laporan/page": {
-          "moduleId": 58863,
+          "moduleId": 76136,
           "async": true,
           "exportedName": "getLaporanData",
-          "filename": "web-desktop/src/app/laporan/actions.ts"
+          "filename": "src/app/laporan/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/laporan/actions.ts",
+      "filename": "src/app/laporan/actions.ts",
       "exportedName": "getLaporanData"
     },
-    "6042079ebf457117bc46c677822f880a7cd2544a62": {
+    "60828b20215628d3b248071413b73aadb3995ea2b3": {
       "workers": {
         "app/login/page": {
-          "moduleId": 39019,
+          "moduleId": 74553,
           "async": true,
           "exportedName": "verifyLogin",
-          "filename": "web-desktop/src/app/actions/auth.ts"
+          "filename": "src/app/actions/auth.ts"
         }
       },
-      "filename": "web-desktop/src/app/actions/auth.ts",
+      "filename": "src/app/actions/auth.ts",
       "exportedName": "verifyLogin"
     },
-    "40186c208d355d8a9f139e51e571387d106f33987d": {
+    "4005df7f4ee2abcccfbc4f9851aef24ebc457d3af7": {
       "workers": {
         "app/santri/page": {
-          "moduleId": 30039,
-          "async": true,
-          "exportedName": "addSantri",
-          "filename": "web-desktop/src/app/santri/actions.ts"
-        }
-      },
-      "filename": "web-desktop/src/app/santri/actions.ts",
-      "exportedName": "addSantri"
-    },
-    "40bf27e16a2fa98cec765d8d9aefc3e527ea05607e": {
-      "workers": {
-        "app/santri/page": {
-          "moduleId": 30039,
+          "moduleId": 80798,
           "async": true,
           "exportedName": "deleteSantri",
-          "filename": "web-desktop/src/app/santri/actions.ts"
+          "filename": "src/app/santri/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/santri/actions.ts",
+      "filename": "src/app/santri/actions.ts",
       "exportedName": "deleteSantri"
     },
-    "603362d163fbf8ef530d4a33b3a7d260c657c0b5b6": {
+    "40c7d6bf47833d63942547d41dd54483073ec4cd57": {
       "workers": {
         "app/santri/page": {
-          "moduleId": 30039,
+          "moduleId": 80798,
+          "async": true,
+          "exportedName": "addSantri",
+          "filename": "src/app/santri/actions.ts"
+        }
+      },
+      "filename": "src/app/santri/actions.ts",
+      "exportedName": "addSantri"
+    },
+    "604b406a7a0cd1a0e3a707da8a559fd9a7f8888d47": {
+      "workers": {
+        "app/santri/page": {
+          "moduleId": 80798,
           "async": true,
           "exportedName": "updateSantri",
-          "filename": "web-desktop/src/app/santri/actions.ts"
+          "filename": "src/app/santri/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/santri/actions.ts",
+      "filename": "src/app/santri/actions.ts",
       "exportedName": "updateSantri"
     },
-    "40fa80ccb561940f6709ff5056db716b8785a667c1": {
+    "40fa81ec4dbb318feb19def17df0aabcce7f1912ba": {
       "workers": {
-        "app/settings/page": {
-          "moduleId": 68701,
+        "app/santri/page": {
+          "moduleId": 80798,
           "async": true,
-          "exportedName": "saveSettings",
-          "filename": "web-desktop/src/server/settings.ts"
-        },
-        "app/template/page": {
-          "moduleId": 49379,
-          "async": true,
-          "exportedName": "saveSettings",
-          "filename": "web-desktop/src/server/settings.ts"
+          "exportedName": "importSantriBatch",
+          "filename": "src/app/actions/santri.ts"
         }
       },
-      "filename": "web-desktop/src/server/settings.ts",
+      "filename": "src/app/actions/santri.ts",
+      "exportedName": "importSantriBatch"
+    },
+    "404f584bd6d4c52b81fb5cb5c19ae99f6731033625": {
+      "workers": {
+        "app/settings/page": {
+          "moduleId": 48612,
+          "async": true,
+          "exportedName": "saveSettings",
+          "filename": "src/server/settings.ts"
+        },
+        "app/template/page": {
+          "moduleId": 12841,
+          "async": true,
+          "exportedName": "saveSettings",
+          "filename": "src/server/settings.ts"
+        }
+      },
+      "filename": "src/server/settings.ts",
       "exportedName": "saveSettings"
     },
-    "00347f597d848fdfe023d3af2ffcff5ac91daa3eeb": {
+    "00558f9bccae1c8acd34f8360c7f00ce7d06441d07": {
       "workers": {
         "app/settings/page": {
-          "moduleId": 68701,
+          "moduleId": 48612,
           "async": true,
           "exportedName": "getSettings",
-          "filename": "web-desktop/src/server/settings.ts"
+          "filename": "src/server/settings.ts"
         },
         "app/template/page": {
-          "moduleId": 49379,
+          "moduleId": 12841,
           "async": true,
           "exportedName": "getSettings",
-          "filename": "web-desktop/src/server/settings.ts"
+          "filename": "src/server/settings.ts"
         }
       },
-      "filename": "web-desktop/src/server/settings.ts",
+      "filename": "src/server/settings.ts",
       "exportedName": "getSettings"
     },
-    "00b8a6635988d244be5545e06fc657fe97f15aa872": {
+    "0021c8049b9159d3ddf3eb9378219011c63fa15c03": {
       "workers": {
         "app/tunggakan/page": {
-          "moduleId": 69994,
+          "moduleId": 39590,
           "async": true,
           "exportedName": "getTunggakan",
-          "filename": "web-desktop/src/app/tunggakan/actions.ts"
+          "filename": "src/app/tunggakan/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/tunggakan/actions.ts",
+      "filename": "src/app/tunggakan/actions.ts",
       "exportedName": "getTunggakan"
     },
-    "40ad1a0dff7b4a36d1ee1b2eeb56c5151401e4d31e": {
+    "40ea401f070bcbd03be7671e4968693a7cb9a207fa": {
       "workers": {
         "app/tunggakan/page": {
-          "moduleId": 69994,
+          "moduleId": 39590,
           "async": true,
           "exportedName": "tandaiLunas",
-          "filename": "web-desktop/src/app/tunggakan/actions.ts"
+          "filename": "src/app/tunggakan/actions.ts"
         }
       },
-      "filename": "web-desktop/src/app/tunggakan/actions.ts",
+      "filename": "src/app/tunggakan/actions.ts",
       "exportedName": "tandaiLunas"
     }
   },
   "edge": {},
-  "encryptionKey": "GeSMErepVTk5ESuYvTuTAHQMoy9WZAJJD69jr1DSp5E="
+  "encryptionKey": "v56tt6j6+XFTEGDN5HWEBl+vkPFpWJUBSk+ZmNqv1uM="
 }
