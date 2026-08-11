@@ -168,7 +168,33 @@ export function MediaAIGallery() {
                 type="file" 
                 onChange={(e) => setFile(e.target.files?.[0] || null)} 
                 className="mt-1 bg-white dark:bg-slate-800"
+                accept="image/*,application/pdf"
               />
+              {file && file.type.startsWith('image/') && (
+                <div className="mt-3 relative h-28 w-full overflow-hidden rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+                  <img 
+                    src={URL.createObjectURL(file)} 
+                    alt="Preview" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-50 blur-[2px]" 
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="bg-slate-900/70 text-white px-3 py-1.5 rounded-md text-xs font-medium backdrop-blur-sm shadow-sm flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      File Sesuai
+                    </span>
+                  </div>
+                </div>
+              )}
+              {file && !file.type.startsWith('image/') && (
+                <div className="mt-3 p-3 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center gap-3">
+                  <FileText className="w-6 h-6 text-emerald-500 opacity-70" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{file.name}</p>
+                    <p className="text-[10px] text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
+                  <Check className="w-4 h-4 text-emerald-500" />
+                </div>
+              )}
             </div>
           </div>
           <div>
