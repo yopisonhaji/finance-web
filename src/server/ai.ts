@@ -123,6 +123,14 @@ export async function processAIResponse(message: string, sender: string, santriD
       
       return { text: caption, media_url: bestMatch.url, media_type: bestMatch.tipe };
     }
+    
+    // Jika user minta media tapi tidak ada yang cocok atau galeri kosong
+    if (isMediaRequest) {
+      if (availableMediaList.length === 0) {
+        return { text: `Maaf, saat ini belum ada brosur atau file yang tersedia. Silakan hubungi admin untuk informasi lebih lanjut.` };
+      }
+      // Ada media tapi tidak cocok — fall through ke AI untuk menjelaskan
+    }
   }
   // ===== END PRE-PROCESSOR =====
   
