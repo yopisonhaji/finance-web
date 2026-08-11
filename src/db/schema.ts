@@ -66,3 +66,35 @@ export const pencairan = sqliteTable('pencairan', {
   createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
   updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
 });
+
+export const social_connections = sqliteTable('social_connections', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  platform: text('platform').notNull(), // 'facebook', 'instagram'
+  pageId: text('page_id').notNull().unique(), // ID Unik dari Meta untuk pencocokan Webhook
+  accessToken: text('access_token').notNull(), // Wajib dienkripsi AES-256
+  status: text('status').default('active'), // 'active', 'disconnected'
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const meta_customers = sqliteTable('meta_customers', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  platform: text('platform').notNull(),
+  psid: text('psid').notNull(), // Page-Scoped ID (Sender ID)
+  lastReplyAt: text('last_reply_at').default('CURRENT_TIMESTAMP'), // Untuk aturan 24 jam Meta
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const meta_messages = sqliteTable('meta_messages', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  messageId: text('message_id').notNull().unique(), // ID Pesan dari Meta (Idempotency)
+  tenantId: text('tenant_id').notNull(),
+  platform: text('platform').notNull(),
+  senderId: text('sender_id').notNull(), // PSID
+  text: text('text'),
+  isEcho: integer('is_echo').default(0), // 1 if this message was sent by the page
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+});
