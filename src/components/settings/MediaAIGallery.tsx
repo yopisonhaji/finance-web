@@ -238,7 +238,11 @@ export function MediaAIGallery() {
                   )}
                   {media.tipeMedia === "image" && (
                      <img 
-                       src={media.urlFile.startsWith('http') ? media.urlFile : `http://195.88.211.117:8080${media.urlFile.startsWith('/') ? '' : '/'}${media.urlFile}`} 
+                       src={media.urlFile.startsWith('http') && media.urlFile.includes('195.88.211.117') 
+                         ? `/api/media-proxy?url=${encodeURIComponent(media.urlFile)}` 
+                         : media.urlFile.startsWith('http') 
+                           ? media.urlFile 
+                           : `/api/media-proxy?url=${encodeURIComponent(media.urlFile)}`} 
                        alt={media.namaFile}
                        className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-110 shadow-sm"
                        onError={(e) => {
@@ -268,6 +272,14 @@ export function MediaAIGallery() {
                     <>
                       <h4 className="font-bold text-slate-800 dark:text-white text-sm mb-1">{media.namaFile}</h4>
                       <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{media.deskripsi}</p>
+                      {media.ukuranFile && (
+                        <p className="text-[10px] text-slate-400 mt-2 flex items-center gap-1">
+                          <FileText className="w-3 h-3" />
+                          {(media.ukuranFile / 1024 / 1024) >= 1 
+                            ? `${(media.ukuranFile / 1024 / 1024).toFixed(2)} MB` 
+                            : `${(media.ukuranFile / 1024).toFixed(1)} KB`}
+                        </p>
+                      )}
                     </>
                   )}
                   

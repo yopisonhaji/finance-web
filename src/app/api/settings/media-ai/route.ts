@@ -95,6 +95,7 @@ export async function POST(req: Request) {
       namaFile: namaFile,
       urlFile: publicURL,
       deskripsi: deskripsi,
+      ukuranFile: file.size,
       tipeMedia: tipeMedia,
     }).returning()
 

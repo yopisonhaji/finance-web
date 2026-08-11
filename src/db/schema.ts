@@ -51,6 +51,7 @@ export const media_ai = sqliteTable('media_ai', {
   namaFile: text('nama_file').notNull(),
   urlFile: text('url_file').notNull(),
   deskripsi: text('deskripsi').notNull(),
+  ukuranFile: integer('ukuran_file'),
   tipeMedia: text('tipe_media').default('image'),
   createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
 });
