@@ -36,6 +36,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Kuota penyimpanan penuh (maksimal 50 file / 20MB total). Hapus beberapa file lama." }, { status: 400 })
     }
 
+    const contentType = req.headers.get("content-type") || "";
+    
+    // Alur Baru: Bypass Vercel, Simpan JSON (Direct Upload dari Client)
+    if (contentType.includes("application/json")) {
+      const body = await req.json();
+      const { namaFile, deskripsi, urlFile, ukuranFile, tipeMedia } = body;
+      
+      if (!namaFile || !urlFile) {
+        return NextResponse.json({ error: "Data tidak lengkap" }, { status: 400 })
+      }
+
+      const inserted = await db.insert(media_ai).values({
+        tenantId: tenantId,
+        namaFile: namaFile,
+        urlFile: urlFile,
+        deskripsi: deskripsi || "",
+        ukuranFile: ukuranFile || 0,
+        tipeMedia: tipeMedia || "document",
+      }).returning()
+
+      return NextResponse.json({ success: true, data: inserted[0] })
+    }
+
+    // Alur Lama (Bisa menyebabkan error 413 Payload Too Large di Vercel jika >4.5MB)
     const formData = await req.formData()
     const file = formData.get("file") as File
     const namaFile = formData.get("namaFile") as string

@@ -13,6 +13,8 @@ export async function GET(request: Request) {
     let targetUrl = url;
     if (url.startsWith('/')) {
       targetUrl = `http://195.88.211.117:8080${url}`;
+    } else if (url.includes('localhost') || url.includes('127.0.0.1')) {
+      targetUrl = url.replace(/localhost|127\.0\.0\.1/g, '195.88.211.117');
     }
 
     const res = await fetch(targetUrl);

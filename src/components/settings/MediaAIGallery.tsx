@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Upload, Trash2, Image as ImageIcon, FileText, Loader2, Pencil, Check, X } from "lucide-react"
+import { Upload, Trash2, Image as ImageIcon, FileText, Loader2, Pencil, Check, X, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 interface MediaItem {
   id: number
@@ -14,6 +15,7 @@ interface MediaItem {
   urlFile: string
   deskripsi: string
   tipeMedia: string
+  ukuranFile?: number
 }
 
 export function MediaAIGallery() {
@@ -25,6 +27,7 @@ export function MediaAIGallery() {
   const [editNama, setEditNama] = useState("")
   const [editDeskripsi, setEditDeskripsi] = useState("")
   const [saving, setSaving] = useState(false)
+  const [previewMedia, setPreviewMedia] = useState<MediaItem | null>(null)
 
   const [nama, setNama] = useState("")
   const [deskripsi, setDeskripsi] = useState("")
@@ -48,40 +51,75 @@ export function MediaAIGallery() {
 
   const handleUpload = async () => {
     if (!file) return alert("Silakan pilih file terlebih dahulu")
-
-    if (file.size > 20 * 1024 * 1024) {
-      return alert("Ukuran file maksimal 20MB")
+    if (!file) {
+      alert("Pilih file terlebih dahulu")
+      return
     }
 
-    // Auto-generate nama dan deskripsi jika kosong
-    const finalNama = nama.trim() || file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ").substring(0, 50)
-    const finalDeskripsi = deskripsi.trim() || `File: ${finalNama}`
+    if (file.size > 20 * 1024 * 1024) {
+      alert("Ukuran file maksimal 20MB per file")
+      return
+    }
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append("file", file)
-    formData.append("namaFile", finalNama)
-    formData.append("deskripsi", finalDeskripsi)
-    formData.append("tipeMedia", file.type.startsWith("image/") ? "image" : "document")
 
     try {
+      // 1. Dapatkan Token dan Bot URL
+      const tokenRes = await fetch("/api/settings/media-ai/upload-token")
+      const tokenData = await tokenRes.json()
+      
+      if (!tokenRes.ok) {
+        throw new Error(tokenData.error || "Gagal mendapatkan token upload")
+      }
+
+      // 2. Upload langsung ke Bot VPS (Bypass Vercel limit)
+      const botFormData = new FormData()
+      botFormData.append("file", file)
+      
+      const botRes = await fetch(tokenData.uploadUrl, {
+        method: "POST",
+        headers: {
+          'Authorization': `Bearer ${tokenData.token}`
+        },
+        body: botFormData
+      })
+
+      if (!botRes.ok) {
+        const errText = await botRes.text()
+        throw new Error("Gagal upload ke VPS: " + errText)
+      }
+
+      const botData = await botRes.json()
+
+      // 3. Simpan meta data ke Next.js DB
       const res = await fetch("/api/settings/media-ai", {
         method: "POST",
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          namaFile: nama || file.name,
+          deskripsi: deskripsi,
+          urlFile: botData.url,
+          ukuranFile: file.size,
+          tipeMedia: file.type.startsWith("image/") ? "image" : "document"
+        }),
       })
+
       const data = await res.json()
       if (res.ok) {
         setNama("")
-        setDeskripsi("")
         setFile(null)
+        setDeskripsi("")
         const fileInput = document.getElementById("file-upload") as HTMLInputElement
         if (fileInput) fileInput.value = ""
         fetchMedia()
+        alert("Media berhasil diunggah!")
       } else {
-        alert(data.error || "Gagal mengunggah")
+        alert(data.error || "Gagal mengunggah media")
       }
-    } catch (err) {
-      alert("Terjadi kesalahan jaringan")
+    } catch (err: any) {
+      alert(err.message || "Terjadi kesalahan sistem")
     } finally {
       setUploading(false)
     }
@@ -136,6 +174,11 @@ export function MediaAIGallery() {
       setSaving(false)
     }
   }
+
+  const maxBytes = 20 * 1024 * 1024;
+  const usedBytes = mediaList.reduce((acc, media) => acc + (media.ukuranFile || 0), 0);
+  const percentage = Math.min(100, Math.round((usedBytes / maxBytes) * 100));
+  const isNearLimit = percentage > 90;
 
   return (
     <div className="space-y-6 mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
@@ -216,8 +259,21 @@ export function MediaAIGallery() {
       </div>
 
       <div>
-        <h3 className="font-bold text-slate-800 dark:text-white mb-1">Galeri Tersimpan ({mediaList.length} file · Kuota 20MB total)</h3>
-        <p className="text-xs text-slate-500 mb-4">Maksimal 20MB per file. Total penyimpanan 20MB per tenant. Bukan batas jumlah file.</p>
+        <h3 className="font-bold text-slate-800 dark:text-white mb-3">Galeri Tersimpan ({mediaList.length} file)</h3>
+        
+        <div className="mb-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl">
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-slate-600 dark:text-slate-400 font-medium">Kapasitas Penyimpanan</span>
+            <span className="font-bold text-slate-800 dark:text-white">{(usedBytes / 1024 / 1024).toFixed(2)} MB / 20 MB</span>
+          </div>
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${isNearLimit ? 'bg-rose-500' : 'bg-emerald-500'}`} 
+              style={{ width: `${percentage}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">Terpakai {percentage}% dari total kuota 20MB. {isNearLimit && <span className="text-rose-500 font-medium">Kuota hampir habis!</span>}</p>
+        </div>
         {loading ? (
           <div className="flex items-center justify-center p-10">
             <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
@@ -237,21 +293,21 @@ export function MediaAIGallery() {
                     <FileText className="w-10 h-10 text-slate-300 dark:text-slate-600" />
                   )}
                   {media.tipeMedia === "image" && (
+                    <div 
+                      className="absolute inset-0 z-10 cursor-pointer"
+                      onClick={() => setPreviewMedia(media)}
+                    >
                      <img 
-                       src={media.urlFile.startsWith('http') && media.urlFile.includes('195.88.211.117') 
+                       src={media.urlFile.includes('localhost') || media.urlFile.includes('127.0.0.1') || media.urlFile.includes('195.88.211.117') || media.urlFile.startsWith('/')
                          ? `/api/media-proxy?url=${encodeURIComponent(media.urlFile)}` 
-                         : media.urlFile.startsWith('http') 
-                           ? media.urlFile 
-                           : `/api/media-proxy?url=${encodeURIComponent(media.urlFile)}`} 
+                         : media.urlFile} 
                        alt={media.namaFile}
-                       className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-110 shadow-sm"
-                       onError={(e) => {
-                         (e.target as HTMLImageElement).style.display = 'none';
-                       }}
-                       onLoad={(e) => {
-                         (e.target as HTMLImageElement).style.display = 'block';
-                       }}
+                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 shadow-sm bg-slate-200 dark:bg-slate-800"
                      />
+                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                       <Eye className="w-8 h-8 text-white drop-shadow-md" />
+                     </div>
+                    </div>
                   )}
                 </div>
                 <CardContent className="p-4">
@@ -315,6 +371,24 @@ export function MediaAIGallery() {
           </div>
         )}
       </div>
+
+      <Dialog open={!!previewMedia} onOpenChange={(open) => !open && setPreviewMedia(null)}>
+        <DialogContent className="max-w-3xl bg-slate-950 border-slate-800 p-1 sm:rounded-xl">
+          <DialogTitle className="text-slate-200 px-4 pt-4 pb-2 text-lg font-semibold">{previewMedia?.namaFile}</DialogTitle>
+          <DialogDescription className="sr-only">Pratinjau gambar ukuran penuh</DialogDescription>
+          {previewMedia && (
+            <div className="relative w-full h-[70vh] flex items-center justify-center bg-slate-900 rounded-b-lg overflow-hidden">
+              <img
+                src={previewMedia.urlFile.includes('localhost') || previewMedia.urlFile.includes('127.0.0.1') || previewMedia.urlFile.includes('195.88.211.117') || previewMedia.urlFile.startsWith('/')
+                  ? `/api/media-proxy?url=${encodeURIComponent(previewMedia.urlFile)}` 
+                  : previewMedia.urlFile}
+                alt={previewMedia.namaFile}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
