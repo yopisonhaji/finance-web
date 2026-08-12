@@ -196,8 +196,8 @@ export async function DELETE(req: Request) {
           region: "auto",
           endpoint: `https://${r2AccountId}.r2.cloudflarestorage.com`,
           credentials: {
-            accessKeyId: r2AccessKey,
-            secretAccessKey: r2SecretKey,
+            accessKeyId: r2AccessKey as string,
+            secretAccessKey: r2SecretKey as string,
           },
         });
         
