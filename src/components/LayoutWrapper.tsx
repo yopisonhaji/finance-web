@@ -78,7 +78,7 @@ export function LayoutWrapper({
     <SidebarProvider>
       <AppSidebar namaPesantren={namaLembaga} alamatPesantren={alamatLembaga} ownerName={ownerName} />
       <SidebarInset className="bg-[var(--color-background)] flex flex-col flex-1 w-full min-w-0 pb-[72px] md:pb-0">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/80 backdrop-blur-[10px] px-3 sm:px-4 lg:px-6 z-10 sticky top-0 shadow-sm gap-4">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/80 backdrop-blur-[10px] px-3 sm:px-4 lg:px-6 z-50 sticky top-0 shadow-sm gap-4">
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
             <SidebarTrigger className="text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hidden md:flex" />
             <div className="hidden lg:flex items-center text-sm font-medium text-slate-700 dark:text-slate-300 font-medium">
