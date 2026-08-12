@@ -4,6 +4,7 @@ import { media_ai, pengaturan } from "@/db/schema"
 import { eq, and } from "drizzle-orm"
 import { getServerTenantId } from "@/server/auth"
 import jwt from "jsonwebtoken"
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
 export async function GET(req: Request) {
   try {
@@ -182,35 +183,78 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
-    // Call Bot-Go to delete file
-    const urlConfig = await db.query.pengaturan.findFirst({
-      where: and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId))
-    })
-    const tokenConfig = await db.query.pengaturan.findFirst({
-      where: and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId))
-    })
+    // Cek apakah menggunakan R2
+    const r2AccountId = process.env.R2_ACCOUNT_ID;
+    const r2AccessKey = process.env.R2_ACCESS_KEY_ID;
+    const r2SecretKey = process.env.R2_SECRET_ACCESS_KEY;
+    const r2Bucket = process.env.R2_BUCKET_NAME;
 
-    let rawUrl = urlConfig?.nilai || "http://195.88.211.117:8080/api/wa/send"
-    rawUrl = rawUrl.replace("localhost", "127.0.0.1")
-    let botDeleteUrl = "http://195.88.211.117:8080/delete-media"
-    try {
-      const parsed = new URL(rawUrl)
-      botDeleteUrl = `${parsed.protocol}//${parsed.host}/delete-media`
-    } catch (e) {}
+    if (r2AccountId && r2AccessKey && r2SecretKey && r2Bucket && media.urlFile.includes("r2.cloudflarestorage.com") || media.urlFile.includes("r2.dev")) {
+      // Hapus dari R2
+      try {
+        const S3 = new S3Client({
+          region: "auto",
+          endpoint: `https://${r2AccountId}.r2.cloudflarestorage.com`,
+          credentials: {
+            accessKeyId: r2AccessKey,
+            secretAccessKey: r2SecretKey,
+          },
+        });
+        
+        // Ekstrak objectKey dari URL
+        // Contoh URL: https://pub-xxxx.r2.dev/tenantId/123_file.jpg
+        let objectKey = filename;
+        try {
+          const urlObj = new URL(media.urlFile);
+          objectKey = urlObj.pathname.substring(1); // remove leading slash
+        } catch (e) {
+           // fallback: if public url is not standard, try to find tenantId in the string
+           const parts = media.urlFile.split(`${tenantId}/`);
+           if (parts.length > 1) {
+             objectKey = `${tenantId}/${parts[1]}`;
+           }
+        }
 
-    const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c"
-    const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' })
+        const command = new DeleteObjectCommand({
+          Bucket: r2Bucket,
+          Key: objectKey,
+        });
 
-    const botRes = await fetch(botDeleteUrl, {
-      method: "DELETE",
-      headers: {
-        'Authorization': `Bearer ${jwtToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ filename })
-    })
+        await S3.send(command);
+      } catch (err) {
+        console.error("Gagal menghapus dari R2:", err);
+      }
+    } else {
+      // Call Bot-Go to delete file (Alur Lama)
+      const urlConfig = await db.query.pengaturan.findFirst({
+        where: and(eq(pengaturan.kunci, 'wa_bot_url'), eq(pengaturan.tenantId, tenantId))
+      })
+      const tokenConfig = await db.query.pengaturan.findFirst({
+        where: and(eq(pengaturan.kunci, 'wa_bot_token'), eq(pengaturan.tenantId, tenantId))
+      })
 
-    // Even if botRes fails (e.g. file already deleted), we still delete from DB
+      let rawUrl = urlConfig?.nilai || "http://195.88.211.117:8080/api/wa/send"
+      rawUrl = rawUrl.replace("localhost", "127.0.0.1")
+      let botDeleteUrl = "http://195.88.211.117:8080/delete-media"
+      try {
+        const parsed = new URL(rawUrl)
+        botDeleteUrl = `${parsed.protocol}//${parsed.host}/delete-media`
+      } catch (e) {}
+
+      const token = tokenConfig?.nilai || process.env.BOT_API_SECRET || "yopis_secure_jwt_secret_841bd5a4c9e82110c7104f4a382c"
+      const jwtToken = jwt.sign({ tenant_id: tenantId, sender: "nextjs-client" }, token, { expiresIn: '1h' })
+
+      await fetch(botDeleteUrl, {
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ filename })
+      }).catch(() => {})
+    }
+
+    // Delete from DB
     await db.delete(media_ai).where(eq(media_ai.id, id))
 
     return NextResponse.json({ success: true })

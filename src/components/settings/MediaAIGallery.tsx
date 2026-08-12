@@ -64,32 +64,51 @@ export function MediaAIGallery() {
     setUploading(true)
 
     try {
-      // 1. Dapatkan Token dan Bot URL
-      const tokenRes = await fetch("/api/settings/media-ai/upload-token")
+      // 1. Dapatkan Token dan Bot URL (Atau Presigned URL R2)
+      const tokenRes = await fetch(`/api/settings/media-ai/upload-token?filename=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`)
       const tokenData = await tokenRes.json()
       
       if (!tokenRes.ok) {
         throw new Error(tokenData.error || "Gagal mendapatkan token upload")
       }
 
-      // 2. Upload langsung ke Bot VPS (Bypass Vercel limit)
-      const botFormData = new FormData()
-      botFormData.append("file", file)
-      
-      const botRes = await fetch(tokenData.uploadUrl, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${tokenData.token}`
-        },
-        body: botFormData
-      })
+      let publicUrl = tokenData.publicUrl;
 
-      if (!botRes.ok) {
-        const errText = await botRes.text()
-        throw new Error("Gagal upload ke VPS: " + errText)
+      // 2. Upload (Ke R2 atau ke VPS)
+      if (tokenData.isR2) {
+        // Alur Baru: Cloudflare R2 Direct Upload
+        const r2Res = await fetch(tokenData.uploadUrl, {
+          method: tokenData.method || "PUT",
+          headers: {
+            "Content-Type": file.type
+          },
+          body: file // Upload file mentah tanpa FormData
+        })
+
+        if (!r2Res.ok) {
+          throw new Error("Gagal upload ke Cloudflare R2")
+        }
+      } else {
+        // Alur Lama: Upload ke VPS Bot
+        const botFormData = new FormData()
+        botFormData.append("file", file)
+        
+        const botRes = await fetch(tokenData.uploadUrl, {
+          method: "POST",
+          headers: {
+            'Authorization': `Bearer ${tokenData.token}`
+          },
+          body: botFormData
+        })
+
+        if (!botRes.ok) {
+          const errText = await botRes.text()
+          throw new Error("Gagal upload ke VPS: " + errText)
+        }
+
+        const botData = await botRes.json()
+        publicUrl = botData.url
       }
-
-      const botData = await botRes.json()
 
       // 3. Simpan meta data ke Next.js DB
       const res = await fetch("/api/settings/media-ai", {
@@ -100,7 +119,7 @@ export function MediaAIGallery() {
         body: JSON.stringify({
           namaFile: nama || file.name,
           deskripsi: deskripsi,
-          urlFile: botData.url,
+          urlFile: publicUrl,
           ukuranFile: file.size,
           tipeMedia: file.type.startsWith("image/") ? "image" : "document"
         }),
