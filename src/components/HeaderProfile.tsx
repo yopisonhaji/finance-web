@@ -39,7 +39,7 @@ export function HeaderProfile({ ownerName }: { ownerName: string }) {
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl py-1 z-50">
+        <div className="absolute right-0 top-full mt-3 w-48 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl py-1 z-[999]">
           <button 
             onClick={handleLogout}
             className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-100 dark:bg-slate-800 flex items-center gap-2"
@@ -51,7 +51,7 @@ export function HeaderProfile({ ownerName }: { ownerName: string }) {
       )}
       
       {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+        <div className="fixed inset-0 z-[998]" onClick={() => setIsOpen(false)}></div>
       )}
     </div>
   );
