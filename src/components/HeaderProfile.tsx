@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { auth, signOut } from "@/lib/firebase";
+import { createPortal } from "react-dom";
 
 export function HeaderProfile({ ownerName }: { ownerName: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,20 +39,20 @@ export function HeaderProfile({ ownerName }: { ownerName: string }) {
         </div>
       </div>
 
-      {isOpen && (
-        <div className="absolute right-0 top-full mt-3 w-48 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl py-1 z-[999]">
-          <button 
-            onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-100 dark:bg-slate-800 flex items-center gap-2"
-          >
-            <LogOut className="w-4 h-4" />
-            Keluar (Log Out)
-          </button>
-        </div>
-      )}
-      
-      {isOpen && (
-        <div className="fixed inset-0 z-[998]" onClick={() => setIsOpen(false)}></div>
+      {isOpen && typeof document !== "undefined" && createPortal(
+        <>
+          <div className="fixed inset-0 z-[99998]" onClick={() => setIsOpen(false)}></div>
+          <div className="fixed right-4 md:right-8 top-[72px] w-48 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl py-1 z-[99999]">
+            <button 
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-100 dark:bg-slate-800 flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Keluar (Log Out)
+            </button>
+          </div>
+        </>,
+        document.body
       )}
     </div>
   );
