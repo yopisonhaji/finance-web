@@ -49,6 +49,7 @@ export async function GET(req: Request) {
       const S3 = new S3Client({
         region: "auto",
         endpoint: `https://${r2AccountId}.r2.cloudflarestorage.com`,
+        forcePathStyle: true,
         credentials: {
           accessKeyId: r2AccessKey as string,
           secretAccessKey: r2SecretKey as string,
