@@ -6,6 +6,7 @@ import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedi
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -165,7 +166,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex lg:hidden justify-center mb-6">
-            <img src="/app-logo-hq.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
+            <Image src="/app-logo-hq.png" alt="Logo" width={64} height={64} priority className="rounded-xl shadow-sm object-cover" />
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("auth.login_title")}</h1>
           <p className="text-gray-700 dark:text-gray-400 text-sm">
@@ -190,7 +191,7 @@ export default function LoginPage() {
             {loading ? (
               <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
             ) : (
-              <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
+              <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
             )}
             <span className="font-medium text-sm">{t("auth.google")}</span>
           </button>
@@ -204,7 +205,7 @@ export default function LoginPage() {
             {loading ? (
               <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
             ) : (
-              <img src="/facebook-icon.svg" alt="Facebook" className="w-5 h-5" />
+              <Image src="/facebook-icon.svg" alt="Facebook" width={20} height={20} />
             )}
             <span className="font-medium text-sm">{t("auth.facebook")}</span>
           </button>
@@ -277,9 +278,12 @@ export default function LoginPage() {
         
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center p-8">
-          <img 
+          <Image 
             src="/app-logo-hq.webp" 
             alt="Finance AI Giant Logo" 
+            width={550}
+            height={550}
+            priority
             className="w-full max-w-[550px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-8 transform -rotate-12 scale-110 hover:scale-125 hover:-rotate-6 transition-all duration-1000 ease-in-out"
           />
           <p className="text-slate-700 dark:text-slate-300 font-medium tracking-[0.2em] uppercase text-sm relative z-20 mt-4">

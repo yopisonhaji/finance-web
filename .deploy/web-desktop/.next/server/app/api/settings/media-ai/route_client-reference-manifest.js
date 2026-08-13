@@ -1,0 +1,1 @@
+globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST["/api/settings/media-ai/route"]={"moduleLoading":{"prefix":"/_next/"},"ssrModuleMapping":{},"edgeSSRModuleMapping":{},"clientModules":{},"entryCSSFiles":{"D:\\finance\\web-desktop\\src\\app\\api\\settings\\media-ai\\route":[]},"rscModuleMapping":{},"edgeRscModuleMapping":{}};

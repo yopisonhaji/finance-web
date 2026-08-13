@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline — Finance AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 400px;
+    }
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #f8fafc;
+    }
+    p {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #2563eb; }
+    .info {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="icon">📡</span>
+    <h1>Tidak Ada Koneksi Internet</h1>
+    <p>
+      Finance AI membutuhkan koneksi internet untuk mengambil data terbaru.
+      Periksa koneksi WiFi atau data seluler Bapak/Ibu, lalu coba lagi.
+    </p>
+    <button onclick="window.location.reload()">
+      Coba Lagi
+    </button>
+    <p class="info">Data yang sudah pernah dibuka mungkin masih tersedia di cache.</p>
+  </div>
+</body>
+</html>

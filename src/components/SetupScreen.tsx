@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { auth, googleProvider, facebookProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -197,7 +199,7 @@ export function SetupScreen() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex lg:hidden justify-center mb-6">
-            <img src="/app-logo-hq.png" alt="Logo" className="w-16 h-16 rounded-xl shadow-sm object-cover" />
+            <Image src="/app-logo-hq.png" alt="Logo" width={64} height={64} priority className="rounded-xl shadow-sm object-cover" />
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("auth.setup_title")}</h1>
           <p className="text-gray-700 dark:text-gray-400 text-sm">
@@ -221,7 +223,7 @@ export function SetupScreen() {
                 type="button"
                 className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
               >
-                <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
+                <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
                 <span className="font-medium text-sm">{t("auth.google")}</span>
               </button>
 
@@ -231,7 +233,7 @@ export function SetupScreen() {
                 type="button"
                 className="flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 px-4 hover:bg-gray-50 transition-colors disabled:opacity-80"
               >
-                <img src="/facebook-icon.svg" alt="Facebook" className="w-5 h-5" />
+                <Image src="/facebook-icon.svg" alt="Facebook" width={20} height={20} />
                 <span className="font-medium text-sm">{t("auth.facebook")}</span>
               </button>
             </div>
@@ -375,9 +377,12 @@ export function SetupScreen() {
         
         {/* Giant Logo */}
         <div className="relative z-10 flex flex-col items-center justify-center p-8">
-          <img 
+          <Image 
             src="/app-logo-hq.webp" 
             alt="Finance AI Giant Logo" 
+            width={550}
+            height={550}
+            priority
             className="w-full max-w-[550px] object-contain drop-shadow-[0_0_100px_rgba(234,88,12,0.3)] dark:drop-shadow-[0_0_100px_rgba(59,130,246,0.3)] opacity-95 mb-8 transform -rotate-12 scale-110 hover:scale-125 hover:-rotate-6 transition-all duration-1000 ease-in-out"
           />
           <p className="text-slate-700 dark:text-slate-300 font-medium tracking-[0.2em] uppercase text-sm relative z-20 mt-4">

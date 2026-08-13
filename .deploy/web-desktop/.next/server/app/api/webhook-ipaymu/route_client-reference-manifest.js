@@ -1,0 +1,1 @@
+globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST["/api/webhook-ipaymu/route"]={"moduleLoading":{"prefix":"/_next/"},"ssrModuleMapping":{},"edgeSSRModuleMapping":{},"clientModules":{},"entryCSSFiles":{"D:\\finance\\web-desktop\\src\\app\\api\\webhook-ipaymu\\route":[]},"rscModuleMapping":{},"edgeRscModuleMapping":{}};
