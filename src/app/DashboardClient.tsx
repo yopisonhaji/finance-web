@@ -161,16 +161,18 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
             </h3>
           </div>
           <CardContent className="p-0 flex-1 flex flex-col">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-700 dark:text-slate-300 font-medium bg-white dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/60">
-                <tr>
-                  <th className="px-5 py-3 font-medium">Nama {clientTerm}</th>
-                  <th className="px-5 py-3 font-medium">{clientTerm === "Siswa" ? "Wali/Orang Tua" : "Penanggung Jawab"}</th>
-                  <th className="px-5 py-3 font-medium">{t("dashboard.arrears")}</th>
-                  <th className="px-5 py-3 font-medium text-right">{t("dashboard.status")}</th>
-                </tr>
-              </thead>
-            </table>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-sm text-left min-w-[500px]">
+                <thead className="text-xs text-slate-700 dark:text-slate-300 font-medium bg-white dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/60 whitespace-nowrap">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">Nama {clientTerm}</th>
+                    <th className="px-5 py-3 font-medium">{clientTerm === "Siswa" ? "Wali/Orang Tua" : "Penanggung Jawab"}</th>
+                    <th className="px-5 py-3 font-medium">{t("dashboard.arrears")}</th>
+                    <th className="px-5 py-3 font-medium text-right">{t("dashboard.status")}</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
             {/* Empty State Keren, Ringan */}
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
               <div className="relative w-16 h-16 mb-4 flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 rounded-2xl animate-[pulse_4s_infinite]">

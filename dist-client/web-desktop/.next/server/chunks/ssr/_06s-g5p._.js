@@ -1,3 +1,0 @@
-module.exports=[5050,(a,b,c)=>{"use strict";Object.defineProperty(c,"__esModule",{value:!0});var d={callServer:function(){return f.callServer},createServerReference:function(){return h.createServerReference},findSourceMapURL:function(){return g.findSourceMapURL}};for(var e in d)Object.defineProperty(c,e,{enumerable:!0,get:d[e]});let f=a.r(20611),g=a.r(1722),h=a.r(38783)},66649,a=>{"use strict";a.s([],80580),a.i(80580);var b=a.i(5050);let c=(0,b.createServerReference)("7c7a4145198e71554fc8bb170cae738d03e4401aac",b.callServer,void 0,b.findSourceMapURL,"saveSetupData");a.s(["saveSetupData",0,c],66649)}];
-
-//# sourceMappingURL=_06s-g5p._.js.map

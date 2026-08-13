@@ -89,25 +89,35 @@ export function MediaAIGallery() {
           throw new Error("Gagal upload ke Cloudflare R2")
         }
       } else {
-        // Alur Lama: Upload ke VPS Bot
-        const botFormData = new FormData()
-        botFormData.append("file", file)
+        // Alur Lama: Upload via Next.js Proxy ke VPS Bot
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("namaFile", nama || file.name)
+        formData.append("deskripsi", deskripsi)
+        formData.append("tipeMedia", file.type.startsWith("image/") ? "image" : "document")
         
-        const botRes = await fetch(tokenData.uploadUrl, {
+        const res = await fetch("/api/settings/media-ai", {
           method: "POST",
-          headers: {
-            'Authorization': `Bearer ${tokenData.token}`
-          },
-          body: botFormData
+          body: formData
         })
 
-        if (!botRes.ok) {
-          const errText = await botRes.text()
-          throw new Error("Gagal upload ke VPS: " + errText)
+        if (!res.ok) {
+          const errData = await res.json()
+          throw new Error(errData.error || "Gagal upload ke VPS (via Next.js)")
         }
 
-        const botData = await botRes.json()
-        publicUrl = botData.url
+        const data = await res.json()
+        
+        // Data sudah tersimpan di DB via proxy, jadi bisa langsung return success
+        setNama("")
+        setFile(null)
+        setDeskripsi("")
+        const fileInput = document.getElementById("file-upload") as HTMLInputElement
+        if (fileInput) fileInput.value = ""
+        fetchMedia()
+        alert("Media berhasil diunggah!")
+        setUploading(false)
+        return
       }
 
       // 3. Simpan meta data ke Next.js DB

@@ -121,7 +121,7 @@ export function LayoutWrapper({
             <Suspense fallback={<LazyFallback />}><HeaderProfile ownerName={ownerName} /></Suspense>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 animate-page-enter relative">
+        <main className="flex-1 overflow-y-auto p-4 pb-28 md:pb-4 lg:p-6 lg:pb-6 animate-page-enter relative">
           {children}
         </main>
         

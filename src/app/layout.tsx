@@ -5,6 +5,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: "#3b82f6",
 };
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -29,7 +30,7 @@ import { pengaturan, users } from "@/db/schema";
 import { eq, inArray, and } from "drizzle-orm";
 import { getServerTenantId } from "@/server/auth";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap", preload: true });
 
 export const dynamic = "force-dynamic";
 
