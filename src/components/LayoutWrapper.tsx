@@ -6,18 +6,14 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/components/AppSidebar";
 import { Search, ChevronRight } from "lucide-react";
 
-// Dynamic imports untuk komponen berat — hanya load saat dibutuhkan
-const HeaderProfile = lazy(() => import("@/components/HeaderProfile").then(m => ({ default: m.HeaderProfile })));
-const LanguageSwitcher = lazy(() => import("@/components/LanguageSwitcher").then(m => ({ default: m.LanguageSwitcher })));
-const CurrentDate = lazy(() => import("@/components/CurrentDate").then(m => ({ default: m.CurrentDate })));
-const UpdateButton = lazy(() => import("@/components/UpdateButton").then(m => ({ default: m.UpdateButton })));
-const AboutApp = lazy(() => import("@/components/AboutApp").then(m => ({ default: m.AboutApp })));
-const AiTopIndicator = lazy(() => import("@/components/AiTopIndicator").then(m => ({ default: m.AiTopIndicator })));
-const MobileBottomNav = lazy(() => import("@/components/MobileBottomNav").then(m => ({ default: m.MobileBottomNav })));
-const ThemeToggle = lazy(() => import("@/components/ThemeToggle").then(m => ({ default: m.ThemeToggle })));
-
-// Placeholder statis untuk menghindari layout shift
-const LazyFallback = () => <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />;
+import { HeaderProfile } from "@/components/HeaderProfile";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { CurrentDate } from "@/components/CurrentDate";
+import { UpdateButton } from "@/components/UpdateButton";
+import { AboutApp } from "@/components/AboutApp";
+import { AiTopIndicator } from "@/components/AiTopIndicator";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -105,20 +101,20 @@ export function LayoutWrapper({
           
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
             <div className="block">
-              <Suspense fallback={null}><AiTopIndicator active={hasAiKey} /></Suspense>
+              <AiTopIndicator active={hasAiKey} />
             </div>
             <div className="hidden sm:block">
-              <Suspense fallback={null}><UpdateButton /></Suspense>
+              <UpdateButton />
             </div>
             <div className="hidden md:block">
-              <Suspense fallback={null}><CurrentDate /></Suspense>
+              <CurrentDate />
             </div>
-            <Suspense fallback={null}><LanguageSwitcher /></Suspense>
+            <LanguageSwitcher />
             <div className="hidden sm:block">
-              <Suspense fallback={null}><AboutApp /></Suspense>
+              <AboutApp />
             </div>
-            <Suspense fallback={<LazyFallback />}><ThemeToggle /></Suspense>
-            <Suspense fallback={<LazyFallback />}><HeaderProfile ownerName={ownerName} /></Suspense>
+            <ThemeToggle />
+            <HeaderProfile ownerName={ownerName} />
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 pb-28 md:pb-4 lg:p-6 lg:pb-6 animate-page-enter relative">
@@ -147,7 +143,7 @@ export function LayoutWrapper({
         </footer>
         
         {/* Mobile Navigation */}
-        <Suspense fallback={null}><MobileBottomNav /></Suspense>
+        <MobileBottomNav />
       </SidebarInset>
     </SidebarProvider>
   );
