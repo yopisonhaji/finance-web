@@ -153,7 +153,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
         </Card>
 
         {/* Tengah: Daftar Tunggakan Teratas */}
-        <Card className="xl:col-span-6 bg-[var(--color-dash-panel)] border-slate-300 dark:border-slate-700/50 flex flex-col h-[400px] transition-all hover:border-slate-600/50">
+        <Card className="xl:col-span-6 bg-[var(--color-dash-panel)] border-slate-300 dark:border-slate-700/50 flex flex-col min-h-[400px] transition-all hover:border-slate-600/50">
           <div className="p-5 border-b border-slate-200 dark:border-slate-800/60 pb-3 flex justify-between items-center">
             <h3 className="font-semibold text-slate-900 dark:text-white text-sm flex items-center gap-2">
               <FileText className="w-4 h-4 text-rose-400" />
@@ -187,7 +187,7 @@ export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: Dashboar
         </Card>
 
         {/* Kanan: Riwayat Transaksi & Status Layanan */}
-        <div className="xl:col-span-3 flex flex-col gap-6 h-[400px]">
+        <div className="xl:col-span-3 flex flex-col gap-6 min-h-[400px]">
           <Card className="bg-[var(--color-dash-panel)] border-slate-300 dark:border-slate-700/50 flex flex-col flex-1 hover:border-slate-600/50 transition-colors">
             <div className="p-5 border-b border-slate-200 dark:border-slate-800/60 pb-3 flex justify-between items-center">
               <h3 className="font-semibold text-slate-900 dark:text-white text-sm flex items-center gap-2">

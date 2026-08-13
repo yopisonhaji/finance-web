@@ -172,7 +172,7 @@ export default function PencairanClient({ saldo, riwayatMasuk, riwayatTarik, ban
             <CardContent>
               <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden w-full">
                 <div className="overflow-x-auto w-full">
-                  <table className="w-full text-sm text-left min-w-full sm:min-w-[500px]">
+                  <table className="w-full text-sm text-left min-w-[500px]">
                     <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300">
                       <tr>
                         <th className="px-3 sm:px-4 py-2.5 sm:py-3 font-semibold text-xs sm:text-sm whitespace-nowrap">Tanggal & Waktu</th>
