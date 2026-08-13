@@ -33,7 +33,6 @@
   --color-accent-orange: #f59e0b;
   --color-accent-purple: #8b5cf6;
   
-  --animate-page-enter: pageEnter 260ms ease-out;
   --animate-status-pulse: statusPulse 2s ease-in-out infinite;
 }
 
@@ -49,16 +48,9 @@ body {
   text-rendering: optimizeSpeed;
 }
 
-/* Perf: hint browser to skip rendering off-screen elements (kecuali bottom nav yg ada FAB) */
-main > :not([data-bottom-nav]) {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
-}
+/* Perf: hint browser removed due to pop-in issues */
 
-@keyframes pageEnter {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+
 
 @keyframes statusPulse {
   0%, 100% { opacity: 0.55; transform: scale(1); }

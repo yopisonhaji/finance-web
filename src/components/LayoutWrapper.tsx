@@ -117,7 +117,7 @@ export function LayoutWrapper({
             <HeaderProfile ownerName={ownerName} />
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 pb-28 md:pb-4 lg:p-6 lg:pb-6 animate-page-enter relative">
+        <main className="flex-1 overflow-y-auto p-4 pb-28 md:pb-4 lg:p-6 lg:pb-6 relative">
           {children}
         </main>
         
