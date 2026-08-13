@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Upload, Trash2, Image as ImageIcon, FileText, Loader2, Pencil, Check, X, Eye } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -326,12 +327,14 @@ export function MediaAIGallery() {
                       className="absolute inset-0 z-10 cursor-pointer"
                       onClick={() => setPreviewMedia(media)}
                     >
-                     <img 
+                     <Image 
                        src={media.urlFile.includes('localhost') || media.urlFile.includes('127.0.0.1') || media.urlFile.includes('195.88.211.117') || media.urlFile.startsWith('/')
                          ? `/api/media-proxy?url=${encodeURIComponent(media.urlFile)}` 
                          : media.urlFile} 
                        alt={media.namaFile}
-                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 shadow-sm bg-slate-200 dark:bg-slate-800"
+                       fill
+                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                       className="object-cover transition-transform duration-500 group-hover:scale-110 shadow-sm bg-slate-200 dark:bg-slate-800"
                      />
                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                        <Eye className="w-8 h-8 text-white drop-shadow-md" />
@@ -407,12 +410,13 @@ export function MediaAIGallery() {
           <DialogDescription className="sr-only">Pratinjau gambar ukuran penuh</DialogDescription>
           {previewMedia && (
             <div className="relative w-full h-[70vh] flex items-center justify-center bg-slate-900 rounded-b-lg overflow-hidden">
-              <img
+              <Image
                 src={previewMedia.urlFile.includes('localhost') || previewMedia.urlFile.includes('127.0.0.1') || previewMedia.urlFile.includes('195.88.211.117') || previewMedia.urlFile.startsWith('/')
                   ? `/api/media-proxy?url=${encodeURIComponent(previewMedia.urlFile)}` 
                   : previewMedia.urlFile}
                 alt={previewMedia.namaFile}
-                className="max-w-full max-h-full object-contain"
+                fill
+                className="object-contain"
               />
             </div>
           )}

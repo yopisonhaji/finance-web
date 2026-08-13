@@ -1,9 +1,11 @@
 import { getSantri } from "./actions"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
+import { SantriMobileList } from "./SantriMobileList"
+import { Suspense } from "react"
+import { SkeletonTable } from '@/components/ui/skeleton-cards'
 import { AddSantriDialog } from "./AddSantriDialog"
 import { ImportExcelDialog } from "./ImportExcelDialog"
-import { SantriMobileList } from "./SantriMobileList"
 import { db } from "@/db"
 import { pengaturan } from "@/db/schema"
 import { eq } from "drizzle-orm"
@@ -31,11 +33,15 @@ export default async function SantriPage() {
       
       {/* Desktop Table View */}
       <div className="hidden md:block flex-1 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white rounded-xl border border-slate-300 dark:border-slate-700 shadow-2xl p-4 sm:p-6 overflow-hidden">
-        <DataTable columns={columns} data={data} />
+        <Suspense fallback={<SkeletonTable />}>
+          <DataTable columns={columns} data={data} />
+        </Suspense>
       </div>
 
       {/* Mobile Card List View */}
-      <SantriMobileList data={data} />
+      <Suspense fallback={<SkeletonTable />}>
+        <SantriMobileList data={data} />
+      </Suspense>
     </div>
   )
 }

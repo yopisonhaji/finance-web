@@ -1,23 +1,30 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { KasirSearch } from "@/components/kasir/KasirSearch"
-import { PaymentPanel } from "@/components/kasir/PaymentPanel"
+import { useState } from "react"
+import dynamic from "next/dynamic"
+import { useQuery } from "@tanstack/react-query"
 import { TranslatedText } from "@/components/TranslatedText"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const KasirSearch = dynamic(() => import("@/components/kasir/KasirSearch").then(m => ({ default: m.KasirSearch })), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[500px] w-full rounded-xl" />
+})
+
+const PaymentPanel = dynamic(() => import("@/components/kasir/PaymentPanel").then(m => ({ default: m.PaymentPanel })), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[500px] w-full rounded-xl" />
+})
 import { getSantri, Santri } from "@/app/santri/actions"
 
 export default function KasirPage() {
-  const [santriList, setSantriList] = useState<Santri[]>([])
   const [selectedSantri, setSelectedSantri] = useState<Santri | null>(null)
 
-  useEffect(() => {
-    // Memuat data santri dari server action (saat ini mock data)
-    async function loadData() {
-      const data = await getSantri()
-      setSantriList(data)
-    }
-    loadData()
-  }, [])
+  const { data: santriList = [] } = useQuery({
+    queryKey: ['santriList'],
+    queryFn: () => getSantri(),
+    staleTime: 5 * 60 * 1000 // Cache for 5 minutes
+  })
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">

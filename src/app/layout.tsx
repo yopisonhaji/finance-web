@@ -12,6 +12,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppConfigProvider } from "@/contexts/AppConfigContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -114,19 +115,21 @@ export default async function RootLayout({
     return (
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} min-h-screen bg-slate-50 antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
-              <LanguageProvider>
-                <SetupScreen />
-                <div style={{ display: 'none' }}>{children}</div>
-              </LanguageProvider>
-            </AppConfigProvider>
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
+                <LanguageProvider>
+                  <SetupScreen />
+                  <div style={{ display: 'none' }}>{children}</div>
+                </LanguageProvider>
+              </AppConfigProvider>
+            </ThemeProvider>
+          </QueryProvider>
         </body>
       </html>
     );
@@ -135,25 +138,27 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen bg-[var(--color-dash-bg)] text-slate-900 dark:text-white antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
-            <LanguageProvider>
-              <LayoutWrapper 
-                namaLembaga={namaLembaga} 
-                alamatLembaga={alamatLembaga} 
-                hasAiKey={hasAiKey} 
-                ownerName={ownerName}
-              >
-                {children}
-              </LayoutWrapper>
-            </LanguageProvider>
-          </AppConfigProvider>
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AppConfigProvider initialTipeBisnis={tipeBisnis} initialPaymentMode={paymentMode}>
+              <LanguageProvider>
+                <LayoutWrapper 
+                  namaLembaga={namaLembaga} 
+                  alamatLembaga={alamatLembaga} 
+                  hasAiKey={hasAiKey} 
+                  ownerName={ownerName}
+                >
+                  {children}
+                </LayoutWrapper>
+              </LanguageProvider>
+            </AppConfigProvider>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

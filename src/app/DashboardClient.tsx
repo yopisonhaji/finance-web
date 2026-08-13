@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Users, FileText, Wallet, KeyRound, Bot, MessageSquareShare } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAppConfig } from "@/contexts/AppConfigContext"
-import { useState, useEffect } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { getDashboardStats } from "@/app/actions/dashboard"
 
 interface DashboardClientProps {
@@ -16,24 +16,20 @@ interface DashboardClientProps {
 export function DashboardClient({ hasAiKey, hasIpaymuKey, isWaActive }: DashboardClientProps) {
   const { t } = useLanguage()
   const { clientTerm, paymentMode } = useAppConfig()
-  const [stats, setStats] = useState({
+  const { data: res } = useQuery({
+    queryKey: ['dashboardStats'],
+    queryFn: () => getDashboardStats(),
+    staleTime: 5 * 60 * 1000 // Cache for 5 minutes
+  })
+
+  const stats = res?.data || {
     totalSantri: 0,
     totalKekurangan: 0,
     pemasukanHariIni: 0,
     persentase: 0,
     lunasCount: 0,
     nunggakCount: 0
-  })
-
-  useEffect(() => {
-    async function fetchStats() {
-      const res = await getDashboardStats()
-      if (res.success && res.data) {
-        setStats(res.data)
-      }
-    }
-    fetchStats()
-  }, [])
+  }
 
   return (
     <div className="space-y-6">

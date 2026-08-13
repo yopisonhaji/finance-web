@@ -19,10 +19,24 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
   
-  // Image optimization (tetap unoptimized untuk standalone mode)
+  // Image optimization 
   images: {
-    unoptimized: true,
+    unoptimized: false,
     minimumCacheTTL: 86400, // 24 jam cache
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '195.88.211.117',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.r2.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pub-*.r2.dev',
+      }
+    ],
   },
   
   // Cache static assets lebih lama  
