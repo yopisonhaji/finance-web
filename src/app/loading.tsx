@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function Loading() {
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6 w-full max-w-7xl mx-auto animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 p-4 md:p-6 w-full max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
         <Skeleton className="h-10 w-48" />
         <Skeleton className="h-10 w-10 md:w-32" />

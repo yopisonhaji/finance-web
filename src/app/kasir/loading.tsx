@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function KasirLoading() {
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6 w-full max-w-7xl mx-auto animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 p-4 md:p-6 w-full max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <Skeleton className="h-10 w-48 mb-2" />
