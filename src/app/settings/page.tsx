@@ -14,7 +14,7 @@ export default async function SettingsPage() {
         </p>
       </div>
 
-      <SettingsTabs initialData={initialData} />
+      <SettingsTabs initialData={initialData} isGuest={initialData.is_guest === "true"} />
     </div>
   )
 }

@@ -67,6 +67,16 @@ export function LayoutWrapper({
         if (diff <= 0) {
           setTimeLeft("Waktu Habis");
           clearInterval(timer);
+          
+          if (!localStorage.getItem("guest_auto_logout_done")) {
+             localStorage.setItem("guest_auto_logout_done", "true");
+             const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://195.88.211.117:8080";
+             const token = localStorage.getItem("token") || "";
+             fetch(`${botUrl}/api/wa/logout`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+             }).catch(() => {});
+          }
         } else {
           const h = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
           const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
@@ -91,6 +101,16 @@ export function LayoutWrapper({
         }
         if (data.token_exhausted === true) {
           setShowTokenExhaustedModal(true);
+          
+          if (isGuest && !localStorage.getItem("guest_auto_logout_done")) {
+             localStorage.setItem("guest_auto_logout_done", "true");
+             const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "http://195.88.211.117:8080";
+             const token = localStorage.getItem("token") || "";
+             fetch(`${botUrl}/api/wa/logout`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+             }).catch(() => {});
+          }
         }
       } catch (e) {
         // Ignore network errors
