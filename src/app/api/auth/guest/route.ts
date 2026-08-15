@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     // Generate Guest Tenant ID
-    const newTenantId = crypto.randomUUID();
+    const newTenantId = "guest-" + crypto.randomUUID();
     const masterDeepseekKey = process.env.MASTER_DEEPSEEK_KEY || "sk-default-dummy-key";
     const aiDefaultPrompt = "Anda adalah asisten virtual resmi yang ramah. Bantu pengguna dengan informasi layanan dan produk.";
 
