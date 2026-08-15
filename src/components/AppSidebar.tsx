@@ -236,13 +236,13 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
             <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
               <Lock className="w-6 h-6 text-orange-600 dark:text-blue-400" />
             </div>
-            <DialogTitle className="text-center text-xl text-slate-900 dark:text-white">Fitur Terkunci (Premium)</DialogTitle>
-            <DialogDescription className="text-center text-md mt-2 font-medium">
-              Maaf, fitur <strong>{lockedFeatureName}</strong> hanya tersedia untuk akun resmi (Premium).
+            <DialogTitle className="text-center text-xl font-bold text-slate-900 dark:text-white">Fitur Terkunci (Premium)</DialogTitle>
+            <DialogDescription className="text-center text-base mt-3 font-medium text-slate-800 dark:text-slate-200">
+              Maaf, fitur <strong className="text-orange-600 dark:text-blue-400 font-bold text-lg">{lockedFeatureName}</strong> hanya tersedia untuk akun resmi (Premium).
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4 text-center text-sm text-slate-600 dark:text-slate-400">
-            Daftar sekarang secara gratis untuk membuka seluruh fitur aplikasi dan rasakan kemudahannya!
+          <div className="py-4 text-center text-[15px] leading-relaxed font-medium text-slate-700 dark:text-slate-300">
+            Daftar sekarang secara <span className="font-bold text-emerald-600 dark:text-emerald-400">gratis</span> untuk membuka seluruh fitur aplikasi dan rasakan kemudahannya!
           </div>
           <DialogFooter className="sm:justify-center flex-col space-y-2 w-full sm:flex-col sm:space-x-0">
             <Button type="button" className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold h-11" onClick={() => window.location.href = '/register'}>
