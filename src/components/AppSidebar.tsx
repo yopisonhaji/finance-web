@@ -231,27 +231,32 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
 
       {/* Premium Feature Lock Dialog */}
       <Dialog open={showPremiumLock} onOpenChange={setShowPremiumLock}>
-        <DialogContent className="sm:max-w-md border-orange-500/20 dark:border-blue-500/20">
-          <DialogHeader>
-            <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6 text-orange-600 dark:text-blue-400" />
+        <DialogContent className="sm:max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-0 overflow-hidden z-[100]">
+          <div className="bg-gradient-to-br from-orange-50 to-white dark:from-slate-800 dark:to-slate-900 px-6 py-8 flex flex-col items-center border-b border-slate-100 dark:border-slate-800">
+            <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mb-5 shadow-[0_0_20px_rgba(234,88,12,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.15)] border border-orange-100 dark:border-blue-900/50">
+              <Lock className="w-8 h-8 text-orange-600 dark:text-blue-400" />
             </div>
-            <DialogTitle className="text-center text-xl font-bold text-slate-900 dark:text-white">Fitur Terkunci (Premium)</DialogTitle>
-            <DialogDescription className="text-center text-base mt-3 font-medium text-slate-800 dark:text-slate-200">
-              Maaf, fitur <strong className="text-orange-600 dark:text-blue-400 font-bold text-lg">{lockedFeatureName}</strong> hanya tersedia untuk akun resmi (Premium).
+            <DialogTitle className="text-center text-2xl font-black tracking-tight text-slate-900 dark:text-white mb-2">
+              Fitur Terkunci
+            </DialogTitle>
+            <DialogDescription className="text-center text-base leading-relaxed font-medium text-slate-600 dark:text-slate-300">
+              Maaf, menu <span className="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-bold mx-1 border border-slate-200 dark:border-slate-700 shadow-sm">{lockedFeatureName}</span> merupakan fitur premium.
             </DialogDescription>
-          </DialogHeader>
-          <div className="py-4 text-center text-[15px] leading-relaxed font-medium text-slate-700 dark:text-slate-300">
-            Daftar sekarang secara <span className="font-bold text-emerald-600 dark:text-emerald-400">gratis</span> untuk membuka seluruh fitur aplikasi dan rasakan kemudahannya!
           </div>
-          <DialogFooter className="sm:justify-center flex-col space-y-2 w-full sm:flex-col sm:space-x-0">
-            <Button type="button" className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold h-11" onClick={() => window.location.href = '/register'}>
-              Buka Kunci (Daftar Sekarang)
-            </Button>
-            <Button type="button" variant="ghost" className="w-full h-11" onClick={() => setShowPremiumLock(false)}>
-              Nanti Saja
-            </Button>
-          </DialogFooter>
+          
+          <div className="px-6 py-5 bg-slate-50/50 dark:bg-slate-900/50 text-center">
+            <p className="text-[14px] leading-relaxed font-medium text-slate-700 dark:text-slate-300 mb-5">
+              Daftar sekarang secara <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-md mx-1">GRATIS</span> untuk membuka seluruh fitur & keajaiban AI kami!
+            </p>
+            <div className="flex flex-col space-y-3 w-full">
+              <Button type="button" className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 text-white font-bold h-12 text-[15px] shadow-lg shadow-orange-600/20 dark:shadow-blue-600/20 rounded-xl transition-all hover:scale-[1.02]" onClick={() => window.location.href = '/register'}>
+                Buka Kunci Sekarang
+              </Button>
+              <Button type="button" variant="ghost" className="w-full h-11 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium rounded-xl" onClick={() => setShowPremiumLock(false)}>
+                Nanti Saja, Lanjut Uji Coba
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </Sidebar>
