@@ -12,6 +12,7 @@
     "@aws-sdk/client-s3": "^3.1108.0",
     "@aws-sdk/s3-request-presigner": "^3.1108.0",
     "@base-ui/react": "^1.6.0",
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@hookform/resolvers": "^5.4.0",
     "@libsql/client": "^0.17.4",
     "@radix-ui/react-label": "^2.1.13",

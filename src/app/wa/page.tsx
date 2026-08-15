@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import fpPromise from '@fingerprintjs/fingerprintjs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -35,10 +36,15 @@ export default function StatusWAPage() {
         // Mode Demo: Coba buat sesi Guest
         let deviceId = localStorage.getItem("device_id");
         if (!deviceId) {
-          deviceId = typeof crypto !== 'undefined' && crypto.randomUUID 
-            ? crypto.randomUUID() 
-            : 'guest-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-          localStorage.setItem("device_id", deviceId);
+          try {
+            const fp = await fpPromise.load();
+            const result = await fp.get();
+            deviceId = 'guest-' + result.visitorId;
+            localStorage.setItem("device_id", deviceId);
+          } catch (e) {
+            deviceId = 'guest-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem("device_id", deviceId);
+          }
         }
         
         try {
