@@ -60,7 +60,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const tenantId = await getServerTenantId();
-  const isGuest = tenantId?.startsWith("guest-") || false;
+  let isGuest = tenantId?.startsWith("guest-") || false;
   
   let settingsData: any[] = [];
   if (tenantId) {
@@ -98,7 +98,7 @@ export default async function RootLayout({
   isFreshInstall = usersCheck.length === 0;
 
   if (tenantId && !isFreshInstall) {
-    const currentTenant = await db.select({ id: users.id }).from(users).where(eq(users.tenantId, tenantId)).limit(1);
+    const currentTenant = await db.select({ id: users.id, role: users.role }).from(users).where(eq(users.tenantId, tenantId)).limit(1);
     isTenantExist = currentTenant.length > 0;
     
     if (!isTenantExist) {
@@ -109,6 +109,10 @@ export default async function RootLayout({
           </body>
         </html>
       );
+    }
+
+    if (currentTenant[0].role === "GUEST") {
+      isGuest = true;
     }
   }
 
