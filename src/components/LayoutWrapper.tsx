@@ -190,7 +190,22 @@ export function LayoutWrapper({
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 pb-28 md:pb-4 lg:p-6 lg:pb-6 relative">
-          {children}
+          {isGuest && !["/", "/wa", "/settings"].includes(pathname) && !pathname.startsWith("/wa/") && !pathname.startsWith("/settings/") ? (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+              <div className="w-20 h-20 bg-orange-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                <AlertTriangle className="w-10 h-10 text-orange-600 dark:text-blue-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Akses Dibatasi</h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-md mb-8">
+                Halaman ini adalah fitur premium yang tidak tersedia dalam mode uji coba (Guest Mode). Silakan mendaftar untuk mengakses.
+              </p>
+              <Button onClick={() => window.location.href = '/register'} className="bg-orange-600 hover:bg-orange-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold h-12 px-8 rounded-xl">
+                Daftar Akun Sekarang
+              </Button>
+            </div>
+          ) : (
+            children
+          )}
         </main>
         
         {/* Footer v08.10 - Quote & Info */}
@@ -215,7 +230,7 @@ export function LayoutWrapper({
         </footer>
         
         {/* Mobile Navigation */}
-        <MobileBottomNav />
+        <MobileBottomNav isGuest={isGuest} />
 
         {/* Token Exhausted Modal (GuestGate) */}
         <Dialog open={showTokenExhaustedModal} onOpenChange={() => {}}>
