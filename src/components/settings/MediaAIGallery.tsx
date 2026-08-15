@@ -50,8 +50,48 @@ export function MediaAIGallery() {
     fetchMedia()
   }, [])
 
+  // Helper function to validate file magic number (header signature)
+  const validateMagicNumber = async (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = function(e) {
+        if (!e.target || !e.target.result) {
+          resolve(false);
+          return;
+        }
+        
+        const arr = new Uint8Array(e.target.result as ArrayBuffer);
+        let header = "";
+        for (let i = 0; i < arr.length; i++) {
+          header += arr[i].toString(16).padStart(2, '0').toUpperCase();
+        }
+        
+        // Allowed Signatures:
+        // JPEG/JPG: FFD8FF
+        // PNG: 89504E47
+        // PDF: 25504446
+        // WEBP/WAV: 52494646 (RIFF)
+        // GIF: 47494638 (GIF8)
+        if (
+          header.startsWith("FFD8FF") || 
+          header.startsWith("89504E47") || 
+          header.startsWith("25504446") || 
+          header.startsWith("52494646") ||
+          header.startsWith("47494638")
+        ) {
+          resolve(true);
+        } else {
+          console.warn("File signature ditolak:", header);
+          resolve(false);
+        }
+      };
+      reader.onerror = () => resolve(false);
+      // Read first 4 bytes
+      reader.readAsArrayBuffer(file.slice(0, 4));
+    });
+  };
+
   const handleUpload = async () => {
-    if (!file) return alert("Silakan pilih file terlebih dahulu")
     if (!file) {
       alert("Pilih file terlebih dahulu")
       return
@@ -63,6 +103,14 @@ export function MediaAIGallery() {
     }
 
     setUploading(true)
+
+    // Validasi Magic Number (Keamanan Anti-Malware)
+    const isSafe = await validateMagicNumber(file);
+    if (!isSafe) {
+      alert("Akses ditolak: File terdeteksi sebagai file berbahaya atau format tidak didukung.");
+      setUploading(false);
+      return;
+    }
 
     try {
       // 1. Dapatkan Token dan Bot URL (Atau Presigned URL R2)

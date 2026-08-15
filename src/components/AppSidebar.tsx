@@ -26,6 +26,17 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Lock } from "lucide-react"
 
 import { useLanguage } from "@/contexts/LanguageContext"
 import { useAppConfig } from "@/contexts/AppConfigContext"
@@ -114,11 +125,14 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string, paymentMod
   }
 ];
 
-export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ownerName = "Admin" }: { namaPesantren?: string, alamatPesantren?: string, ownerName?: string }) {
+export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ownerName = "Admin", isGuest = false }: { namaPesantren?: string, alamatPesantren?: string, ownerName?: string, isGuest?: boolean }) {
   const pathname = usePathname();
   const { t, language } = useLanguage();
   const { clientTerm, paymentMode } = useAppConfig();
   const groups = getNavGroups(t, clientTerm, paymentMode);
+
+  const [showPremiumLock, setShowPremiumLock] = useState(false);
+  const [lockedFeatureName, setLockedFeatureName] = useState("");
 
   return (
     <Sidebar side={language === 'ar' ? 'right' : 'left'} variant="sidebar" collapsible="icon" className="border-r border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)] hidden md:flex">
@@ -148,37 +162,57 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
               <SidebarMenu className="gap-1">
                 {group.items.map((item) => {
                   const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
+                  const isLocked = isGuest && !["/", "/wa", "/settings"].includes(item.url);
+                  
                   return (
                     <SidebarMenuItem key={item.title}>
                       {/* @ts-ignore */}
                       <SidebarMenuButton asChild tooltip={item.title} className="h-auto p-0 hover:bg-transparent">
-                        <Link 
-                          href={item.url} 
-                          className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
-                            isActive 
-                              ? 'bg-orange-500 dark:bg-blue-500/10 text-white border border-orange-500 dark:border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
-                              : 'text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hover:bg-[#1e293b] border border-transparent'
-                          }`}
-                        >
-                          {isActive && (
-                            <>
-                              <div className="absolute inset-0 bg-orange-500 dark:bg-blue-500/5 rounded-lg"></div>
-                              <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
-                            </>
-                          )}
-                          
-                          <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 shrink-0 ${
-                            isActive 
-                              ? 'bg-orange-500 dark:bg-blue-500/20 text-white border border-orange-500 dark:border-blue-500/30' 
-                              : `bg-slate-100 dark:bg-slate-800/30 ${item.color} group-hover:bg-slate-700/50 ${item.hoverColor}`
-                          }`}>
-                            <item.icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
-                          </div>
-                          
-                          <span className={`relative z-10 font-medium tracking-wide transition-all duration-200 text-[13px] group-data-[collapsible=icon]:hidden ${isActive ? 'font-semibold text-slate-900 dark:text-white' : item.hoverColor}`}>
-                            {item.title}
-                          </span>
-                        </Link>
+                        {isLocked ? (
+                          <button 
+                            onClick={() => {
+                              setLockedFeatureName(item.title);
+                              setShowPremiumLock(true);
+                            }}
+                            className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden text-slate-400 dark:text-slate-500 font-medium hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer`}
+                          >
+                            <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 shrink-0 bg-slate-100/50 dark:bg-slate-800/30 text-slate-400`}>
+                              <Lock className={`w-4 h-4 transition-transform duration-200`} />
+                            </div>
+                            
+                            <span className={`relative z-10 flex-1 text-left font-medium tracking-wide transition-all duration-200 text-[13px] group-data-[collapsible=icon]:hidden text-slate-400 line-through decoration-slate-300 dark:decoration-slate-600`}>
+                              {item.title}
+                            </span>
+                          </button>
+                        ) : (
+                          <Link 
+                            href={item.url} 
+                            className={`group relative flex items-center w-full gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 overflow-hidden ${
+                              isActive 
+                                ? 'bg-orange-500 dark:bg-blue-500/10 text-white border border-orange-500 dark:border-blue-500/20 shadow-[0_2px_10px_rgba(59,130,246,0.1)]' 
+                                : 'text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hover:bg-[#1e293b] border border-transparent'
+                            }`}
+                          >
+                            {isActive && (
+                              <>
+                                <div className="absolute inset-0 bg-orange-500 dark:bg-blue-500/5 rounded-lg"></div>
+                                <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
+                              </>
+                            )}
+                            
+                            <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200 shrink-0 ${
+                              isActive 
+                                ? 'bg-orange-500 dark:bg-blue-500/20 text-white border border-orange-500 dark:border-blue-500/30' 
+                                : `bg-slate-100 dark:bg-slate-800/30 ${item.color} group-hover:bg-slate-700/50 ${item.hoverColor}`
+                            }`}>
+                              <item.icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-105'}`} />
+                            </div>
+                            
+                            <span className={`relative z-10 font-medium tracking-wide transition-all duration-200 text-[13px] group-data-[collapsible=icon]:hidden ${isActive ? 'font-semibold text-slate-900 dark:text-white' : item.hoverColor}`}>
+                              {item.title}
+                            </span>
+                          </Link>
+                        )}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -194,6 +228,32 @@ export function AppSidebar({ namaPesantren = "Finance", alamatPesantren = "", ow
           <a href="https://satujalan.id" target="_blank" rel="noopener noreferrer" className="text-orange-500 dark:text-blue-400 hover:underline">satujalan.id</a>
         </div>
       </SidebarFooter>
+
+      {/* Premium Feature Lock Dialog */}
+      <Dialog open={showPremiumLock} onOpenChange={setShowPremiumLock}>
+        <DialogContent className="sm:max-w-md border-orange-500/20 dark:border-blue-500/20">
+          <DialogHeader>
+            <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6 text-orange-600 dark:text-blue-400" />
+            </div>
+            <DialogTitle className="text-center text-xl text-slate-900 dark:text-white">Fitur Terkunci (Premium)</DialogTitle>
+            <DialogDescription className="text-center text-md mt-2 font-medium">
+              Maaf, fitur <strong>{lockedFeatureName}</strong> hanya tersedia untuk akun resmi (Premium).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 text-center text-sm text-slate-600 dark:text-slate-400">
+            Daftar sekarang secara gratis untuk membuka seluruh fitur aplikasi dan rasakan kemudahannya!
+          </div>
+          <DialogFooter className="sm:justify-center flex-col space-y-2 w-full sm:flex-col sm:space-x-0">
+            <Button type="button" className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold h-11" onClick={() => window.location.href = '/register'}>
+              Buka Kunci (Daftar Sekarang)
+            </Button>
+            <Button type="button" variant="ghost" className="w-full h-11" onClick={() => setShowPremiumLock(false)}>
+              Nanti Saja
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   )
 }

@@ -60,6 +60,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const tenantId = await getServerTenantId();
+  const isGuest = tenantId?.startsWith("guest-") || false;
   
   let settingsData: any[] = [];
   if (tenantId) {
@@ -152,6 +153,7 @@ export default async function RootLayout({
                   alamatLembaga={alamatLembaga} 
                   hasAiKey={hasAiKey} 
                   ownerName={ownerName}
+                  isGuest={isGuest}
                 >
                   {children}
                 </LayoutWrapper>

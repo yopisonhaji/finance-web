@@ -13,6 +13,16 @@ export function middleware(request: NextRequest) {
   }
 
   if (!token && !isAuthPage && !isOnboarding && !isRegisterPage) {
+    if (request.nextUrl.pathname === '/') {
+      console.log(`MIDDLEWARE REDIRECTING ROOT TO /wa`);
+      return NextResponse.redirect(new URL('/wa', request.url));
+    }
+    
+    // Allow public access to /wa for demo
+    if (request.nextUrl.pathname.startsWith('/wa')) {
+      return NextResponse.next();
+    }
+
     console.log(`MIDDLEWARE REDIRECTING TO LOGIN from: ${request.nextUrl.pathname}`);
     return NextResponse.redirect(new URL('/login', request.url));
   }

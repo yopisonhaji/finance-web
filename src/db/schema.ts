@@ -99,3 +99,12 @@ export const meta_messages = sqliteTable('meta_messages', {
   isEcho: integer('is_echo').default(0), // 1 if this message was sent by the page
   createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
 });
+
+export const wa_messages = sqliteTable('wa_messages', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  noWa: text('no_wa').notNull(),
+  pesan: text('pesan').notNull(),
+  pengirim: text('pengirim').notNull(), // 'USER' atau 'BOT'
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+});

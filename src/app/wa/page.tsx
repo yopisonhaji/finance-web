@@ -5,6 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Smartphone, RefreshCcw, Wifi, WifiOff, LogOut, CheckCircle2, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
 export default function StatusWAPage() {
   const [status, setStatus] = useState<string>("disconnected")
@@ -13,6 +21,8 @@ export default function StatusWAPage() {
   const [pairingCode, setPairingCode] = useState<string>("")
   const [loading, setLoading] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const [showGuestLimit, setShowGuestLimit] = useState(false)
+  const [guestLimitMsg, setGuestLimitMsg] = useState("")
 
 
   const botUrl = process.env.NEXT_PUBLIC_BOT_URL || "/api-bot";
@@ -20,6 +30,39 @@ export default function StatusWAPage() {
   const fetchStatus = async () => {
     try {
       const token = localStorage.getItem("token") || ""
+      
+      if (!token) {
+        // Mode Demo: Coba buat sesi Guest
+        let deviceId = localStorage.getItem("device_id");
+        if (!deviceId) {
+          deviceId = typeof crypto !== 'undefined' && crypto.randomUUID 
+            ? crypto.randomUUID() 
+            : 'guest-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          localStorage.setItem("device_id", deviceId);
+        }
+        
+        try {
+          const guestRes = await fetch("/api/auth/guest", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deviceId })
+          });
+          const guestData = await guestRes.json();
+          if (guestRes.ok && guestData.token) {
+            localStorage.setItem("token", guestData.token);
+            window.location.reload();
+            return;
+          } else {
+            setGuestLimitMsg("Anda sudah pernah menggunakan batas percobaan gratis di perangkat ini.");
+            setShowGuestLimit(true);
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to create guest:", err);
+          return;
+        }
+      }
+
       const res = await fetch(`${botUrl}/api/wa/status?t=${Date.now()}`, { 
         cache: "no-store",
         headers: {
@@ -274,6 +317,29 @@ export default function StatusWAPage() {
         </Card>
       </div>
 
+      <Dialog open={showGuestLimit} onOpenChange={setShowGuestLimit}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-slate-900 dark:text-white">Batas Percobaan Habis</DialogTitle>
+            <DialogDescription className="text-md mt-2">
+              {guestLimitMsg}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col space-y-4 py-4">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
+              Silakan buat akun resmi secara gratis untuk menghubungkan nomor WhatsApp Anda secara permanen dan menikmati seluruh fitur Finance AI.
+            </p>
+          </div>
+          <DialogFooter className="sm:justify-start flex-col space-y-2 w-full">
+            <Button type="button" className="w-full bg-orange-600 hover:bg-orange-700 text-white" onClick={() => window.location.href = '/register'}>
+              Daftar / Buat Akun Sekarang
+            </Button>
+            <Button type="button" variant="ghost" className="w-full text-slate-500 hover:text-slate-900" onClick={() => window.location.href = '/login'}>
+              Sudah punya akun? Login di sini
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,10 +1,19 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, AlertTriangle } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 import { HeaderProfile } from "@/components/HeaderProfile";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -21,6 +30,7 @@ interface LayoutWrapperProps {
   alamatLembaga: string;
   hasAiKey: boolean;
   ownerName: string;
+  isGuest?: boolean;
 }
 
 export function LayoutWrapper({ 
@@ -28,29 +38,64 @@ export function LayoutWrapper({
   namaLembaga, 
   alamatLembaga, 
   hasAiKey, 
-  ownerName 
+  ownerName,
+  isGuest = false
 }: LayoutWrapperProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/onboarding") || pathname.startsWith("/register");
+  
+  const [timeLeft, setTimeLeft] = useState<string>("");
+  const [showTokenExhaustedModal, setShowTokenExhaustedModal] = useState<boolean>(false);
 
   // Polling to detect if account was deleted via Telegram
   useEffect(() => {
     if (isAuthPage) return;
+    
+    // Countdown Timer untuk Guest
+    if (isGuest) {
+      let start = localStorage.getItem("guest_start_time");
+      if (!start) {
+        start = Date.now().toString();
+        localStorage.setItem("guest_start_time", start);
+      }
+      const endTime = parseInt(start) + 24 * 60 * 60 * 1000;
+      
+      const timer = setInterval(() => {
+        const now = Date.now();
+        const diff = endTime - now;
+        if (diff <= 0) {
+          setTimeLeft("Waktu Habis");
+          clearInterval(timer);
+        } else {
+          const h = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+          const s = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+          setTimeLeft(`${h}:${m}:${s}`);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+
     const interval = setInterval(async () => {
       try {
         const res = await fetch("/api/status", { cache: "no-store" });
         const data = await res.json();
         if (data.activated === false) {
-          // Account was deleted/deactivated! Kick user out.
-          localStorage.removeItem("token");
-          document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          window.location.href = "/";
+          // Account was deleted/deactivated! Kick user out, BUT NOT if they are on /wa (Public Guest terminal)
+          if (!pathname.startsWith('/wa')) {
+            localStorage.removeItem("token");
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = "/login";
+          }
+        }
+        if (data.token_exhausted === true) {
+          setShowTokenExhaustedModal(true);
         }
       } catch (e) {
         // Ignore network errors
       }
-    }, 30000);  // Poll tiap 30 detik (sebelumnya 5s, dikurangi utk performa)
+    }, 15000);  // Poll tiap 15 detik 
     return () => clearInterval(interval);
   }, [isAuthPage]);
 
@@ -72,9 +117,16 @@ export function LayoutWrapper({
 
   return (
     <SidebarProvider>
-      <AppSidebar namaPesantren={namaLembaga} alamatPesantren={alamatLembaga} ownerName={ownerName} />
-      <SidebarInset className="bg-[var(--color-background)] flex flex-col flex-1 w-full min-w-0 pb-[72px] md:pb-0">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/80 backdrop-blur-[10px] px-3 sm:px-4 lg:px-6 z-50 sticky top-0 shadow-sm gap-4">
+      <AppSidebar namaPesantren={namaLembaga} alamatPesantren={alamatLembaga} ownerName={ownerName} isGuest={isGuest} />
+      <SidebarInset className="bg-[var(--color-background)] flex flex-col flex-1 w-full min-w-0 pb-[72px] md:pb-0 relative">
+        {isGuest && timeLeft && (
+          <div className="bg-red-500 text-white text-center text-xs font-bold py-1.5 px-4 shadow-sm w-full sticky top-0 z-[60] flex items-center justify-center gap-2">
+            <span className="animate-pulse">🔴</span>
+            <span>Akses Uji Coba Gratis Anda Akan Hangus Dalam:</span>
+            <span className="font-mono text-sm tracking-wider bg-red-700/50 px-2 py-0.5 rounded">{timeLeft}</span>
+          </div>
+        )}
+        <header className={`flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800/60 bg-[var(--color-dash-bg)]/80 backdrop-blur-[10px] px-3 sm:px-4 lg:px-6 z-50 sticky ${isGuest ? 'top-[32px]' : 'top-0'} shadow-sm gap-4`}>
           <div className="flex items-center gap-2 sm:gap-4 flex-none">
             <SidebarTrigger className="text-slate-700 dark:text-slate-300 font-medium hover:text-slate-900 dark:text-white hidden md:flex" />
             <div className="hidden lg:flex items-center text-sm font-medium text-slate-700 dark:text-slate-300 font-medium">
@@ -144,6 +196,32 @@ export function LayoutWrapper({
         
         {/* Mobile Navigation */}
         <MobileBottomNav />
+
+        {/* Token Exhausted Modal (GuestGate) */}
+        <Dialog open={showTokenExhaustedModal} onOpenChange={() => {}}>
+          <DialogContent className="sm:max-w-md border-rose-500/20 dark:border-rose-500/20 [&>button]:hidden">
+            <DialogHeader>
+              <div className="mx-auto w-12 h-12 bg-rose-100 dark:bg-rose-900/30 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400" />
+              </div>
+              <DialogTitle className="text-center text-xl text-slate-900 dark:text-white">Kuota Gratis Habis</DialogTitle>
+              <DialogDescription className="text-center text-md mt-2 font-medium">
+                Batas <strong>40,000 Token AI</strong> untuk uji coba gratis Anda telah habis.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 text-center text-sm text-slate-600 dark:text-slate-400">
+              Silakan buat akun resmi (Premium) secara gratis untuk melanjutkan penggunaan dan menikmati semua fitur eksklusif tanpa batasan waktu!
+            </div>
+            <DialogFooter className="sm:justify-center flex-col space-y-2 w-full sm:flex-col sm:space-x-0">
+              <Button type="button" className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold h-11" onClick={() => window.location.href = '/register'}>
+                Daftar Akun Sekarang
+              </Button>
+              <Button type="button" variant="ghost" className="w-full h-11" onClick={() => window.location.href = '/login'}>
+                Sudah Punya Akun? Login
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </SidebarInset>
     </SidebarProvider>
   );

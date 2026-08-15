@@ -63,6 +63,12 @@ const settingsSchema = z.object({
   BANK_ACCOUNT: z.string().optional(),
   BANK_ACCOUNT_NAME: z.string().optional(),
   FEE_BEARER: z.string().optional().or(z.literal("CUSTOMER")),
+
+  // Auto Follow-Up Settings
+  follow_up_aktif: z.string().optional().or(z.literal("")),
+  follow_up_tipe: z.string().optional().or(z.literal("")),
+  follow_up_durasi_menit: z.string().optional().or(z.literal("")),
+  follow_up_pesan: z.string().optional().or(z.literal("")),
 })
 
 export function SettingsTabs({ initialData }: { initialData: Record<string, string> }) {
@@ -117,10 +123,16 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
       BANK_ACCOUNT: initialData.BANK_ACCOUNT || "",
       BANK_ACCOUNT_NAME: initialData.BANK_ACCOUNT_NAME || "",
       FEE_BEARER: initialData.FEE_BEARER || "CUSTOMER",
+      
+      follow_up_aktif: initialData.follow_up_aktif || "false",
+      follow_up_tipe: initialData.follow_up_tipe || "ai",
+      follow_up_durasi_menit: initialData.follow_up_durasi_menit || "10",
+      follow_up_pesan: initialData.follow_up_pesan || "Halo Kak, apakah ada pertanyaan lebih lanjut atau ada yang bisa kami bantu lagi?",
     },
   })
 
   const paymentModeValue = form.watch("PAYMENT_MODE")
+  const followUpTipeValue = form.watch("follow_up_tipe")
 
   async function onSubmit(values: z.infer<typeof settingsSchema>) {
     setLoading(true)
@@ -645,6 +657,100 @@ export function SettingsTabs({ initialData }: { initialData: Record<string, stri
                     </FormItem>
                   )}
                 />
+                
+                {/* Auto Follow-Up Settings */}
+                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
+                  <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Fitur Auto Follow-Up</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                    Bot akan otomatis mengirimkan pesan tindak lanjut (follow-up) jika pelanggan tidak merespon setelah beberapa menit.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="follow_up_aktif"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status Follow-Up</FormLabel>
+                          <FormControl>
+                            <select
+                              {...field}
+                              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
+                            >
+                              <option value="false">Tidak Aktif</option>
+                              <option value="true">Aktifkan Fitur Ini</option>
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    {form.watch("follow_up_aktif") === "true" && (
+                      <FormField
+                        control={form.control}
+                        name="follow_up_durasi_menit"
+                        render={({ field }) => (
+                          <FormItem className="animate-in fade-in slide-in-from-top-2">
+                            <FormLabel>Durasi Menunggu (Menit)</FormLabel>
+                            <FormControl>
+                              <Input type="number" min="1" placeholder="Contoh: 10" {...field} className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white h-10" />
+                            </FormControl>
+                            <FormDescription>Minimal 1 menit (disarankan 10 menit).</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                  
+                  {form.watch("follow_up_aktif") === "true" && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2 mt-4">
+                      <FormField
+                        control={form.control}
+                        name="follow_up_tipe"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Opsi Pesan Follow-Up</FormLabel>
+                            <FormControl>
+                              <select
+                                {...field}
+                                className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-80 text-slate-900 dark:text-white"
+                              >
+                                <option value="ai">Opsi 1: AI (Merangkum Otomatis & Persuasif)</option>
+                                <option value="manual">Opsi 2: Manual (Ketik Sendiri Teks Statis)</option>
+                              </select>
+                            </FormControl>
+                            <FormDescription>AI akan membaca riwayat chat dan membuat kalimat ajakan yang relevan secara otomatis.</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      {followUpTipeValue === "manual" && (
+                        <FormField
+                          control={form.control}
+                          name="follow_up_pesan"
+                          render={({ field }) => (
+                            <FormItem className="animate-in fade-in slide-in-from-top-2">
+                              <FormLabel>Template Pesan Follow-Up (Manual)</FormLabel>
+                              <FormControl>
+                                <Textarea 
+                                  {...field} 
+                                  className="min-h-[100px] border-slate-300 dark:border-slate-700"
+                                  placeholder="Halo Kak, apakah ada yang bisa kami bantu lagi?"
+                                />
+                              </FormControl>
+                              <FormDescription>Pesan yang akan dikirim saat pelanggan menggantung percakapan.</FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
