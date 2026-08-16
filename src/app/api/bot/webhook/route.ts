@@ -14,10 +14,12 @@ export async function POST(req: Request) {
     }
 
     // Trigger event bahwa ada pesan masuk (untuk membatalkan auto follow-up jika ada)
-    await inngest.send({
-      name: "wa/webhook.received",
-      data: { tenantId: tenant_id, noWa: no_wa }
-    });
+    try {
+      await inngest.send({
+        name: "wa/webhook.received",
+        data: { tenantId: tenant_id, noWa: no_wa }
+      });
+    } catch(e) { console.error("Gagal trigger inngest", e); }
 
     // Simpan pesan dari User ke database
     try {
@@ -49,14 +51,16 @@ export async function POST(req: Request) {
     } catch(e) { console.error("Gagal menyimpan log chat bot", e); }
 
     // Jadwalkan auto follow-up ke Inngest
-    await inngest.send({
-      name: "wa/schedule.follow_up",
-      data: {
-        tenantId: tenant_id,
-        noWa: no_wa,
-        lastMessageTime: Date.now()
-      }
-    });
+    try {
+      await inngest.send({
+        name: "wa/schedule.follow_up",
+        data: {
+          tenantId: tenant_id,
+          noWa: no_wa,
+          lastMessageTime: Date.now()
+        }
+      });
+    } catch(e) { console.error("Gagal menjadwalkan Inngest", e); }
 
     return NextResponse.json({ 
       reply: aiResult.text,

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { pengaturan } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { processDevOpsCommand } from "@/server/devopsAgent";
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8826966282:AAE1RDHPLJHL58GjPZKPg_-LZW2jCqynYuo";
 
@@ -180,8 +181,20 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true });
       }
 
+      if (cmd === "/devops" || cmd === "/develops") {
+        const prompt = text.substring(cmd.length).trim();
+        if (!prompt) {
+           await sendMessage(chatId, "⚠️ Harap masukkan instruksi DevOps. Contoh: `/devops cek status pm2`", botToken);
+           return NextResponse.json({ success: true });
+        }
+        
+        // Execute asynchronously so Telegram webhook returns 200 immediately
+        processDevOpsCommand(chatId, prompt, botToken, sendMessage).catch(console.error);
+        return NextResponse.json({ success: true });
+      }
+
       if (cmd === "/help") {
-        const menu = `🤖 *PUSAT KOMANDO OWNER — SEMUA INSTALASI* 🤖\n\nAnda mengontrol semua pembeli software dari sini.\n\n📋 *PERINTAH:*\n/clients — Daftar semua pembeli\n/info <no> — Cek token & status\n/reset <no> — Reset token ke 0\n/release <no> — Hapus nomor (logout WA + hapus)\n/hapus <no> — Sama dengan /release\n/limit <no> <angka> — Ubah limit token\n/hari <no> <hari> — Set masa aktif dari sekarang\n/perpanjang <no> <hari> — Tambah masa aktif\n/api <no> <key> — Set API key\n/model <no> <chat|reasoner> — Ubah model AI\n/status — Cek panel owner\n/help — Tampilkan menu ini\n\n⚠️ *Aturan:* /release = app pembeli langsung logout WA & terhapus.`;
+        const menu = `🤖 *PUSAT KOMANDO OWNER — SEMUA INSTALASI* 🤖\n\nAnda mengontrol semua pembeli software dari sini.\n\n📋 *PERINTAH:*\n/clients — Daftar semua pembeli\n/info <no> — Cek token & status\n/reset <no> — Reset token ke 0\n/release <no> — Hapus nomor (logout WA + hapus)\n/hapus <no> — Sama dengan /release\n/limit <no> <angka> — Ubah limit token\n/hari <no> <hari> — Set masa aktif dari sekarang\n/perpanjang <no> <hari> — Tambah masa aktif\n/api <no> <key> — Set API key\n/model <no> <chat|reasoner> — Ubah model AI\n/status — Cek panel owner\n/devops <perintah> — Tanya AI untuk remote server VPS\n/help — Tampilkan menu ini\n\n⚠️ *Aturan:* /release = app pembeli langsung logout WA & terhapus.`;
         await sendMessage(chatId, menu, botToken);
         return NextResponse.json({ success: true });
       }
