@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error("Webhook error:", error);
-    return NextResponse.json({ reply: "Maaf, terjadi kesalahan internal sistem." });
+    return NextResponse.json({ reply: "Maaf, terjadi kesalahan internal sistem.", detail_error: error?.message || String(error) });
   }
 }
 
