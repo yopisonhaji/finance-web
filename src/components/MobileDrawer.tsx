@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { MessageSquareShare, FileText, Settings, X, LogOut, Wallet, Lock } from "lucide-react"
+import { MessageSquareShare, FileText, Settings, X, LogOut, Wallet, Lock, Bot } from "lucide-react"
 import { auth, signOut } from "@/lib/firebase"
 import { useAppConfig } from "@/contexts/AppConfigContext"
 import {
@@ -48,6 +48,7 @@ export function MobileDrawer({ isOpen, onClose, isGuest = false }: MobileDrawerP
     { title: "Terminal WhatsApp AI", url: "/wa", icon: MessageSquareShare, color: "text-teal-400" },
     { title: "Laporan Keuangan", url: "/laporan", icon: FileText, color: "text-rose-400" },
     ...(paymentMode === 'DEFAULT' ? [{ title: "Pencairan Dana", url: "/pencairan", icon: Wallet, color: "text-blue-400" }] : []),
+    { title: "Pengaturan AI", url: "/ai-settings", icon: Bot, color: "text-purple-500" },
     { title: "Pengaturan", url: "/settings", icon: Settings, color: "text-slate-700 dark:text-slate-300 font-medium" },
   ]
 
