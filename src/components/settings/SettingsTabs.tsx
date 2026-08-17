@@ -597,7 +597,26 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                     </FormItem>
                   )}
                 />
-
+                <FormField
+                  control={form.control}
+                  name="ai_prompt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('settings.system_prompt')}</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          {...field} 
+                          className="h-32 border-primary/30"
+                          placeholder="Beri tahu AI bagaimana dia harus bersikap..."
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t('settings.prompt_desc')}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="ai_model"
