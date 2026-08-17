@@ -43,6 +43,15 @@ const settingsSchema = z.object({
 
   deepseek_key: z.string(),
   ai_prompt: z.string().optional().or(z.literal("")),
+  namaUsaha: z.string().optional(),
+  sapaanPelanggan: z.string().optional(),
+  gayaBahasa: z.string().optional(),
+  aturanKhusus: z.string().optional(),
+  basaBasi_p: z.string().optional(),
+  basaBasi_halo: z.string().optional(),
+  basaBasi_terimakasih: z.string().optional(),
+  basaBasi_ok: z.string().optional(),
+  knowledgeUrl: z.string().optional(),
   usage_token: z.string().optional(),
   limit_token: z.string().optional(),
   masa_aktif: z.string().optional(),
@@ -104,6 +113,15 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
       ipaymu_fee_bearer: initialData.ipaymu_fee_bearer || "USER",
       deepseek_key: initialData.deepseek_key || "",
       ai_prompt: initialData.ai_prompt || "",
+      namaUsaha: initialData.namaUsaha || "",
+      sapaanPelanggan: initialData.sapaanPelanggan || "Kak",
+      gayaBahasa: initialData.gayaBahasa || "Formal",
+      aturanKhusus: initialData.aturanKhusus || "",
+      basaBasi_p: initialData.basaBasi_p || "Halo kak, ada yang bisa kami bantu?",
+      basaBasi_halo: initialData.basaBasi_halo || "Halo! Selamat datang di layanan kami.",
+      basaBasi_terimakasih: initialData.basaBasi_terimakasih || "Sama-sama kak, senang bisa membantu!",
+      basaBasi_ok: initialData.basaBasi_ok || "Baik kak, siap di laksanakan!",
+      knowledgeUrl: initialData.knowledgeUrl || "",
       usage_token: initialData.usage_token || "0",
       limit_token: initialData.limit_token || "0",
       masa_aktif: initialData.masa_aktif || "Belum Diset",
@@ -137,6 +155,20 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
   async function onSubmit(values: z.infer<typeof settingsSchema>) {
     setLoading(true)
     
+    // Pisahkan field RAG untuk dikirim ke /api/ai-settings
+    const {
+      namaUsaha,
+      sapaanPelanggan,
+      gayaBahasa,
+      aturanKhusus,
+      basaBasi_p,
+      basaBasi_halo,
+      basaBasi_terimakasih,
+      basaBasi_ok,
+      knowledgeUrl,
+      ...coreValues
+    } = values
+
     // PENTING: Jangan kirim variabel yang dikelola oleh Bot Telegram
     // agar tidak tertimpa dengan nilai kosong atau nilai lama saat form disave
     const { 
@@ -146,8 +178,34 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
       masa_aktif, 
       ai_model, 
       ...safeValues 
-    } = values
+    } = coreValues
     
+    // Save AI RAG Settings to API
+    try {
+      await fetch("/api/ai-settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tenantId: initialData.tenantId || "tenant-1",
+          namaUsaha,
+          sapaanPelanggan,
+          gayaBahasa,
+          aturanKhusus,
+          knowledgeUrl,
+          basaBasi: {
+            "p": basaBasi_p,
+            "halo": basaBasi_halo,
+            "terimakasih": basaBasi_terimakasih,
+            "ok": basaBasi_ok,
+          }
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to save RAG settings", e);
+    }
+
     const res = await saveSettings(safeValues)
     if (res.success) {
       alert(t('settings.save_success') || "Pengaturan berhasil disimpan!")
@@ -597,6 +655,92 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                     </FormItem>
                   )}
                 />
+                {/* --- RAG SETTINGS START --- */}
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <FormField
+                    control={form.control}
+                    name="namaUsaha"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nama Usaha / Bisnis</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Toko Baju Barokah" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="sapaanPelanggan"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sapaan Pelanggan</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Kak, Bunda, Sis" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="gayaBahasa"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gaya Bahasa</FormLabel>
+                        <select
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300"
+                          value={field.value}
+                          onChange={field.onChange}
+                        >
+                          <option value="Santai">Santai (Friendly & Casual)</option>
+                          <option value="Formal">Formal (Profesional)</option>
+                          <option value="Empatik">Empatik (High-empathy Sales)</option>
+                        </select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="knowledgeUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Website or Instagram URL (Knowledge Base)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://www.websiteanda.com/faq" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="aturanKhusus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Aturan Khusus / Promo</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="e.g. Berikan diskon 10% jika pelanggan ragu. Selalu tawarkan pembelian bundling." 
+                          className="resize-none h-24"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormDescription>Instruksi khusus yang wajib diikuti AI dalam berjualan.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="ai_prompt"
@@ -607,16 +751,17 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                         <Textarea 
                           {...field} 
                           className="h-32 border-primary/30"
-                          placeholder="Beri tahu AI bagaimana dia harus bersikap..."
+                          placeholder="Beri tahu AI bagaimana dia harus bersikap secara manual (Opsional)..."
                         />
                       </FormControl>
                       <FormDescription>
-                        {t('settings.prompt_desc')}
+                        {t('settings.prompt_desc')} Jika Anda sudah mengisi pengaturan di atas, prompt ini hanya akan menjadi tambahan.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                {/* --- RAG SETTINGS END --- */}
                 <FormField
                   control={form.control}
                   name="ai_model"
