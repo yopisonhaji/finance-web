@@ -108,3 +108,23 @@ export const wa_messages = sqliteTable('wa_messages', {
   pengirim: text('pengirim').notNull(), // 'USER' atau 'BOT'
   createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
 });
+
+export const ai_settings = sqliteTable('ai_settings', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull().unique(), // One settings record per tenant
+  namaUsaha: text('nama_usaha'),
+  sapaanPelanggan: text('sapaan_pelanggan').default('Kak'),
+  gayaBahasa: text('gaya_bahasa').default('Formal'), // Santai, Formal, Empatik
+  aturanKhusus: text('aturan_khusus'),
+  basaBasi: text('basa_basi'), // Stored as JSON string of quick replies, e.g. {"p": "Halo kak!", "thanks": "Sama-sama"}
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+  updatedAt: text('updated_at').default('CURRENT_TIMESTAMP'),
+});
+
+export const ai_knowledge_base = sqliteTable('ai_knowledge_base', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tenantId: text('tenant_id').notNull(),
+  sumber: text('sumber').notNull(), // 'URL' or 'TEXT'
+  konten: text('konten').notNull(),
+  createdAt: text('created_at').default('CURRENT_TIMESTAMP'),
+});

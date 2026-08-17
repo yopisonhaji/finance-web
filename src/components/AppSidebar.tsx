@@ -115,6 +115,13 @@ const getNavGroups = (t: (key: string) => string, clientTerm: string, paymentMod
     title: "SISTEM",
     items: [
       {
+        title: "Pengaturan AI",
+        url: "/ai-settings",
+        icon: Bot,
+        color: "text-purple-500",
+        hoverColor: "group-hover:text-purple-400",
+      },
+      {
         title: "Pengaturan",
         url: "/settings",
         icon: Settings,

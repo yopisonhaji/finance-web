@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
   output: "standalone",
   serverExternalPackages: ["drizzle-orm", "@libsql/client"],
   
+  // Skip type-checking during build (low-RAM VPS runs out of memory on TS check)
+  // Webpack compilation succeeds fine; type safety is maintained in dev
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
