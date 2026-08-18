@@ -4,12 +4,15 @@ import { TranslatedText } from "@/components/TranslatedText"
 import { db } from "@/db"
 import { ai_settings, ai_knowledge_base } from "@/db/schema"
 import { eq } from "drizzle-orm"
+import { getServerTenantId } from "@/server/auth"
 
 export default async function SettingsPage() {
   const initialData = await getSettings();
   
   // Ambil pengaturan RAG dari database terpisah untuk digabung ke initialData
-  const tenantId = initialData.tenantId || "tenant-1";
+  const tenantId = await getServerTenantId() || "tenant-1";
+  initialData.tenantId = tenantId;
+
   const aiSettings = await db.select().from(ai_settings).where(eq(ai_settings.tenantId, tenantId)).get();
   const kb = await db.select().from(ai_knowledge_base).where(eq(ai_knowledge_base.tenantId, tenantId)).get();
 
