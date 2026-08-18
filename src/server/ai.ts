@@ -3,7 +3,7 @@
 
 
 import { db } from "@/db";
-import { pengaturan, santri, media_ai } from "@/db/schema";
+import { pengaturan, santri, media_ai, ai_settings, ai_knowledge_base } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generatePaymentLink } from "./ipaymu";
 
@@ -24,6 +24,16 @@ export async function processAIResponse(message: string, sender: string, santriD
   const tokenUsageStr = getSetting("usage_token");
   const tokenLimit = parseInt(tokenLimitStr) || 0;
   let tokenUsage = parseInt(tokenUsageStr) || 0;
+
+  // Coba ambil pengaturan AI kustom dari tabel ai_settings
+  const aiSettingsRecord = await db.select().from(ai_settings).where(eq(ai_settings.tenantId, tenantId)).get();
+  const aiKbRecord = await db.select().from(ai_knowledge_base).where(eq(ai_knowledge_base.tenantId, tenantId)).get();
+
+  const customNamaUsaha = aiSettingsRecord?.namaUsaha || pesantrenName;
+  const customSapaan = aiSettingsRecord?.sapaanPelanggan || parentTerm;
+  const customGayaBahasa = aiSettingsRecord?.gayaBahasa || "Formal";
+  const customAturan = aiSettingsRecord?.aturanKhusus || "";
+  const customKb = aiKbRecord?.konten || "";
 
   // Pre-load daftar media yang tersedia untuk tenant ini
   let availableMediaList: { id: number; nama: string; tipe: string; deskripsi: string; url: string }[] = [];
@@ -143,6 +153,29 @@ export async function processAIResponse(message: string, sender: string, santriD
     return { text: "" };
   }
 
+  // ===== CEK ZERO-TOKEN INTERCEPTOR =====
+  if (aiSettingsRecord && aiSettingsRecord.basaBasi) {
+    try {
+      const basaBasiMap = JSON.parse(aiSettingsRecord.basaBasi);
+      const lowerMsg = message.toLowerCase().trim();
+      const cleanMsg = lowerMsg.replace(/[^a-zA-Z0-9]+/g, "");
+      
+      let zeroTokenReply = "";
+      if (basaBasiMap[cleanMsg] && basaBasiMap[cleanMsg].trim() !== "") {
+        zeroTokenReply = basaBasiMap[cleanMsg];
+      } else if (basaBasiMap[lowerMsg] && basaBasiMap[lowerMsg].trim() !== "") {
+        zeroTokenReply = basaBasiMap[lowerMsg];
+      }
+
+      if (zeroTokenReply) {
+        console.log(`[AI] Zero-Token Interceptor Hit: ${zeroTokenReply}`);
+        return { text: zeroTokenReply };
+      }
+    } catch (e) {
+      console.error("[AI] Error parsing basaBasi", e);
+    }
+  }
+
   // Pre-load daftar media yang tersedia untuk tenant ini (SUDAH di-load di atas)
   // availableMediaList sudah ada dari pre-processor
 
@@ -187,6 +220,23 @@ Jika mereka menanyakan detail data spesifik seseorang, panggil tool 'cari_data_s
 JIKA admin memberikan perintah untuk menagih (contoh: "Tagih sekarang", "Kirim pengingat ke Ahmad"), ANDA WAJIB LANGSUNG MEMANGGIL TOOL 'kirim_broadcast_tagihan' TANPA BERTANYA ATAU MEMINTA KONFIRMASI LAGI. Langsung eksekusi perintahnya detik itu juga!
 DILARANG KERAS bertanya "Apakah saya harus mengirimkannya?" atau "Apakah Anda yakin?". Langsung panggil tool yang relevan!
 Setelah tool berhasil dieksekusi, berikan laporan singkat bahwa tugas telah selesai dilaksanakan.`;
+  } else if (aiSettingsRecord) {
+    // Gunakan prompt kustom dari ai_settings jika ada
+    systemPrompt = `You are a top-performing customer success and sales closer for "${customNamaUsaha}". Be highly empathetic. Use AIDA and FOMO frameworks subtly. Never end the conversation without a gentle push for a decision. Use WhatsApp formatting (*bold*, _italic_).
+Style: ${customGayaBahasa}. Call customer: ${customSapaan}.
+Rules: ${customAturan}
+Knowledge: ${customKb}
+Return ONLY helpful, human-like response.
+
+Jika user menanyakan portofolio atau hasil kerja, referensikan Knowledge Base.
+Jika data belum lengkap, pancing secara halus sampai klien menyebutkan data yang dibutuhkan.`;
+
+    if (santriData) {
+      systemPrompt += `\n\n[INFO TAMBAHAN]:
+Konteks: Pengirim pesan adalah ${parentTerm} bernama ${santriData.nama_wali} (Nomor WA: ${sender}).
+Mereka mewakili ${clientTerm} bernama ${santriData.nama} (ID: ${santriData.nis}, Grup/Kelas: ${santriData.kelas}).
+Status Tagihan bulan ini: ${santriData.status_bulan_ini === 'LUNAS' ? 'SUDAH LUNAS' : 'BELUM BAYAR (TUNGGAKAN)'}.`;
+    }
   } else if (santriData) {
     systemPrompt = `Anda adalah asisten/admin bagian Keuangan di ${pesantrenName}.
 Tugas Anda melayani ${parentTerm} terkait informasi tagihan pembayaran mereka.
