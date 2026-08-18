@@ -42,7 +42,7 @@ const settingsSchema = z.object({
   ipaymu_fee_bearer: z.string().optional().or(z.literal("USER")),
 
   deepseek_key: z.string(),
-  ai_prompt: z.string().optional().or(z.literal("")),
+  ai_model: z.string().optional().or(z.literal("")),
   namaUsaha: z.string().optional(),
   sapaanPelanggan: z.string().optional(),
   gayaBahasa: z.string().optional(),
@@ -112,7 +112,6 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
       pencairan_nama: initialData.pencairan_nama || "",
       ipaymu_fee_bearer: initialData.ipaymu_fee_bearer || "USER",
       deepseek_key: initialData.deepseek_key || "",
-      ai_prompt: initialData.ai_prompt || "",
       namaUsaha: initialData.namaUsaha || "",
       sapaanPelanggan: initialData.sapaanPelanggan || "Kak",
       gayaBahasa: initialData.gayaBahasa || "Formal",
@@ -741,26 +740,65 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="ai_prompt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('settings.system_prompt')}</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          {...field} 
-                          className="h-32 border-primary/30"
-                          placeholder="Beri tahu AI bagaimana dia harus bersikap secara manual (Opsional)..."
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {t('settings.prompt_desc')} Jika Anda sudah mengisi pengaturan di atas, prompt ini hanya akan menjadi tambahan.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <h4 className="text-sm font-medium">Basa-basi / Balasan Cepat (Zero Token)</h4>
+                  <p className="text-xs text-slate-500">Balasan otomatis instan tanpa menggunakan kuota token AI. Gunakan untuk kata-kata umum.</p>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_p"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "P" atau "Ping"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Halo kak, ada yang bisa dibantu?" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_halo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Halo"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Halo juga kak, selamat datang!" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_terimakasih"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Terima Kasih"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Sama-sama kak, ditunggu pesanannya." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_ok"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Ok" atau "Oke"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Baik kak, kami proses ya." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
                 {/* --- RAG SETTINGS END --- */}
                 <FormField
                   control={form.control}
