@@ -48,23 +48,25 @@ export async function POST(req: Request) {
     }
 
     if (knowledgeUrl) {
-      const scrapedText = await extractTextFromURL(knowledgeUrl);
-      if (scrapedText) {
-        const existingKb = await db.select().from(ai_knowledge_base)
-          .where(eq(ai_knowledge_base.tenantId, tenantId)).get();
-        
-        if (existingKb) {
-          await db.update(ai_knowledge_base).set({
-            sumber: knowledgeUrl,
-            konten: scrapedText
-          }).where(eq(ai_knowledge_base.tenantId, tenantId)).run();
-        } else {
-          await db.insert(ai_knowledge_base).values({
-            tenantId,
-            sumber: knowledgeUrl,
-            konten: scrapedText
-          }).run();
-        }
+      let scrapedText = await extractTextFromURL(knowledgeUrl);
+      if (!scrapedText) {
+        scrapedText = "Tidak dapat membaca isi tautan secara otomatis. Referensi: " + knowledgeUrl;
+      }
+      
+      const existingKb = await db.select().from(ai_knowledge_base)
+        .where(eq(ai_knowledge_base.tenantId, tenantId)).get();
+      
+      if (existingKb) {
+        await db.update(ai_knowledge_base).set({
+          sumber: knowledgeUrl,
+          konten: scrapedText
+        }).where(eq(ai_knowledge_base.tenantId, tenantId)).run();
+      } else {
+        await db.insert(ai_knowledge_base).values({
+          tenantId,
+          sumber: knowledgeUrl,
+          konten: scrapedText
+        }).run();
       }
     }
     
