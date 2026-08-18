@@ -655,7 +655,7 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                   )}
                 />
                 {/* --- RAG SETTINGS START --- */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                   <FormField
                     control={form.control}
                     name="namaUsaha"
@@ -685,7 +685,7 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="gayaBahasa"
@@ -744,7 +744,7 @@ export function SettingsTabs({ initialData, isGuest = false }: { initialData: Re
                   <h4 className="text-sm font-medium">Basa-basi / Balasan Cepat (Zero Token)</h4>
                   <p className="text-xs text-slate-500">Balasan otomatis instan tanpa menggunakan kuota token AI. Gunakan untuk kata-kata umum.</p>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="basaBasi_p"
