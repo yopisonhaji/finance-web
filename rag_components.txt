@@ -1,0 +1,107 @@
+                {/* --- RAG SETTINGS START --- */}
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <FormField
+                    control={form.control}
+                    name="namaUsaha"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nama Usaha / Bisnis</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Toko Baju Barokah" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="sapaanPelanggan"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sapaan Pelanggan</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Kak, Bunda, Sis" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="gayaBahasa"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gaya Bahasa</FormLabel>
+                        <select
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300"
+                          value={field.value}
+                          onChange={field.onChange}
+                        >
+                          <option value="Santai">Santai (Friendly & Casual)</option>
+                          <option value="Formal">Formal (Profesional)</option>
+                          <option value="Empatik">Empatik (High-empathy Sales)</option>
+                        </select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="knowledgeUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Website or Instagram URL (Knowledge Base)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://www.websiteanda.com/faq" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="aturanKhusus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Aturan Khusus / Promo</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="e.g. Berikan diskon 10% jika pelanggan ragu. Selalu tawarkan pembelian bundling." 
+                          className="resize-none h-24"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormDescription>Instruksi khusus yang wajib diikuti AI dalam berjualan.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ai_prompt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('settings.system_prompt')}</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          {...field} 
+                          className="h-32 border-primary/30"
+                          placeholder="Beri tahu AI bagaimana dia harus bersikap secara manual (Opsional)..."
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t('settings.prompt_desc')} Jika Anda sudah mengisi pengaturan di atas, prompt ini hanya akan menjadi tambahan.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* --- RAG SETTINGS END --- */}

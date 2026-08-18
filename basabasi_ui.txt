@@ -1,0 +1,59 @@
+                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <h4 className="text-sm font-medium">Basa-basi / Balasan Cepat (Zero Token)</h4>
+                  <p className="text-xs text-slate-500">Balasan otomatis instan tanpa menggunakan kuota token AI. Gunakan untuk kata-kata umum.</p>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_p"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "P" atau "Ping"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Halo kak, ada yang bisa dibantu?" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_halo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Halo"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Halo juga kak, selamat datang!" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_terimakasih"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Terima Kasih"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Sama-sama kak, ditunggu pesanannya." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basaBasi_ok"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Jika chat berisi "Ok" atau "Oke"</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Baik kak, kami proses ya." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { santri, wa_messages } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { processAIResponse } from "@/server/ai";
-import { inngest } from "@/inngest/client";
+import { pengaturan } from "@/db/schema";
 
 export async function POST(req: Request) {
   try {
@@ -13,13 +13,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Trigger event bahwa ada pesan masuk (untuk membatalkan auto follow-up jika ada)
-    try {
-      await inngest.send({
-        name: "wa/webhook.received",
-        data: { tenantId: tenant_id, noWa: no_wa }
-      });
-    } catch(e) { console.error("Gagal trigger inngest", e); }
+    // Fetch follow up settings
+    const settings = await db.select().from(pengaturan).where(
+      and(
+        eq(pengaturan.tenantId, tenant_id),
+        inArray(pengaturan.kunci, ["follow_up_aktif", "follow_up_durasi_menit"])
+      )
+    );
+    const config: Record<string, string> = {};
+    settings.forEach(r => { config[r.kunci] = r.nilai; });
+    const follow_up_aktif = config["follow_up_aktif"] === "true";
+    const follow_up_durasi_menit = parseInt(config["follow_up_durasi_menit"] || "10", 10);
 
     // Simpan pesan dari User ke database
     try {
@@ -67,43 +71,23 @@ export async function POST(req: Request) {
         }
       } catch(e) { console.error("Gagal menyimpan log chat bot", e); }
       
-      // Jadwalkan auto follow-up ke Inngest (karena kita yang balas)
-      try {
-        await inngest.send({
-          name: "wa/schedule.follow_up",
-          data: {
-            tenantId: tenant_id,
-            noWa: no_wa,
-            lastMessageTime: Date.now()
-          }
-        });
-      } catch(e) { console.error("Gagal menjadwalkan Inngest", e); }
-
       return NextResponse.json({ 
         reply: botReplyText,
         broadcasts: aiResult.broadcasts,
         media_url: aiResult.media_url,
-        media_type: aiResult.media_type
+        media_type: aiResult.media_type,
+        follow_up_aktif,
+        follow_up_durasi_menit
       });
     }
 
-    // Jadwalkan auto follow-up ke Inngest (meskipun log_only, kita tetap harus menjadwalkan follow up)
-    try {
-      await inngest.send({
-        name: "wa/schedule.follow_up",
-        data: {
-          tenantId: tenant_id,
-          noWa: no_wa,
-          lastMessageTime: Date.now()
-        }
-      });
-    } catch(e) { console.error("Gagal menjadwalkan Inngest (log_only)", e); }
-
-    return NextResponse.json({ reply: "" }); // Return empty reply for log_only
-  } catch (error: any) {
-    console.error("Webhook error:", error);
-    return NextResponse.json({ reply: "Maaf, terjadi kesalahan internal sistem.", detail_error: error?.message || String(error) });
+    return NextResponse.json({ 
+      success: true,
+      follow_up_aktif,
+      follow_up_durasi_menit
+    });
+  } catch (error) {
+    console.error("Webhook Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
-
